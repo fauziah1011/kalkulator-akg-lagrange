@@ -114,7 +114,7 @@ st.set_page_config(
 
 st.title("⚙️ Kalkulator Estimasi Kebutuhan Gizi Harian (Metode Lagrange)")
 # MODIFIKASI: Teks di bawah ini sudah disingkat sesuai permintaan.
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) **berdasarkan Berat Badan target**.")
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) **berdasarkan Berat Badan**.")
 st.markdown("---")
 
 # --- 1. Input Parameter (Side Bar) ---
@@ -223,3 +223,4 @@ if st.session_state['hitung']:
             
     except Exception as e:
         st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
+
