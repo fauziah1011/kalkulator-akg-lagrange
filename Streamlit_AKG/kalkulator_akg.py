@@ -14,7 +14,6 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     hasil_estimasi = 0.0
     
     if len(np.unique(X_Acuan)) < n:
-        # Jika ada BB Acuan yang sama, Streamlit akan menampilkan error
         st.error("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
         return 0.0
 
@@ -27,76 +26,85 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN (DATA AKG 2019 VERSI DETAIL)
 # ----------------------------------------------------------------------
+# Data diambil dari beberapa kelompok umur yang berdekatan untuk mendapatkan titik BB acuan yang berbeda (minimal 2 titik)
+# Gizi yang diambil: Energi, Protein, Lemak Total, Karbohidrat, Serat, Air.
+
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
     'Laki-laki (Remaja 10-18 th)': {
-        'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
+        # Menggunakan data dari kelompok 10-12 th (BB 36), 13-15 th (BB 50), 16-18 th (BB 60)
+        'Berat_Badan_Acuan_X': np.array([36.0, 50.0, 60.0, 75.0, 100.0]),
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1750, 2000, 2400, 3000, 3600]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([45, 50, 70, 95, 120]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([55, 65, 80, 110, 140]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([270, 300, 350, 480, 600]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
-            'Besi (Fe)': {'data': np.array([9, 10, 11, 11, 11]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Energi': {'data': np.array([2000, 2400, 2650, 2900, 3400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'},
+            'Protein': {'data': np.array([50, 70, 75, 85, 110]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([65, 80, 85, 95, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([300, 350, 400, 470, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([28, 34, 37, 37, 42]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([1850, 2100, 2300, 2500, 2600]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Laki-laki (Dewasa 19-64 th)': {
-        'Berat_Badan_Acuan_X': np.array([30.0, 60.0, 75.0, 90.0, 100.0]), 
+        # Menggunakan data dari kelompok 19-29 th (BB 60), 30-49 th (BB 60) dan penyesuaian BB 75, 90, 100
+        'Berat_Badan_Acuan_X': np.array([60.0, 75.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1900, 2477.5, 2900, 3200, 3400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([50, 65, 85, 100, 110]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([60, 70, 95, 115, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([280, 395, 470, 520, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1000, 1000, 1000, 1000, 1000]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
-            'Besi (Fe)': {'data': np.array([9, 9, 9, 9, 9]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Energi': {'data': np.array([2550, 2800, 3100, 3400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([65, 80, 95, 110]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([70, 85, 105, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([415, 450, 500, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([36, 40, 43, 45]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([2500, 2700, 2900, 3100]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Laki-laki (Lansia 65-80+ th)': {
-        'Berat_Badan_Acuan_X': np.array([30.0, 55.0, 70.0, 85.0, 100.0]), 
+        # Menggunakan data dari kelompok 65-80 th (BB 58) dan 80+ th (BB 58) dan penyesuaian BB 75, 90, 100
+        'Berat_Badan_Acuan_X': np.array([58.0, 75.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1500, 1900, 2200, 2500, 2800]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([50, 64, 75, 90, 105]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([40, 50, 70, 90, 110]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([220, 285, 330, 380, 430]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
-            'Besi (Fe)': {'data': np.array([8, 9, 9, 9, 9]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Energi': {'data': np.array([1800, 2100, 2350, 2550]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([64, 75, 88, 100]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([50, 65, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([275, 320, 360, 400]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([25, 28, 30, 32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([1800, 2000, 2200, 2400]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     
     # B. PEREMPUAN
     'Perempuan (Remaja 10-18 th)': {
-        'Berat_Badan_Acuan_X': np.array([30.0, 38.0, 52.0, 75.0, 100.0]), 
+        # Menggunakan data dari kelompok 10-12 th (BB 38), 13-15 th (BB 48), 16-18 th (BB 52)
+        'Berat_Badan_Acuan_X': np.array([38.0, 48.0, 52.0, 75.0, 100.0]), 
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1600, 1900, 2100, 2700, 3300]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([50, 55, 65, 90, 115]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([50, 65, 70, 100, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([240, 280, 300, 420, 550]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
-            'Besi (Fe)': {'data': np.array([13, 15, 15, 15, 15]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Energi': {'data': np.array([1900, 2050, 2100, 2400, 2800]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'},
+            'Protein': {'data': np.array([55, 65, 65, 80, 100]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([65, 70, 70, 90, 110]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([280, 300, 300, 380, 470]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([27, 29, 29, 33, 38]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([1850, 2100, 2150, 2300, 2500]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Perempuan (Dewasa 19-64 th)': {
-        'Berat_Badan_Acuan_X': np.array([30.0, 55.0, 70.0, 85.0, 100.0]), 
+        # Menggunakan data dari kelompok 19-29 th (BB 55), 30-49 th (BB 56) dan penyesuaian BB 75, 90, 100
+        'Berat_Badan_Acuan_X': np.array([55.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1700, 2250, 2500, 2800, 3100]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([50, 60, 75, 90, 105]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([50, 65, 80, 100, 120]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([260, 360, 410, 460, 510]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1000, 1000, 1000, 1000, 1000]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
-            'Besi (Fe)': {'data': np.array([15, 18, 15, 15, 15]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Energi': {'data': np.array([2250, 2500, 2750, 3000]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'},
+            'Protein': {'data': np.array([60, 70, 85, 100]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([65, 80, 95, 115]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([360, 400, 440, 480]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([32, 35, 38, 41]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([2350, 2550, 2750, 2950]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Perempuan (Lansia 65-80+ th)': {
-        'Berat_Badan_Acuan_X': np.array([30.0, 50.0, 75.0, 100.0]), 
+        # Menggunakan data dari kelompok 65-80 th (BB 53) dan 80+ th (BB 53) dan penyesuaian BB 75, 90, 100
+        'Berat_Badan_Acuan_X': np.array([53.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1300, 1600, 2000, 2400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([45, 58, 70, 85]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([35, 45, 65, 85]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([200, 230, 300, 370]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
-            'Besi (Fe)': {'data': np.array([8, 8, 8, 8]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Energi': {'data': np.array([1550, 1750, 1950, 2150]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([58, 68, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([45, 60, 75, 90]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([230, 260, 290, 320]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([22, 25, 27, 29]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([1550, 1700, 1850, 2000]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
 }
@@ -113,8 +121,8 @@ st.set_page_config(
 )
 
 st.title("⚙️ Kalkulator Estimasi Kebutuhan Gizi Harian (Metode Lagrange)")
-# MODIFIKASI: Teks di bawah ini sudah disingkat sesuai permintaan.
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) **berdasarkan Berat Badan**.")
+# Teks pengantar yang disingkat sesuai permintaan
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) **berdasarkan Berat Badan target**.")
 st.markdown("---")
 
 # --- 1. Input Parameter (Side Bar) ---
@@ -137,7 +145,7 @@ with st.sidebar:
         index=0,
     )
 
-    # Input Berat Badan Target (Batasan 30-100 kg tetap ada di sini secara teknis)
+    # Input Berat Badan Target 
     BB_Target_Val = st.number_input(
         '3. Berat Badan Target (kg):',
         min_value=30.0,
@@ -223,4 +231,3 @@ if st.session_state['hitung']:
             
     except Exception as e:
         st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
-
