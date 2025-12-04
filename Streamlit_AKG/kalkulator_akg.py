@@ -26,10 +26,8 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN (DATA AKG 2019 DENGAN RENTANG USIA BARU)
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN (DATA AIR DIUBAH KE LITER)
 # ----------------------------------------------------------------------
-# Dewasa: 19-60 th
-# Lansia: 61+ th
 
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
@@ -42,10 +40,11 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([65, 80, 85, 95, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([300, 350, 400, 470, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([28, 34, 37, 37, 42]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1850, 2100, 2300, 2500, 2600]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            # DATA AIR DIUBAH KE LITER ( dibagi 1000 )
+            'Air': {'data': np.array([1.85, 2.10, 2.30, 2.50, 2.60]), 'unit': 'L', 'desc': 'Kebutuhan Air'}, 
         }
     },
-    'Laki-laki (Dewasa 19-60 th)': { # NAMA KELOMPOK DEWASA BARU
+    'Laki-laki (Dewasa 19-60 th)': {
         # BB acuan: 60, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([60.0, 75.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
@@ -54,11 +53,12 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([70, 85, 105, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([415, 450, 500, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([36, 40, 43, 45]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([2500, 2700, 2900, 3100]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            # DATA AIR DIUBAH KE LITER ( dibagi 1000 )
+            'Air': {'data': np.array([2.50, 2.70, 2.90, 3.10]), 'unit': 'L', 'desc': 'Kebutuhan Air'}, 
         }
     },
-    'Laki-laki (Lansia 61+ th)': { # NAMA KELOMPOK LANSIA BARU
-        # BB acuan: 58, 70, 80, 90, 100 kg (Lebih detail di rentang BB rendah)
+    'Laki-laki (Lansia 61+ th)': {
+        # BB acuan: 58, 70, 80, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([58.0, 70.0, 80.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1800, 2000, 2200, 2350, 2550]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -66,7 +66,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([50, 60, 70, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([275, 300, 320, 360, 400]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([25, 27, 28, 30, 32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1800, 1950, 2100, 2200, 2400]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            # DATA AIR DIUBAH KE LITER ( dibagi 1000 )
+            'Air': {'data': np.array([1.80, 1.95, 2.10, 2.20, 2.40]), 'unit': 'L', 'desc': 'Kebutuhan Air'}, 
         }
     },
     
@@ -80,10 +81,11 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([65, 70, 70, 90, 110]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([280, 300, 300, 380, 470]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([27, 29, 29, 33, 38]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1850, 2100, 2150, 2300, 2500]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            # DATA AIR DIUBAH KE LITER ( dibagi 1000 )
+            'Air': {'data': np.array([1.85, 2.10, 2.15, 2.30, 2.50]), 'unit': 'L', 'desc': 'Kebutuhan Air'},
         }
     },
-    'Perempuan (Dewasa 19-60 th)': { # NAMA KELOMPOK DEWASA BARU
+    'Perempuan (Dewasa 19-60 th)': {
         # BB acuan: 55, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([55.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
@@ -92,11 +94,12 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([65, 80, 95, 115]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([360, 400, 440, 480]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([32, 35, 38, 41]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([2350, 2550, 2750, 2950]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            # DATA AIR DIUBAH KE LITER ( dibagi 1000 )
+            'Air': {'data': np.array([2.35, 2.55, 2.75, 2.95]), 'unit': 'L', 'desc': 'Kebutuhan Air'}, 
         }
     },
-    'Perempuan (Lansia 61+ th)': { # NAMA KELOMPOK LANSIA BARU
-        # BB acuan: 53, 65, 75, 90, 100 kg (Lebih detail di rentang BB rendah)
+    'Perempuan (Lansia 61+ th)': {
+        # BB acuan: 53, 65, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([53.0, 65.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1550, 1650, 1750, 1950, 2150]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -104,7 +107,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([45, 50, 60, 75, 90]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([230, 250, 260, 290, 320]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([22, 24, 25, 27, 29]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1550, 1600, 1700, 1850, 2000]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            # DATA AIR DIUBAH KE LITER ( dibagi 1000 )
+            'Air': {'data': np.array([1.55, 1.60, 1.70, 1.85, 2.00]), 'unit': 'L', 'desc': 'Kebutuhan Air'}, 
         }
     },
 }
@@ -194,6 +198,7 @@ if st.session_state['hitung']:
         
         with col_res:
              st.subheader(f"🎯 Kebutuhan {Jenis_Gizi_Key}")
+             # Satuan output akan otomatis menjadi 'L' jika Jenis_Gizi_Key adalah 'Air'
              st.metric(
                 label=f"BB Target {BB_Target_Val} kg (TB {TB_Val} cm)", 
                 value=f"{hasil_estimasi:.2f} {Unit_Gizi}",
