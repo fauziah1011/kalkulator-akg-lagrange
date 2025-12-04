@@ -42,7 +42,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([65, 80, 85, 95, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([300, 350, 400, 470, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([28, 34, 37, 37, 42]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1850, 2100, 2300, 2500, 2600]), 'unit': 'l', 'desc': 'Kebutuhan Air'},
+            'Air': {'data': np.array([1850, 2100, 2300, 2500, 2600]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Laki-laki (Dewasa 19-60 th)': { # NAMA KELOMPOK DEWASA BARU
@@ -54,7 +54,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([70, 85, 105, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([415, 450, 500, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([36, 40, 43, 45]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([2500, 2700, 2900, 3100]), 'unit': 'l', 'desc': 'Kebutuhan Air'},
+            'Air': {'data': np.array([2500, 2700, 2900, 3100]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Laki-laki (Lansia 61+ th)': { # NAMA KELOMPOK LANSIA BARU
@@ -66,7 +66,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([50, 60, 70, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([275, 300, 320, 360, 400]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([25, 27, 28, 30, 32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1800, 1950, 2100, 2200, 2400]), 'unit': 'l', 'desc': 'Kebutuhan Air'},
+            'Air': {'data': np.array([1800, 1950, 2100, 2200, 2400]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     
@@ -80,7 +80,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([65, 70, 70, 90, 110]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([280, 300, 300, 380, 470]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([27, 29, 29, 33, 38]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1850, 2100, 2150, 2300, 2500]), 'unit': 'l', 'desc': 'Kebutuhan Air'},
+            'Air': {'data': np.array([1850, 2100, 2150, 2300, 2500]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Perempuan (Dewasa 19-60 th)': { # NAMA KELOMPOK DEWASA BARU
@@ -92,7 +92,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([65, 80, 95, 115]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([360, 400, 440, 480]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([32, 35, 38, 41]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([2350, 2550, 2750, 2950]), 'unit': 'l', 'desc': 'Kebutuhan Air'},
+            'Air': {'data': np.array([2350, 2550, 2750, 2950]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     'Perempuan (Lansia 61+ th)': { # NAMA KELOMPOK LANSIA BARU
@@ -104,7 +104,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Lemak Total': {'data': np.array([45, 50, 60, 75, 90]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([230, 250, 260, 290, 320]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Serat': {'data': np.array([22, 24, 25, 27, 29]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1550, 1600, 1700, 1850, 2000]), 'unit': 'l', 'desc': 'Kebutuhan Air'},
+            'Air': {'data': np.array([1550, 1600, 1700, 1850, 2000]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
 }
@@ -257,4 +257,3 @@ if st.session_state['hitung']:
             
     except Exception as e:
         st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
-
