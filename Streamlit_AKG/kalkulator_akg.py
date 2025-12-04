@@ -28,13 +28,13 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
 # ----------------------------------------------------------------------
 # BAGIAN 2: SUMBER DATA AKG RUJUKAN (DATA AKG 2019 VERSI DETAIL)
 # ----------------------------------------------------------------------
-# Data diambil dari beberapa kelompok umur yang berdekatan untuk mendapatkan titik BB acuan yang berbeda (minimal 2 titik)
+# Data disusun dari berbagai kelompok umur untuk mendapatkan titik BB acuan yang cukup.
 # Gizi yang diambil: Energi, Protein, Lemak Total, Karbohidrat, Serat, Air.
 
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
     'Laki-laki (Remaja 10-18 th)': {
-        # Menggunakan data dari kelompok 10-12 th (BB 36), 13-15 th (BB 50), 16-18 th (BB 60)
+        # BB acuan: 36, 50, 60, 75, 100 kg
         'Berat_Badan_Acuan_X': np.array([36.0, 50.0, 60.0, 75.0, 100.0]),
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([2000, 2400, 2650, 2900, 3400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'},
@@ -46,7 +46,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
         }
     },
     'Laki-laki (Dewasa 19-64 th)': {
-        # Menggunakan data dari kelompok 19-29 th (BB 60), 30-49 th (BB 60) dan penyesuaian BB 75, 90, 100
+        # BB acuan: 60, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([60.0, 75.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([2550, 2800, 3100, 3400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -58,7 +58,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
         }
     },
     'Laki-laki (Lansia 65-80+ th)': {
-        # Menggunakan data dari kelompok 65-80 th (BB 58) dan 80+ th (BB 58) dan penyesuaian BB 75, 90, 100
+        # BB acuan: 58, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([58.0, 75.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1800, 2100, 2350, 2550]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -72,7 +72,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
     
     # B. PEREMPUAN
     'Perempuan (Remaja 10-18 th)': {
-        # Menggunakan data dari kelompok 10-12 th (BB 38), 13-15 th (BB 48), 16-18 th (BB 52)
+        # BB acuan: 38, 48, 52, 75, 100 kg
         'Berat_Badan_Acuan_X': np.array([38.0, 48.0, 52.0, 75.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1900, 2050, 2100, 2400, 2800]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'},
@@ -84,7 +84,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
         }
     },
     'Perempuan (Dewasa 19-64 th)': {
-        # Menggunakan data dari kelompok 19-29 th (BB 55), 30-49 th (BB 56) dan penyesuaian BB 75, 90, 100
+        # BB acuan: 55, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([55.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([2250, 2500, 2750, 3000]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'},
@@ -96,7 +96,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
         }
     },
     'Perempuan (Lansia 65-80+ th)': {
-        # Menggunakan data dari kelompok 65-80 th (BB 53) dan 80+ th (BB 53) dan penyesuaian BB 75, 90, 100
+        # BB acuan: 53, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([53.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1550, 1750, 1950, 2150]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -145,7 +145,7 @@ with st.sidebar:
         index=0,
     )
 
-    # Input Berat Badan Target 
+    # Input Berat Badan Target
     BB_Target_Val = st.number_input(
         '3. Berat Badan Target (kg):',
         min_value=30.0,
@@ -154,6 +154,17 @@ with st.sidebar:
         step=0.1,
         format="%.1f",
         help="Masukkan BB antara 30.0 kg hingga 100.0 kg"
+    )
+
+    # Input Tinggi Badan (Tambahan baru)
+    TB_Val = st.number_input(
+        '4. Tinggi Badan (cm):',
+        min_value=100.0,
+        max_value=220.0,
+        value=165.0, # Nilai default TB rata-rata
+        step=0.1,
+        format="%.1f",
+        help="Masukkan Tinggi Badan dalam satuan cm."
     )
     st.markdown("---")
     
@@ -174,7 +185,7 @@ if st.session_state['hitung']:
         Unit_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['unit']
         Deskripsi_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['desc']
         
-        # Estimasi Nilai
+        # Estimasi Nilai Lagrange
         hasil_estimasi = Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, BB_Target_Val)
 
         st.header(f"Hasil Estimasi untuk {Kelompok_Populasi_Key}")
@@ -185,7 +196,7 @@ if st.session_state['hitung']:
         with col_res:
              st.subheader(f"🎯 Kebutuhan {Jenis_Gizi_Key}")
              st.metric(
-                label=f"BB Target {BB_Target_Val} kg", 
+                label=f"BB Target {BB_Target_Val} kg (TB {TB_Val} cm)", 
                 value=f"{hasil_estimasi:.2f} {Unit_Gizi}",
                 delta=f"Basis: {X_data_BB.min()} - {X_data_BB.max()} kg",
                 delta_color="off"
@@ -194,8 +205,24 @@ if st.session_state['hitung']:
         with col_info:
             st.info(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
-        st.markdown("---")
+        # Logika IMT (Koreksi Tambahan)
+        TB_meter = TB_Val / 100
+        IMT = BB_Target_Val / (TB_meter ** 2)
+        
+        st.subheader("Pengecekan Indeks Massa Tubuh (IMT)")
+        st.metric(label="IMT Anda", value=f"{IMT:.2f}")
 
+        if IMT < 18.5:
+            st.warning("⚠️ Status IMT Anda: **Kekurangan Berat Badan**.\nPerkiraan gizi ini dihitung berdasarkan target BB Anda. Disarankan konsultasi dengan ahli gizi untuk rencana penambahan berat badan yang aman.")
+        elif IMT >= 18.5 and IMT < 25.0:
+            st.success("✅ Status IMT Anda: **Normal**.\nPerkiraan gizi ini sesuai untuk BB dan TB ideal.")
+        elif IMT >= 25.0 and IMT < 30.0:
+            st.warning("🔶 Status IMT Anda: **Kelebihan Berat Badan (Pre-obesitas)**.\nPerkiraan gizi ini dihitung berdasarkan target BB Anda. Disarankan konsultasi dengan ahli gizi untuk rencana penurunan berat badan.")
+        else:
+            st.error("🛑 Status IMT Anda: **Obesitas**.\nPerkiraan gizi ini dihitung berdasarkan target BB Anda. **Sangat disarankan** konsultasi dengan ahli gizi dan dokter.")
+        
+        st.markdown("---")
+        
         # Tampilkan Data Acuan dan Visualisasi
         colA, colB = st.columns([1, 1])
         
