@@ -14,6 +14,7 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     hasil_estimasi = 0.0
     
     if len(np.unique(X_Acuan)) < n:
+        # Jika ada BB Acuan yang sama, Streamlit akan menampilkan error
         st.error("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
         return 0.0
 
@@ -112,7 +113,8 @@ st.set_page_config(
 )
 
 st.title("⚙️ Kalkulator Estimasi Kebutuhan Gizi Harian (Metode Lagrange)")
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
+# MODIFIKASI: Teks di bawah ini sudah disingkat sesuai permintaan.
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) **berdasarkan Berat Badan target**.")
 st.markdown("---")
 
 # --- 1. Input Parameter (Side Bar) ---
@@ -135,7 +137,7 @@ with st.sidebar:
         index=0,
     )
 
-    # Input Berat Badan Target
+    # Input Berat Badan Target (Batasan 30-100 kg tetap ada di sini secara teknis)
     BB_Target_Val = st.number_input(
         '3. Berat Badan Target (kg):',
         min_value=30.0,
@@ -149,7 +151,6 @@ with st.sidebar:
     
     # Tombol Hitung
     if st.button('Hitung Estimasi 🚀', use_container_width=True, type="primary"):
-        # Menyimpan status hitung ke session state
         st.session_state['hitung'] = True
 
 # Inisialisasi session state
