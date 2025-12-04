@@ -26,10 +26,10 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN (DATA AKG 2019 VERSI DETAIL)
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN (DATA AKG 2019 DENGAN RENTANG USIA BARU)
 # ----------------------------------------------------------------------
-# Data disusun dari berbagai kelompok umur untuk mendapatkan titik BB acuan yang cukup.
-# Gizi yang diambil: Energi, Protein, Lemak Total, Karbohidrat, Serat, Air.
+# Dewasa: 19-60 th
+# Lansia: 61+ th
 
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
@@ -45,7 +45,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Air': {'data': np.array([1850, 2100, 2300, 2500, 2600]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
-    'Laki-laki (Dewasa 19-64 th)': {
+    'Laki-laki (Dewasa 19-60 th)': { # NAMA KELOMPOK DEWASA BARU
         # BB acuan: 60, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([60.0, 75.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
@@ -57,16 +57,16 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Air': {'data': np.array([2500, 2700, 2900, 3100]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
-    'Laki-laki (Lansia 65-80+ th)': {
-        # BB acuan: 58, 75, 90, 100 kg
-        'Berat_Badan_Acuan_X': np.array([58.0, 75.0, 90.0, 100.0]),
+    'Laki-laki (Lansia 61+ th)': { # NAMA KELOMPOK LANSIA BARU
+        # BB acuan: 58, 70, 80, 90, 100 kg (Lebih detail di rentang BB rendah)
+        'Berat_Badan_Acuan_X': np.array([58.0, 70.0, 80.0, 90.0, 100.0]),
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1800, 2100, 2350, 2550]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([64, 75, 88, 100]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([50, 65, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([275, 320, 360, 400]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Serat': {'data': np.array([25, 28, 30, 32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1800, 2000, 2200, 2400]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            'Energi': {'data': np.array([1800, 2000, 2200, 2350, 2550]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([64, 70, 78, 88, 100]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([50, 60, 70, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([275, 300, 320, 360, 400]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([25, 27, 28, 30, 32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([1800, 1950, 2100, 2200, 2400]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
     
@@ -83,7 +83,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Air': {'data': np.array([1850, 2100, 2150, 2300, 2500]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
-    'Perempuan (Dewasa 19-64 th)': {
+    'Perempuan (Dewasa 19-60 th)': { # NAMA KELOMPOK DEWASA BARU
         # BB acuan: 55, 75, 90, 100 kg
         'Berat_Badan_Acuan_X': np.array([55.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
@@ -95,16 +95,16 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Air': {'data': np.array([2350, 2550, 2750, 2950]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
-    'Perempuan (Lansia 65-80+ th)': {
-        # BB acuan: 53, 75, 90, 100 kg
-        'Berat_Badan_Acuan_X': np.array([53.0, 75.0, 90.0, 100.0]), 
+    'Perempuan (Lansia 61+ th)': { # NAMA KELOMPOK LANSIA BARU
+        # BB acuan: 53, 65, 75, 90, 100 kg (Lebih detail di rentang BB rendah)
+        'Berat_Badan_Acuan_X': np.array([53.0, 65.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
-            'Energi': {'data': np.array([1550, 1750, 1950, 2150]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
-            'Protein': {'data': np.array([58, 68, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
-            'Lemak Total': {'data': np.array([45, 60, 75, 90]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
-            'Karbohidrat': {'data': np.array([230, 260, 290, 320]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Serat': {'data': np.array([22, 25, 27, 29]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
-            'Air': {'data': np.array([1550, 1700, 1850, 2000]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
+            'Energi': {'data': np.array([1550, 1650, 1750, 1950, 2150]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([58, 62, 68, 80, 95]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([45, 50, 60, 75, 90]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([230, 250, 260, 290, 320]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Serat': {'data': np.array([22, 24, 25, 27, 29]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},
+            'Air': {'data': np.array([1550, 1600, 1700, 1850, 2000]), 'unit': 'ml', 'desc': 'Kebutuhan Air'},
         }
     },
 }
@@ -121,7 +121,6 @@ st.set_page_config(
 )
 
 st.title("⚙️ Kalkulator Estimasi Kebutuhan Gizi Harian (Metode Lagrange)")
-# Teks pengantar yang disingkat sesuai permintaan
 st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) **berdasarkan Berat Badan target**.")
 st.markdown("---")
 
@@ -134,7 +133,7 @@ with st.sidebar:
     Kelompok_Populasi_Key = st.selectbox(
         '1. Pilih Kelompok Usia:',
         Kelompok_options,
-        index=1,
+        index=2, # Default ke Dewasa Laki-laki
     )
 
     # Dropdown Jenis Gizi
@@ -156,7 +155,7 @@ with st.sidebar:
         help="Masukkan BB antara 30.0 kg hingga 100.0 kg"
     )
 
-    # Input Tinggi Badan (Tambahan baru)
+    # Input Tinggi Badan
     TB_Val = st.number_input(
         '4. Tinggi Badan (cm):',
         min_value=100.0,
