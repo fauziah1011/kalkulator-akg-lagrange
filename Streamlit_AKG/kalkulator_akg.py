@@ -15,7 +15,6 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     
     # Cek duplikasi nilai X (Berat Badan Acuan)
     if len(np.unique(X_Acuan)) < n:
-        # Mengubah ini menjadi raise agar ditangkap di blok try/except utama
         raise ValueError("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
         
     # Rumus Interpolasi Lagrange
@@ -104,7 +103,46 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
 }
 
 # ----------------------------------------------------------------------
-# BAGIAN 3: ANTARMUKA STREAMLIT
+# BAGIAN 3: FUNGSI SARAN KONSUMSI BARU
+# ----------------------------------------------------------------------
+def Saran_Konsumsi(Jenis_Gizi_Key):
+    """Memberikan saran makanan/minuman berdasarkan jenis gizi yang dipilih."""
+    
+    if Jenis_Gizi_Key == 'Energi':
+        return """
+        * **Sumber Utama Karbohidrat Kompleks (Energi Tahan Lama):** Nasi merah, ubi jalar, oatmeal, roti gandum utuh.
+        * **Tambahkan Lemak Sehat:** Alpukat, kacang-kacangan (almond, kenari), minyak zaitun untuk memasak.
+        """
+    elif Jenis_Gizi_Key == 'Protein':
+        return """
+        * **Protein Hewani:** Daging tanpa lemak (dada ayam, ikan salmon), telur, produk susu rendah lemak (yogurt, keju).
+        * **Protein Nabati:** Tahu, tempe, kacang-kacangan (lentil, buncis), *chia seeds*.
+        """
+    elif Jenis_Gizi_Key == 'Lemak Total':
+        return """
+        * **Pilih Lemak Tak Jenuh (Sehat):** Ikan berlemak (makarel, sarden), alpukat, biji-bijian, minyak zaitun/canola.
+        * **Hindari Lemak Trans:** Makanan cepat saji, gorengan yang dipanaskan ulang, kue kering kemasan.
+        """
+    elif Jenis_Gizi_Key == 'Karbohidrat':
+        return """
+        * **Karbohidrat Kompleks (Utama):** Nasi cokelat/merah, sereal gandum utuh, pasta gandum, kentang.
+        * **Hindari Gula Berlebihan:** Minuman manis, permen, dan makanan olahan tinggi gula.
+        """
+    elif Jenis_Gizi_Key == 'Serat':
+        return """
+        * **Buah dan Sayuran:** Apel (dengan kulit), pir, brokoli, wortel, sayuran hijau gelap.
+        * **Biji-bijian dan Polong-polongan:** Kacang merah, kacang hijau, biji-bijian utuh, *flaxseed*.
+        """
+    elif Jenis_Gizi_Key == 'Air':
+        return """
+        * **Air Putih adalah Kunci:** Minum secara teratur, jangan tunggu haus.
+        * **Sumber Hidrasi Lain:** Teh herbal tanpa gula, air kelapa, buah-buahan tinggi air (semangka, melon).
+        """
+    else:
+        return "Tidak ada saran spesifik tersedia untuk jenis gizi ini."
+
+# ----------------------------------------------------------------------
+# BAGIAN 4: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
 
 # Konfigurasi Halaman dan Judul
@@ -114,8 +152,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("🔢 Kalkulator Estimasi Kebutuhan Gizi **Individual** (Metode Lagrange)")
-st.markdown("Aplikasi ini menghitung **satu jenis gizi** yang Anda pilih berdasarkan Berat Badan target.")
+st.title("🌟 Kalkulator Nutrisi Presisi: Estimasi Kebutuhan Gizi Harian")
+# REVISI TEKS MARKDOWN UTAMA
+st.markdown("""
+Aplikasi ini menggunakan metode Interpolasi Lagrange yang canggih untuk memproyeksikan **satu jenis gizi** spesifik yang Anda butuhkan, berdasarkan usia dan target Berat Badan ideal Anda. **Mulai hitungan nutrisi terbaik Anda dari *sidebar*!**
+""")
 st.markdown("---")
 
 # --- 1. Input Parameter (Side Bar) ---
@@ -130,8 +171,7 @@ with st.sidebar:
         index=2, # Default ke Dewasa Laki-laki
     )
     
-    # --- TAMBAHAN: Dropdown Jenis Gizi Individual ---
-    # Mendapatkan pilihan gizi berdasarkan kelompok usia yang dipilih
+    # Dropdown Jenis Gizi Individual
     Gizi_options = list(Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'].keys())
     Jenis_Gizi_Key = st.selectbox(
         '2. Pilih Jenis Kebutuhan Gizi:',
@@ -165,16 +205,15 @@ with st.sidebar:
     
     # Fungsi yang dipanggil saat tombol ditekan
     def run_calculation():
-        # Ketika tombol ditekan, set status hitung menjadi True
         st.session_state['run_calculation'] = True
         
-    # Tombol Hitung - Mengubah Label dan menggunakan on_click
+    # Tombol Hitung
     st.button(f'Hitung Estimasi {Jenis_Gizi_Key} 🚀', 
               on_click=run_calculation,
               use_container_width=True, 
               type="primary")
 
-# Inisialisasi session state (menggunakan kunci 'run_calculation' yang lebih aman)
+# Inisialisasi session state
 if 'run_calculation' not in st.session_state:
     st.session_state['run_calculation'] = False
 
@@ -209,9 +248,17 @@ if st.session_state.get('run_calculation', False):
             )
 
         with col_info:
-            st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
-            st.markdown("Untuk menghitung gizi lainnya, silakan ganti pilihan Anda di *sidebar*.")
+            # REVISI TEKS MARKDOWN HASIL
+            st.success(f"🎉 **SELAMAT!** Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+            st.markdown("Angka ini adalah panduan personal untuk mencapai target kesehatan Anda. Ganti pilihan Anda di *sidebar* untuk eksplorasi nutrisi lainnya!")
 
+        st.markdown("---")
+        
+        # ----------------------------------------------------------------------
+        ## 💡 Saran Konsumsi Harian
+        # ----------------------------------------------------------------------
+        st.subheader(f"Saran Makanan & Minuman untuk Mencapai Target **{Jenis_Gizi_Key}**")
+        st.markdown(Saran_Konsumsi(Jenis_Gizi_Key))
         st.markdown("---")
         
         # --- Pengecekan IMT ---
@@ -234,12 +281,12 @@ if st.session_state.get('run_calculation', False):
         
         st.markdown("---")
         
-        # --- Tampilkan Data Acuan dan Visualisasi (Hanya untuk gizi yang dipilih) ---
+        # --- Tampilkan Data Acuan dan Visualisasi ---
         
         colA, colB = st.columns([1, 1])
         
         with colA:
-            st.subheader("Titik Data Rujukan AKG")
+            st.subheader("Tabel Data Rujukan AKG")
             df_data = pd.DataFrame({
                 f'Berat Badan Acuan (kg, X)': X_data_BB,
                 f'{Deskripsi_Gizi} Rujukan ({Unit_Gizi}, Y)': Y_data_Gizi
