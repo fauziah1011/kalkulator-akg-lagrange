@@ -15,9 +15,9 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     
     # Cek duplikasi nilai X (Berat Badan Acuan)
     if len(np.unique(X_Acuan)) < n:
-        st.error("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
-        return 0.0
-
+        # Mengubah ini menjadi raise agar ditangkap di blok try/except utama
+        raise ValueError("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
+        
     # Rumus Interpolasi Lagrange
     for i in range(n):
         Basis_Li = 1.0
@@ -109,13 +109,13 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
 
 # Konfigurasi Halaman dan Judul
 st.set_page_config(
-    page_title="Kalkulator AKG Makro Lagrange",
+    page_title="Kalkulator AKG Makro Individual (Lagrange)",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-st.title("⚙️ Kalkulator Estimasi Kebutuhan Gizi Makro + Air (Metode Lagrange)")
-st.markdown("Aplikasi ini berfokus pada estimasi **Energi, Protein, Lemak, Karbohidrat, Serat, dan Air** harian berdasarkan Berat Badan (BB) target.")
+st.title("🔢 Kalkulator Estimasi Kebutuhan Gizi **Individual** (Metode Lagrange)")
+st.markdown("Aplikasi ini menghitung **satu jenis gizi** yang Anda pilih berdasarkan Berat Badan target.")
 st.markdown("---")
 
 # --- 1. Input Parameter (Side Bar) ---
@@ -129,11 +129,20 @@ with st.sidebar:
         Kelompok_options,
         index=2, # Default ke Dewasa Laki-laki
     )
+    
+    # --- TAMBAHAN: Dropdown Jenis Gizi Individual ---
+    # Mendapatkan pilihan gizi berdasarkan kelompok usia yang dipilih
+    Gizi_options = list(Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'].keys())
+    Jenis_Gizi_Key = st.selectbox(
+        '2. Pilih Jenis Kebutuhan Gizi:',
+        Gizi_options,
+        index=0, # Default ke Energi
+    )
     st.markdown("---")
 
     # Input Berat Badan Target
     BB_Target_Val = st.number_input(
-        '2. Berat Badan Target (kg):',
+        '3. Berat Badan Target (kg):',
         min_value=30.0,
         max_value=100.0,
         value=60.0,
@@ -144,7 +153,7 @@ with st.sidebar:
 
     # Input Tinggi Badan
     TB_Val = st.number_input(
-        '3. Tinggi Badan (cm):',
+        '4. Tinggi Badan (cm):',
         min_value=100.0,
         max_value=220.0,
         value=165.0, # Nilai default TB rata-rata
@@ -154,53 +163,54 @@ with st.sidebar:
     )
     st.markdown("---")
     
-    # Tombol Hitung
-    if st.button('Hitung Semua Estimasi Makro 🚀', use_container_width=True, type="primary"):
-        st.session_state['hitung'] = True
+    # Fungsi yang dipanggil saat tombol ditekan
+    def run_calculation():
+        # Ketika tombol ditekan, set status hitung menjadi True
+        st.session_state['run_calculation'] = True
+        
+    # Tombol Hitung - Mengubah Label dan menggunakan on_click
+    st.button(f'Hitung Estimasi {Jenis_Gizi_Key} 🚀', 
+              on_click=run_calculation,
+              use_container_width=True, 
+              type="primary")
 
-# Inisialisasi session state
-if 'hitung' not in st.session_state:
-    st.session_state['hitung'] = False
+# Inisialisasi session state (menggunakan kunci 'run_calculation' yang lebih aman)
+if 'run_calculation' not in st.session_state:
+    st.session_state['run_calculation'] = False
 
 # --- 2. Logika Perhitungan & Output Utama ---
-if st.session_state['hitung']:
-    try:
-        st.header(f"Hasil Estimasi untuk {Kelompok_Populasi_Key} (BB: {BB_Target_Val} kg)")
-        
-        # Inisialisasi list untuk menyimpan hasil
-        results = []
-        
-        # Hitung semua makronutrien yang diminta
-        for Jenis_Gizi_Key, data_gizi in Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'].items():
-            
-            X_data_BB = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Berat_Badan_Acuan_X']
-            Y_data_Gizi = data_gizi['data']
-            Unit_Gizi = data_gizi['unit']
-            Deskripsi_Gizi = data_gizi['desc']
-            
-            # Estimasi Nilai Lagrange
-            hasil_estimasi = Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, BB_Target_Val)
-            
-            results.append({
-                'Gizi': Jenis_Gizi_Key,
-                'Nilai Estimasi': f"{hasil_estimasi:.2f}",
-                'Unit': Unit_Gizi,
-                'Deskripsi': Deskripsi_Gizi
-            })
 
-        # --- Tampilkan Hasil Utama dalam bentuk Tabel (Metric) ---
-        st.subheader("📊 Ringkasan Estimasi Kebutuhan Makronutrien Harian")
+# Cek apakah status 'run_calculation' True
+if st.session_state.get('run_calculation', False):
+    try:
+        # Ambil Data
+        X_data_BB = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Berat_Badan_Acuan_X']
+        data_gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]
         
-        # Mengatur tampilan dengan 3 kolom
-        cols = st.columns(3)
+        Y_data_Gizi = data_gizi['data']
+        Unit_Gizi = data_gizi['unit']
+        Deskripsi_Gizi = data_gizi['desc']
         
-        for i, res in enumerate(results):
-            col_index = i % 3  # Menentukan kolom (0, 1, atau 2)
-            cols[col_index].metric(
-                label=f"🎯 {res['Gizi']}", 
-                value=f"{res['Nilai Estimasi']} {res['Unit']}",
-                delta=res['Deskripsi']
+        # Estimasi Nilai Lagrange
+        hasil_estimasi = Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, BB_Target_Val)
+
+        st.header(f"Hasil Estimasi **{Jenis_Gizi_Key}** untuk {Kelompok_Populasi_Key}")
+
+        # --- Tampilkan Hasil Utama (Metrik) ---
+        col_res, col_info = st.columns([1, 2])
+        
+        with col_res:
+             st.subheader(f"🎯 Kebutuhan **{Jenis_Gizi_Key}**")
+             st.metric(
+                label=f"BB Target {BB_Target_Val} kg (TB {TB_Val} cm)", 
+                value=f"{hasil_estimasi:.2f} {Unit_Gizi}",
+                delta=f"Basis Acuan: {X_data_BB.min()} - {X_data_BB.max()} kg",
+                delta_color="off"
             )
+
+        with col_info:
+            st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+            st.markdown("Untuk menghitung gizi lainnya, silakan ganti pilihan Anda di *sidebar*.")
 
         st.markdown("---")
         
@@ -224,30 +234,31 @@ if st.session_state['hitung']:
         
         st.markdown("---")
         
-        # --- Tampilkan Data Acuan dan Visualisasi (Kurva Energi sebagai contoh) ---
+        # --- Tampilkan Data Acuan dan Visualisasi (Hanya untuk gizi yang dipilih) ---
         
-        # Kita tampilkan visualisasi untuk Energi dan Protein saja sebagai contoh
-        gizi_untuk_plot = ['Energi', 'Protein']
-        col_plot_1, col_plot_2 = st.columns(2)
+        colA, colB = st.columns([1, 1])
         
-        for i, gizi_key in enumerate(gizi_untuk_plot):
-            data_gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][gizi_key]
+        with colA:
+            st.subheader("Titik Data Rujukan AKG")
+            df_data = pd.DataFrame({
+                f'Berat Badan Acuan (kg, X)': X_data_BB,
+                f'{Deskripsi_Gizi} Rujukan ({Unit_Gizi}, Y)': Y_data_Gizi
+            })
+            st.dataframe(df_data, use_container_width=True)
             
-            X_data_BB = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Berat_Badan_Acuan_X']
-            Y_data_Gizi = data_gizi['data']
-            Unit_Gizi = data_gizi['unit']
-            Deskripsi_Gizi = data_gizi['desc']
-            hasil_estimasi = next(res['Nilai Estimasi'] for res in results if res['Gizi'] == gizi_key) # Ambil hasil dari list
-
+        with colB:
+            st.subheader(f"Kurva Estimasi Lagrange: {Jenis_Gizi_Key}")
+            
+            # Visualisasi Plot Matplotlib
             min_BB = X_data_BB.min()
             max_BB = X_data_BB.max()
             X_plot = np.linspace(min_BB, max_BB, 100)
             Y_plot = [Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, x) for x in X_plot]
             
-            fig, ax = plt.subplots(figsize=(7, 4))
+            fig, ax = plt.subplots(figsize=(8, 5))
             ax.scatter(X_data_BB, Y_data_Gizi, color='red', s=100, label='Titik Data AKG Rujukan', zorder=5)
             ax.plot(X_plot, Y_plot, color='blue', linestyle='-', label='Kurva Model Estimasi Lagrange')
-            ax.scatter(BB_Target_Val, float(hasil_estimasi), color='green', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6)
+            ax.scatter(BB_Target_Val, hasil_estimasi, color='green', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6)
             
             ax.set_title(f"Estimasi {Deskripsi_Gizi} vs Berat Badan")
             ax.set_xlabel("Berat Badan (kg)")
@@ -255,14 +266,10 @@ if st.session_state['hitung']:
             ax.grid(True, linestyle='--', alpha=0.6)
             ax.legend()
             
-            if i == 0:
-                with col_plot_1:
-                    st.subheader(f"Kurva Estimasi {gizi_key}")
-                    st.pyplot(fig) 
-            else:
-                with col_plot_2:
-                    st.subheader(f"Kurva Estimasi {gizi_key}")
-                    st.pyplot(fig)
+            st.pyplot(fig)
             
     except Exception as e:
-        st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
+        st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}. Pastikan data rujukan valid.")
+        
+    # Nonaktifkan status hitung untuk iterasi berikutnya (Penting untuk menghindari loop)
+    st.session_state['run_calculation'] = False
