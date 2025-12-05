@@ -152,7 +152,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("NutriMatch: Kebutuhan Gizi yang Pas Buat Kamu")
+st.title("🧮NutriMatch: Kebutuhan Gizi yang Pas Buat Kamu 🍳")
 # REVISI TEKS MARKDOWN UTAMA
 st.markdown("""
 Aplikasi ini pakai metode Interpolasi Lagrange buat ngebantu kamu ngitung satu *kebutuhan gizi* secara akurat, sesuai usia dan target berat badan idealmu.
@@ -321,4 +321,5 @@ if st.session_state.get('run_calculation', False):
         
     # Nonaktifkan status hitung untuk iterasi berikutnya (Penting untuk menghindari loop)
     st.session_state['run_calculation'] = False
+
 
