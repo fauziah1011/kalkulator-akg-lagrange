@@ -13,12 +13,10 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     n = len(X_Acuan)
     hasil_estimasi = 0.0
     
-    # Cek duplikasi nilai X (Berat Badan Acuan)
     if len(np.unique(X_Acuan)) < n:
-        st.error("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
+        # st.error("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
         return 0.0
 
-    # Rumus Interpolasi Lagrange
     for i in range(n):
         Basis_Li = 1.0
         for j in range(n):
@@ -28,9 +26,27 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN (HANYA MAKRONUTRIEN + AIR)
+# BAGIAN 2: FUNGSI SARAN MAKANAN (BARU)
 # ----------------------------------------------------------------------
 
+def Beri_Saran_Makanan(jenis_gizi):
+    """Memberikan saran makanan sumber utama berdasarkan jenis gizi."""
+    saran = {
+        'Energi': 'Fokus pada keseimbangan porsi. Pilih sumber karbohidrat kompleks (nasi merah, gandum utuh) dan hindari kalori kosong dari minuman manis.',
+        'Protein': 'Tingkatkan asupan dari: **Hewani** (daging tanpa lemak, ikan, telur, susu, keju) dan **Nabati** (tahu, tempe, kacang-kacangan, *lentil*).',
+        'Lemak Total': 'Fokus pada Lemak Tak Jenuh: **Sumber** (alpukat, minyak zaitun, ikan berlemak, kacang-kacangan, biji-bijian). **Batasi** makanan yang digoreng dan lemak jenuh.',
+        'Karbohidrat': 'Prioritaskan **Karbohidrat Kompleks** seperti nasi merah, kentang, ubi, oatmeal, dan produk gandum utuh. Batasi gula sederhana.',
+        'Serat': 'Tingkatkan konsumsi **Sayuran Hijau** (bayam, brokoli), **Buah-buahan** (apel, pisang, pir), dan **Biji-bijian Utuh**.',
+        'Air': 'Pastikan minum air putih secara teratur sepanjang hari. Konsumsi buah dan sayur yang tinggi kadar airnya (semangka, mentimun).'
+    }
+    return saran.get(jenis_gizi, 'Tidak ada saran spesifik untuk komponen gizi ini.')
+
+
+# ----------------------------------------------------------------------
+# BAGIAN 3: SUMBER DATA AKG RUJUKAN
+# ----------------------------------------------------------------------
+
+# (Data AKG Rujukan dari bagian sebelumnya dipindahkan ke sini)
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
     'Laki-laki (Remaja 10-18 th)': {
@@ -104,7 +120,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
 }
 
 # ----------------------------------------------------------------------
-# BAGIAN 3: ANTARMUKA STREAMLIT
+# BAGIAN 4: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
 
 # Konfigurasi Halaman dan Judul
@@ -127,7 +143,7 @@ with st.sidebar:
     Kelompok_Populasi_Key = st.selectbox(
         '1. Pilih Kelompok Usia:',
         Kelompok_options,
-        index=2, # Default ke Dewasa Laki-laki
+        index=2,
     )
     st.markdown("---")
 
@@ -147,7 +163,7 @@ with st.sidebar:
         '3. Tinggi Badan (cm):',
         min_value=100.0,
         max_value=220.0,
-        value=165.0, # Nilai default TB rata-rata
+        value=165.0,
         step=0.1,
         format="%.1f",
         help="Masukkan Tinggi Badan dalam satuan cm."
@@ -167,7 +183,6 @@ if st.session_state['hitung']:
     try:
         st.header(f"Hasil Estimasi untuk {Kelompok_Populasi_Key} (BB: {BB_Target_Val} kg)")
         
-        # Inisialisasi list untuk menyimpan hasil
         results = []
         
         # Hitung semua makronutrien yang diminta
@@ -183,7 +198,7 @@ if st.session_state['hitung']:
             
             results.append({
                 'Gizi': Jenis_Gizi_Key,
-                'Nilai Estimasi': f"{hasil_estimasi:.2f}",
+                'Nilai Estimasi': float(f"{hasil_estimasi:.2f}"), # Simpan sebagai float untuk saran
                 'Unit': Unit_Gizi,
                 'Deskripsi': Deskripsi_Gizi
             })
@@ -191,42 +206,46 @@ if st.session_state['hitung']:
         # --- Tampilkan Hasil Utama dalam bentuk Tabel (Metric) ---
         st.subheader("📊 Ringkasan Estimasi Kebutuhan Makronutrien Harian")
         
-        # Mengatur tampilan dengan 3 kolom
-        cols = st.columns(3)
-        
-        for i, res in enumerate(results):
-            col_index = i % 3  # Menentukan kolom (0, 1, atau 2)
-            cols[col_index].metric(
-                label=f"🎯 {res['Gizi']}", 
-                value=f"{res['Nilai Estimasi']} {res['Unit']}",
-                delta=res['Deskripsi']
-            )
+        # Dataframe untuk menampilkan hasil dan saran
+        df_results = pd.DataFrame(results)
+        df_results['Nilai Estimasi (Unit)'] = df_results['Nilai Estimasi'].astype(str) + ' ' + df_results['Unit']
+        df_results['Saran Makanan 💡'] = df_results['Gizi'].apply(Beri_Saran_Makanan)
+
+        # Tampilkan hanya kolom yang relevan untuk hasil akhir
+        st.dataframe(
+            df_results[['Gizi', 'Nilai Estimasi (Unit)', 'Saran Makanan 💡']], 
+            use_container_width=True, 
+            hide_index=True
+        )
 
         st.markdown("---")
         
-        # --- Pengecekan IMT ---
+        # --- Pengecekan IMT & Visualisasi (Sama seperti sebelumnya) ---
+        
         st.subheader("Pengecekan Indeks Massa Tubuh (IMT)")
         TB_meter = TB_Val / 100
         IMT = BB_Target_Val / (TB_meter ** 2)
         
-        st.metric(label="IMT Anda", value=f"{IMT:.2f}")
-
-        if IMT < 18.5:
-            st.warning("⚠️ Status IMT Anda: **Kekurangan Berat Badan**.")
-        elif IMT >= 18.5 and IMT < 25.0:
-            st.success("✅ Status IMT Anda: **Normal**.")
-        elif IMT >= 25.0 and IMT < 30.0:
-            st.warning("🔶 Status IMT Anda: **Kelebihan Berat Badan (Pre-obesitas)**.")
-        else:
-            st.error("🛑 Status IMT Anda: **Obesitas**.")
+        col_imt, col_status = st.columns([1, 2])
         
-        st.info("Catatan: Estimasi AKG ini disesuaikan dengan Berat Badan target Anda.")
+        with col_imt:
+            st.metric(label="IMT Anda", value=f"{IMT:.2f}")
+
+        with col_status:
+            if IMT < 18.5:
+                st.warning("⚠️ Status IMT Anda: **Kekurangan Berat Badan**. Perlu penambahan BB melalui makanan padat gizi.")
+            elif IMT >= 18.5 and IMT < 25.0:
+                st.success("✅ Status IMT Anda: **Normal**. Jaga keseimbangan porsi makan sesuai estimasi gizi di atas.")
+            elif IMT >= 25.0 and IMT < 30.0:
+                st.warning("🔶 Status IMT Anda: **Kelebihan Berat Badan (Pre-obesitas)**. Kurangi porsi makanan berenergi dan lemak tinggi.")
+            else:
+                st.error("🛑 Status IMT Anda: **Obesitas**. Sangat disarankan konsultasi dengan ahli gizi/dokter.")
         
         st.markdown("---")
+
+        # Visualisasi (Tetap menampilkan Energi dan Protein sebagai contoh)
+        st.subheader("Kurva Estimasi Lagrange (Energi dan Protein)")
         
-        # --- Tampilkan Data Acuan dan Visualisasi (Kurva Energi sebagai contoh) ---
-        
-        # Kita tampilkan visualisasi untuk Energi dan Protein saja sebagai contoh
         gizi_untuk_plot = ['Energi', 'Protein']
         col_plot_1, col_plot_2 = st.columns(2)
         
@@ -236,8 +255,7 @@ if st.session_state['hitung']:
             X_data_BB = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Berat_Badan_Acuan_X']
             Y_data_Gizi = data_gizi['data']
             Unit_Gizi = data_gizi['unit']
-            Deskripsi_Gizi = data_gizi['desc']
-            hasil_estimasi = next(res['Nilai Estimasi'] for res in results if res['Gizi'] == gizi_key) # Ambil hasil dari list
+            hasil_estimasi = df_results[df_results['Gizi'] == gizi_key]['Nilai Estimasi'].iloc[0]
 
             min_BB = X_data_BB.min()
             max_BB = X_data_BB.max()
@@ -247,9 +265,9 @@ if st.session_state['hitung']:
             fig, ax = plt.subplots(figsize=(7, 4))
             ax.scatter(X_data_BB, Y_data_Gizi, color='red', s=100, label='Titik Data AKG Rujukan', zorder=5)
             ax.plot(X_plot, Y_plot, color='blue', linestyle='-', label='Kurva Model Estimasi Lagrange')
-            ax.scatter(BB_Target_Val, float(hasil_estimasi), color='green', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6)
+            ax.scatter(BB_Target_Val, hasil_estimasi, color='green', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6)
             
-            ax.set_title(f"Estimasi {Deskripsi_Gizi} vs Berat Badan")
+            ax.set_title(f"Estimasi {gizi_key} vs Berat Badan")
             ax.set_xlabel("Berat Badan (kg)")
             ax.set_ylabel(f"Kebutuhan Harian ({Unit_Gizi})")
             ax.grid(True, linestyle='--', alpha=0.6)
@@ -257,11 +275,9 @@ if st.session_state['hitung']:
             
             if i == 0:
                 with col_plot_1:
-                    st.subheader(f"Kurva Estimasi {gizi_key}")
                     st.pyplot(fig) 
             else:
                 with col_plot_2:
-                    st.subheader(f"Kurva Estimasi {gizi_key}")
                     st.pyplot(fig)
             
     except Exception as e:
