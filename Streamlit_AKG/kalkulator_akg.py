@@ -152,10 +152,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("🌟 Kalkulator Nutrisi Presisi: Estimasi Kebutuhan Gizi Harian")
+st.title("NutriMatch: Kebutuhan Gizi yang Pas Buat Kamu")
 # REVISI TEKS MARKDOWN UTAMA
 st.markdown("""
-Aplikasi ini menggunakan metode Interpolasi Lagrange yang canggih untuk memproyeksikan **satu jenis gizi** spesifik yang Anda butuhkan, berdasarkan usia dan target Berat Badan ideal Anda. **Mulai hitungan nutrisi terbaik Anda dari *sidebar*!**
+Aplikasi ini pakai metode Interpolasi Lagrange buat ngebantu kamu ngitung satu *kebutuhan gizi* secara akurat, sesuai usia dan target berat badan idealmu.
+Mulai cek kebutuhan nutrisimu lewat menu di sidebar ya!
 """)
 st.markdown("---")
 
@@ -320,3 +321,4 @@ if st.session_state.get('run_calculation', False):
         
     # Nonaktifkan status hitung untuk iterasi berikutnya (Penting untuk menghindari loop)
     st.session_state['run_calculation'] = False
+
