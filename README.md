@@ -10,7 +10,7 @@ Intinya: Gak perlu pusing sama perhitungan manual lagi!
 
 ## 🤩 LANGSUNG COBAIN AJA!
 ## 🖼️ Tampilan Aplikasi
-<img width="1264" height="608" alt="image" src="https://github.com/user-attachments/assets/6c34b8f8-e0ef-4339-b7ad-8a523ff7efc9" />
+<img width="1264" height="608" alt="image" src="https://github.com/user-attachments/assets/76736047-f6b1-490b-baea-87e1c16358d6" />
 
 Udah siap pakai dan *live*! Buktiin sendiri deh akurasinya:
 
