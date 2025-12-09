@@ -62,7 +62,7 @@ dengan **![Simbol L_j(x)](assets/L_j_x.png)** adalah basis polinomial Lagrange y
 #### Penerapan pada Gizi
 
 1.  **Input:** Pengguna memasukkan usia, berat, dan jenis kelamin ($x$).
-2.  **Titik Data ($x_i, y_i$):** Kami menggunakan data AKG standar dari Kemenkes/FAO/WHO yang tersedia untuk kelompok usia/berat badan tertentu.
+2.  **Titik Data **![Simbol L_j(x)](assets/x_i,y_i.png)**:** Kami menggunakan data AKG standar dari Kemenkes/FAO/WHO yang tersedia untuk kelompok usia/berat badan tertentu.
 3.  **Output:** Aplikasi menghitung $P(x)$ untuk mendapatkan estimasi AKG (*y*) yang sangat personal dan spesifik untuk input pengguna tersebut, bukan hanya pembulatan ke kategori terdekat.
 
 ---
