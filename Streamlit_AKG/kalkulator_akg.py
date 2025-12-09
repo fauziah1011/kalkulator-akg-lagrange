@@ -396,11 +396,4 @@ with tab_metode:
     """)
 
 ---
-## 📝 Langkah Selanjutnya
 
-1.  **Ganti Total File:** *Copy* dan *paste* seluruh kode di atas untuk menggantikan isi file **`Streamlit_AKG/kalkulator_akg.py`** Anda di GitHub.
-2.  **Commit Perubahan:** Simpan dan *commit* perubahan di GitHub.
-3.  **Reboot Aplikasi:** Kembali ke dasbor Streamlit Cloud Anda, klik **(⋮)**, dan pilih **"Reboot"**.
-4.  **Buka Ulang:** Buka URL aplikasi Anda dan lakukan *hard refresh* (**Ctrl + F5** atau **Cmd + Shift + R**).
-
-**Catatan:** Batasan usia di *dropdown* sekarang akan berbunyi **10-20 th**, **21-60 th**, dan **61-80+ th**. Jika Anda memiliki data kelompok usia lain (misalnya Anak-anak), Anda harus menambahkannya kembali ke bagian **BAGIAN 2**.
