@@ -1,25 +1,81 @@
 # 🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange
 
-Halo *gaes*! Selamat datang di *project* keren ini.
-
-Ini adalah aplikasi web **Streamlit** yang kita bikin pakai **Python**. Fungsinya? Biar kalian bisa hitung **Angka Kecukupan Gizi (AKG)** dengan hasil yang *super duper* akurat karena kita pakai *skill* matematika tingkat tinggi: **Metode Lagrange!**
-
-Intinya: Gak perlu pusing sama perhitungan manual lagi!
+> *Membuat Gizi Akurat, Cepat, dan Anti Ribet dengan Kekuatan Matematika Tingkat Tinggi.*
 
 ---
 
-## 🤩 LANGSUNG COBAIN AJA!
-## 🖼️ Tampilan Aplikasi
-<img width="1458" height="314" alt="image" src="https://github.com/user-attachments/assets/90fd5a3b-78ce-4ad9-bea8-add0a453e65b" />
+## ✨ Pencetus Semangat: Tentang Proyek Ini
 
-Udah siap pakai dan *live*! Buktiin sendiri deh akurasinya:
+Halo *pejuang* kesehatan dan teknologi! Selamat datang di **GIZI ANTI RIBET: Kalkulator AKG Lagrange**.
 
-👉 **[GAS, KLIK DI SINI BUAT COBA KALKULATOR LAGRANGE!](https://bit.ly/3KILFZb)** 👈
+Ini adalah aplikasi web **Streamlit** yang kita bangun menggunakan **Python**. Aplikasi ini dirancang untuk mengatasi masalah perhitungan Angka Kecukupan Gizi (AKG) yang seringkali rumit.
+
+**Keunggulan utama kami?** Kami menggunakan metode interpolasi **Lagrange** untuk memastikan hasil perhitungan Anda **sangat akurat** dan *super duper* presisi. Gak perlu pusing sama perhitungan manual lagi!
 
 ---
 
-## 🛠️ Tim Tempur & Senjata Rahasia
+## ➡️ LANGSUNG COBAIN & BUKTIKAN AKURASINYA!
 
-Proyek ini ada berkat:
-* **Python & Streamlit:** Senjata utama kita buat bikin aplikasi web.
-* **Lagrange:** Otak di balik akurasi perhitungan gizinya.
+Berikut adalah tampilan antarmuka aplikasi kita yang intuitif:
+
+<img width="1458" height="314" alt="Tampilan Antarmuka Aplikasi Kalkulator Gizi Lagrange" src="https://github.com/user-attachments/assets/90fd5a3b-78ce-4ad9-bea8-add0a453e65b" />
+
+Aplikasi sudah *live* dan siap digunakan. Buktikan sendiri seberapa akurat hasilnya:
+
+### 👉 **[GAS, KLIK DI SINI BUAT COBA KALKULATOR LAGRANGE!](https://bit.ly/3KILFZb)** 👈
+
+---
+
+## ⚙️ The Engine Room: Teknologi & Metode
+
+Proyek ini dibangun di atas fondasi teknologi dan algoritma yang kuat:
+
+* **💻 Bahasa Pemrograman:** Python
+* **🌐 Kerangka Kerja Web:** [Streamlit](https://streamlit.io/) (Membuat *data app* jadi super mudah)
+* **🧠 Algoritma Inti:** **Metode Interpolasi Lagrange**
+    * *Mengapa Lagrange?* Metode ini memungkinkan kita untuk mengestimasi AKG dengan presisi tinggi di antara titik-titik data standar, memberikan hasil yang lebih personal dan akurat dibandingkan kalkulator statis.
+
+---
+
+## 🤝 Kontributor & Tim Tempur (Profil)
+
+Proyek keren ini terwujud berkat kolaborasi tim yang bersemangat. Kami terbuka untuk kontribusi!
+
+| Nama | GitHub |
+| :--- | :--- | :--- |
+| **[Fauziah Rahma]** | [@UsernameAnda](https://github.com/UsernameAnda) |
+| **[Aliffia Hilva]** | [@UsernameAnggota2](https://github.com/UsernameAnggota2) |
+
+---
+
+## 🛠️ Cara Menjalankan Secara Lokal (Setup)
+
+Tertarik untuk memodifikasi atau berkontribusi? Ikuti langkah-langkah sederhana ini:
+
+1.  **Clone Repository:**
+    ```bash
+    git clone [https://github.com/UsernameAnda/nama-repo-anda.git](https://github.com/UsernameAnda/nama-repo-anda.git)
+    cd nama-repo-anda
+    ```
+2.  **Buat & Aktifkan Virtual Environment:**
+    ```bash
+    python -m venv venv
+    # Pada Linux/MacOS
+    source venv/bin/activate
+    ```
+3.  **Instal Dependensi:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  **Jalankan Aplikasi Streamlit:**
+    ```bash
+    streamlit run app.py
+    ```
+
+---
+
+## 📄 Lisensi & Status
+
+* **Status Proyek:** Aktif / Selesai (Pilih salah satu)
+* **Versi Saat Ini:** v1.0.0
+* Proyek ini didistribusikan di bawah **[Nama Lisensi, contoh: MIT License]**. Lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
