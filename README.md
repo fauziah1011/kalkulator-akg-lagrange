@@ -39,9 +39,7 @@ Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya te
 
 #### Konsep Matematis
 
-Misalkan kita memiliki 
-<img width="348" height="70" alt="image" src="https://github.com/user-attachments/assets/23e3de3f-71d2-4528-b3d0-aff91eb332e2" />
-Polinomial Lagrange $P(x)$ didefinisikan sebagai:
+Misalkan kita memiliki $n$ titik data AKG $\left(x_0, y_0\right), \left(x_1, y_1\right), \ldots, \left(x_{n-1}, y_{n-1}\right)$. Polinomial Lagrange $P(x)$ didefinisikan sebagai:
 
 $$
 P(x) = \sum_{j=0}^{n-1} y_j L_j(x)
@@ -52,6 +50,15 @@ dengan $L_j(x)$ adalah basis polinomial Lagrange yang didefinisikan sebagai:
 $$
 L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}
 $$
+
+#### Penerapan pada Gizi
+
+1.  **Input:** Pengguna memasukkan usia, berat, dan jenis kelamin ($x$).
+2.  **Titik Data ($x_i, y_i$):** Kami menggunakan data AKG standar dari Kemenkes/FAO/WHO yang tersedia untuk kelompok usia/berat badan tertentu.
+3.  **Output:** Aplikasi menghitung $P(x)$ untuk mendapatkan estimasi AKG (*y*) yang sangat personal dan spesifik untuk input pengguna tersebut, bukan hanya pembulatan ke kategori terdekat.
+
+---
+Apakah Anda ingin saya mengganti bagian The Engine Room pada draf README lengkap Anda dengan detail materi yang baru ini?
 
 #### Penerapan pada Gizi
 
