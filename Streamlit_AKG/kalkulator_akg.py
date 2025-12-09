@@ -76,6 +76,23 @@ st.markdown("""
         color: #000000;
         font-weight: bold;
     }
+    
+    /* 10. Perbaikan Warna Teks pada Tab (Ini yang menyebabkan teks "mati") */
+    /* Target: Label tab yang tidak aktif */
+    .stTabs [data-baseweb="tab"] {
+        color: #F0F0F0 !important; /* Teks Tab Tidak Aktif Putih/Terang */
+        background-color: #19376D; /* Latar belakang tab */
+    }
+    /* Target: Label tab yang aktif */
+    .stTabs [aria-selected="true"] {
+        color: #FFB300 !important; /* Teks Tab Aktif Kuning Emas */
+        background-color: #0B2447; /* Latar belakang tab aktif */
+    }
+    /* Target: Garis bawah tab (indikator) */
+    .stTabs [data-baseweb="tab-list"] button:focus:after {
+        border-color: #FFB300 !important; /* Garis bawah Kuning Emas */
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -441,20 +458,11 @@ with tab_hasil:
 
                 
         except Exception as e:
+            # Perhatikan: Logika penanganan error harus di dalam blok try
+            # dan harus mengikuti aturan indentasi Python.
+            # Kesalahan IndentationError yang muncul sebelumnya karena 
+            # panduan teks di akhir file tidak dihilangkan.
             st.error(f"❌ ERROR KRITIS: Terjadi Kesalahan Dalam Perhitungan: {e}")
             st.session_state['hitung'] = False
     else:
         st.warning("Tekan tombol **'HITUNG ESTIMASI GIZI SEKARANG 🎯'** di tab **Input Parameter** untuk memulai analisis.")
-
-
-# --- TAB 3: Tentang Metode ---
-with tab_metode:
-    st.header("🧠 Otak di Balik Akurasi: Metode Interpolasi Lagrange")
-    st.info("Kalkulator ini menggunakan Interpolasi Lagrange, sebuah metode matematika canggih yang memungkinkan kita mengestimasi nilai Angka Kecukupan Gizi (AKG) yang sangat spesifik.")
-    st.subheader("Konsep Matematis Polinomial Lagrange")
-    st.latex(r"""
-        P(x) = \sum_{j=0}^{n} y_j L_j(x)
-    """)
-    st.latex(r"""
-        \text{dimana Basis Polinomial } L_j(x) = \prod_{i=0, i \neq j}^{n} \frac{x - x_i}{x_j - x_i}
-    """)
