@@ -48,11 +48,11 @@ Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya te
 
 #### Konsep Matematis
 
-Misalkan kita memiliki $n$ titik data AKG yang sudah terstandarisasi:
+Misalkan kita memiliki n titik data AKG yang sudah terstandarisasi:
 
 ![Notasi Titik Data AKG](assets/titik_data_akg.png) 
 
-Polinomial Lagrange $P(x)$ didefinisikan sebagai:
+Polinomial Lagrange P(x) didefinisikan sebagai:
 
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
 
