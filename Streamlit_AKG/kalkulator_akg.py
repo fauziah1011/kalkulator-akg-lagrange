@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA BOLD DAN KONTRAST TEKS) ---
+# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -13,17 +13,21 @@ st.markdown("""
         font-family: 'Georgia', serif; 
     }
 
-    /* 2. Latar Belakang Sidebar (Kontras Lebih Cerah) */
-    .st-emotion-cache-1ldfqsx { 
+    /* 2. Latar Belakang Sidebar & Containers */
+    .st-emotion-cache-1ldfqsx, .st-emotion-cache-h44nrf, .st-emotion-cache-12fm521 { 
         background-color: #19376D; /* Biru sedang pekat */
+        border-radius: 12px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5); 
+        padding: 25px;
+        color: #FFFFFF;
     }
-
-    /* 3. Warna Teks di Sidebar */
+    
+    /* FIX: Teks di Sidebar */
     .st-emotion-cache-1ldfqsx label, .st-emotion-cache-1ldfqsx h2 {
-        color: #F0F0F0 !important; /* Teks terang di sidebar */
+        color: #F0F0F0 !important;
     }
 
-    /* 4. Judul Utama (Sangat Mencolok - Kuning Emas/Orange) */
+    /* 3. Judul Utama */
     h1 {
         color: #FFB300; /* Kuning Emas/Amber Pekat */
         text-align: center;
@@ -32,7 +36,7 @@ st.markdown("""
         border-bottom: 3px solid #FFB300;
     }
     
-    /* 5. Subjudul & Header lainnya */
+    /* 4. Subjudul & Header lainnya */
     h2, h3, h4 {
         color: #A5D7E8; /* Biru Muda Cerah/Kontras */
         font-weight: 700;
@@ -40,98 +44,73 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 6. Styling Kotak Output/Widget (Memberi bentuk) */
-    .st-emotion-cache-h44nrf, .st-emotion-cache-12fm521 { 
-        border-radius: 12px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5); 
-        padding: 25px;
-        background-color: #19376D; /* Background container lebih gelap dari main */
-        color: #FFFFFF; /* Teks di container Putih */
-        border: 1px solid #A5D7E8;
-    }
-    
-    /* 7. Kotak Success (Hasil Estimasi - GANTI WARNA AGAR TERLIHAT) */
+    /* 5. Kotak Success (Ganti Warna Agar Terlihat) */
     .st-emotion-cache-199v4c3 { 
         background-color: #40A2E3; /* Biru Terang Mencolok */
-        border-left: 8px solid #000000; /* Garis Hitam Tegas */
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 20px;
-        color: #000000; /* Teks Hitam di Success Box (Sangat Terlihat) */
+        border-left: 8px solid #000000;
+        color: #000000; /* Teks Hitam di Success Box */
         font-weight: bold;
     }
     
-    /* 8. Metric (Nilai Angka Sangat Menonjol) */
-    .st-emotion-cache-14xtmhp {
-        color: #FFD700; /* Warna Kuning Emas Murni */
-        font-weight: 900; 
-        font-size: 34px;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    }
-    
-    /* 9. Tombol Hitung */
+    /* 6. Tombol Hitung */
     .st-emotion-cache-1cpx6a9 {
-        background-color: #40A2E3; /* Biru Cerah */
+        background-color: #40A2E3;
         color: #000000;
         font-weight: bold;
     }
     
-    /* 10. Perbaikan Warna Teks pada Tab */
+    /* 7. Perbaikan Warna Teks pada Tab */
     .stTabs [data-baseweb="tab"] {
-        color: #F0F0F0 !important; /* Teks Tab Tidak Aktif Putih/Terang */
-        background-color: #19376D; /* Latar belakang tab */
+        color: #F0F0F0 !important;
+        background-color: #19376D;
     }
     .stTabs [aria-selected="true"] {
-        color: #FFB300 !important; /* Teks Tab Aktif Kuning Emas */
-        background-color: #0B2447; /* Latar belakang tab aktif */
-    }
-    .stTabs [data-baseweb="tab-list"] button:focus:after {
-        border-color: #FFB300 !important; /* Garis bawah Kuning Emas */
+        color: #FFB300 !important;
+        background-color: #0B2447;
     }
 
-    /* 11. FIX: BACKGROUND METRIK HASIL (Dibuat Kontras Coklat Muda/Terang agar Menonjol) */
+    /* 8. FIX: BACKGROUND METRIK HASIL (Kotak Putih/Kontras) */
     .st-emotion-cache-1uj74qj { 
         background-color: #f7f3e8; /* Warna Off-White/Coklat Muda Pucat */
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #A5D7E8;
     }
-
-    /* FIX: WARNA LABEL DI METRIC BOX (Diubah menjadi Hitam/Gelap agar terlihat di Background Terang) */
-    .st-emotion-cache-1uj74qj > div > label {
-        color: #000000 !important; /* Teks label metric Hitam */
-        font-weight: bold;
-    }
     
-    /* FIX: WARNA DELTA/SUBTEKS DI METRIC BOX (Diubah menjadi Hitam/Gelap) */
-    .st-emotion-cache-1uj74qj > div > div:last-child {
-        color: #333333 !important; /* Teks sub metric Abu-abu gelap */
+    /* FIX: WARNA LABEL DI METRIC BOX (Hitam) */
+    .st-emotion-cache-1uj74qj > div > label {
+        color: #000000 !important;
+        font-weight: bold;
     }
     
     /* FIX: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
     .st-emotion-cache-1uj74qj .st-emotion-cache-14xtmhp {
-        color: #19376D; /* Nilai Utama Metric dibuat Biru Gelap agar menonjol di background terang */
+        color: #19376D; /* Biru Gelap agar menonjol di background terang */
     }
     
-    /* 12. FIX LATAR BELAKANG KOTAK INPUT */
-    /* Menargetkan kontainer Streamlit untuk selectbox/number input */
-    .st-emotion-cache-1y4pm5r div, .st-emotion-cache-15tx6ry div {
-        background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
+    /* FIX: WARNA DELTA/SUBTEKS DI METRIC BOX (Abu-abu gelap) */
+    .st-emotion-cache-1uj74qj > div > div:last-child {
+        color: #333333 !important;
     }
 
-    /* Menargetkan input field itu sendiri (Teks input) */
-    [data-baseweb="input"] input, [data-baseweb="select"] div:first-child {
-        background-color: #0B2447 !important; 
+    /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT (Selectbox, Number Input) */
+    /* Targetkan semua elemen yang menjadi container input */
+    [data-baseweb="select"] div:first-child,
+    [data-baseweb="input"] input,
+    .st-emotion-cache-1y4pm5r div, 
+    .st-emotion-cache-15tx6ry div,
+    .st-emotion-cache-1u48l0g { 
+        background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
         color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
     }
     
-    /* FIX: Teks label di atas input field yang sebelumnya hilang/mati (seperti 'Kelompok Usia') */
-    /* Ini adalah perbaikan untuk teks label yang anda bilang 'mati' */
-    .st-emotion-cache-vk3wpw { 
+    /* FIX AGGRESSIVE: Teks label di atas input field ('Kelompok Usia:', 'Berat Badan Target:', dll.) */
+    /* Menargetkan semua label Streamlit */
+    label { 
         color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
     }
     
-    /* FIX: Teks di dalam Selectbox/Dropdown (ketika diklik untuk memilih) */
+    /* FIX: Teks di dalam Selectbox/Dropdown Menu (ketika diklik untuk memilih) */
     [data-baseweb="menu"] li {
         color: #000000 !important; /* Teks di dropdown menu dibuat hitam agar terlihat di background putih/terang dropdown */
     }
@@ -144,12 +123,9 @@ st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk 
 st.markdown("---")
 
 # ----------------------------------------------------------------------
-# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE (TIDAK BERUBAH)
+# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
 # ----------------------------------------------------------------------
 def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
-    """Melakukan estimasi Kebutuhan Gizi harian (Y) berdasarkan Berat Badan (X)
-    menggunakan metode Interpolasi Polinomial Lagrange.
-    """
     n = len(X_Acuan)
     hasil_estimasi = 0.0
     
@@ -168,8 +144,6 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
 # ----------------------------------------------------------------------
 # BAGIAN 2: SUMBER DATA AKG RUJUKAN (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
-
-# Data Air dan Serat (untuk metrik terpisah di hasil)
 Tabel_Kebutuhan_Air_Serat = {
     'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
     'Laki-laki (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 37, 'unit_air': 'liter', 'unit_serat': 'g'},
@@ -179,9 +153,7 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# Data AKG (Hanya gizi yang diinterpolasi)
 Tabel_Kebutuhan_Gizi_Rujukan = {
-    # A. LAKI-LAKI
     'Laki-laki (Remaja 10-20 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
         'Kebutuhan_Gizi': {
@@ -255,7 +227,6 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
 # BAGIAN 3: FUNGSI SARAN MAKANAN (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
 def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi):
-    """Memberikan saran makanan/minuman berdasarkan jenis gizi yang diestimasi."""
     saran = []
     
     if Jenis_Gizi_Key == 'Energi':
@@ -294,7 +265,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi):
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 4: ANTARMUKA STREAMLIT (TIDAK BERUBAH)
+# BAGIAN 4: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
 
 # Konfigurasi Halaman 
@@ -410,7 +381,6 @@ with tab_hasil:
             # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT)
             col_bmi, col_air, col_serat = st.columns(3)
             
-            # Perhatikan: Kotak Metric sekarang memiliki background #f7f3e8
             with col_bmi:
                 st.metric(
                     label="Indeks Massa Tubuh (BMI)",
@@ -461,7 +431,6 @@ with tab_hasil:
                     f'Berat Badan Acuan (kg, X)': X_data_BB,
                     f'{Deskripsi_Gizi} Rujukan ({Unit_Gizi}, Y)': Y_data_Gizi
                 })
-                # Perhatikan: Dataframe akan tetap menggunakan tema gelap di luar styling metric
                 st.dataframe(df_data, use_container_width=True)
                 
                 st.markdown("**Interpretasi Tabel:**")
