@@ -89,15 +89,31 @@ st.markdown("""
         border-color: #FFB300 !important; /* Garis bawah Kuning Emas */
     }
 
-    /* 11. BACKGROUND METRIK HASIL */
+    /* 11. FIX: BACKGROUND METRIK HASIL (Dibuat Kontras Coklat Muda/Terang agar Menonjol) */
     .st-emotion-cache-1uj74qj { 
-        background-color: #19376D; /* Biru sedang pekat (sama dengan sidebar/container) */
+        background-color: #f7f3e8; /* Warna Off-White/Coklat Muda Pucat */
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #A5D7E8;
     }
+
+    /* FIX: WARNA LABEL DI METRIC BOX (Diubah menjadi Hitam/Gelap agar terlihat di Background Terang) */
+    .st-emotion-cache-1uj74qj > div > label {
+        color: #000000 !important; /* Teks label metric Hitam */
+        font-weight: bold;
+    }
     
-    /* 12. FIX LATAR BELAKANG KOTAK INPUT (Penting untuk menghilangkan putih) */
+    /* FIX: WARNA DELTA/SUBTEKS DI METRIC BOX (Diubah menjadi Hitam/Gelap) */
+    .st-emotion-cache-1uj74qj > div > div:last-child {
+        color: #333333 !important; /* Teks sub metric Abu-abu gelap */
+    }
+    
+    /* FIX: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
+    .st-emotion-cache-1uj74qj .st-emotion-cache-14xtmhp {
+        color: #19376D; /* Nilai Utama Metric dibuat Biru Gelap agar menonjol di background terang */
+    }
+    
+    /* 12. FIX LATAR BELAKANG KOTAK INPUT */
     /* Menargetkan kontainer Streamlit untuk selectbox/number input */
     .st-emotion-cache-1y4pm5r div, .st-emotion-cache-15tx6ry div {
         background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
@@ -110,6 +126,7 @@ st.markdown("""
     }
     
     /* FIX: Teks label di atas input field yang sebelumnya hilang/mati (seperti 'Kelompok Usia') */
+    /* Ini adalah perbaikan untuk teks label yang anda bilang 'mati' */
     .st-emotion-cache-vk3wpw { 
         color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
     }
@@ -127,7 +144,7 @@ st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk 
 st.markdown("---")
 
 # ----------------------------------------------------------------------
-# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
+# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
 def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     """Melakukan estimasi Kebutuhan Gizi harian (Y) berdasarkan Berat Badan (X)
@@ -149,7 +166,7 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN (AIR DAN SERAT DIHAPUS DARI PILIHAN GIZI)
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
 
 # Data Air dan Serat (untuk metrik terpisah di hasil)
@@ -235,7 +252,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
     },
 }
 # ----------------------------------------------------------------------
-# BAGIAN 3: FUNGSI SARAN MAKANAN
+# BAGIAN 3: FUNGSI SARAN MAKANAN (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
 def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi):
     """Memberikan saran makanan/minuman berdasarkan jenis gizi yang diestimasi."""
@@ -277,7 +294,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi):
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 4: ANTARMUKA STREAMLIT
+# BAGIAN 4: ANTARMUKA STREAMLIT (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
 
 # Konfigurasi Halaman 
@@ -393,6 +410,7 @@ with tab_hasil:
             # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT)
             col_bmi, col_air, col_serat = st.columns(3)
             
+            # Perhatikan: Kotak Metric sekarang memiliki background #f7f3e8
             with col_bmi:
                 st.metric(
                     label="Indeks Massa Tubuh (BMI)",
@@ -422,7 +440,7 @@ with tab_hasil:
             # Tampilkan Hasil Utama Gizi Lagrange
             st.subheader(f"✅ HASIL ESTIMASI LAGRANGE: {Deskripsi_Gizi}")
             
-            # Tampilkan hasil estimasi dalam kotak SUCCESS (dengan warna yang sudah diubah)
+            # Tampilkan hasil estimasi dalam kotak SUCCESS 
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
             # Saran Makanan
@@ -443,6 +461,7 @@ with tab_hasil:
                     f'Berat Badan Acuan (kg, X)': X_data_BB,
                     f'{Deskripsi_Gizi} Rujukan ({Unit_Gizi}, Y)': Y_data_Gizi
                 })
+                # Perhatikan: Dataframe akan tetap menggunakan tema gelap di luar styling metric
                 st.dataframe(df_data, use_container_width=True)
                 
                 st.markdown("**Interpretasi Tabel:**")
@@ -458,9 +477,9 @@ with tab_hasil:
                 Y_plot = [Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, x) for x in X_plot]
                 
                 fig, ax = plt.subplots(figsize=(8, 5))
-                ax.scatter(X_data_BB, Y_data_Gizi, color='#FFB300', s=100, label='Titik Data AKG Rujukan', zorder=5) # Kuning Emas
-                ax.plot(X_plot, Y_plot, color='#A5D7E8', linestyle='-', label='Kurva Model Estimasi Lagrange') # Biru Muda Cerah
-                ax.scatter(BB_Target_Val, hasil_estimasi, color='#40A2E3', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6) # Biru Terang
+                ax.scatter(X_data_BB, Y_data_Gizi, color='#FFB300', s=100, label='Titik Data AKG Rujukan', zorder=5) 
+                ax.plot(X_plot, Y_plot, color='#A5D7E8', linestyle='-', label='Kurva Model Estimasi Lagrange') 
+                ax.scatter(BB_Target_Val, hasil_estimasi, color='#40A2E3', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6) 
                 
                 # Ubah warna background plot agar sesuai tema gelap
                 ax.set_facecolor('#19376D') 
