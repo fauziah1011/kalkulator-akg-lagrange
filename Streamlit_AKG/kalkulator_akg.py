@@ -13,13 +13,14 @@ st.markdown("""
         font-family: 'Georgia', serif; 
     }
 
-    /* 2. Latar Belakang Sidebar & Containers */
+    /* 2. Latar Belakang Sidebar & Containers (Kotak Utama Input & Hasil) */
     .st-emotion-cache-1ldfqsx, .st-emotion-cache-h44nrf, .st-emotion-cache-12fm521 { 
         background-color: #19376D; /* Biru sedang pekat */
         border-radius: 12px;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5); 
         padding: 25px;
         color: #FFFFFF;
+        border: 1px solid #A5D7E8; /* Garis tepi kontainer */
     }
     
     /* FIX: Teks di Sidebar */
@@ -93,8 +94,7 @@ st.markdown("""
         color: #333333 !important;
     }
 
-    /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT (Selectbox, Number Input) */
-    /* Targetkan semua elemen yang menjadi container input */
+    /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT (Input Field itu sendiri) */
     [data-baseweb="select"] div:first-child,
     [data-baseweb="input"] input,
     .st-emotion-cache-1y4pm5r div, 
@@ -104,24 +104,31 @@ st.markdown("""
         color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
     }
     
-    /* FIX AGGRESSIVE: Teks label di atas input field ('Kelompok Usia:', 'Berat Badan Target:', dll.) */
-    /* Menargetkan semua label Streamlit */
+    /* FIX AGGRESSIVE: Teks label di atas input field */
     label { 
         color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
     }
     
-    /* FIX: Teks di dalam Selectbox/Dropdown Menu (ketika diklik untuk memilih) */
+    /* FIX: Teks di dalam Selectbox/Dropdown Menu */
     [data-baseweb="menu"] li {
-        color: #000000 !important; /* Teks di dropdown menu dibuat hitam agar terlihat di background putih/terang dropdown */
+        color: #000000 !important;
+    }
+
+    /* 🔥 PERBAIKAN FINAL: CONTAINER DI TAB INPUT */
+    /* Menargetkan Wrapper di Tab Input agar memiliki kotak (background) */
+    /* Ini seharusnya membuat seluruh area input (yang tidak dicakup oleh .st-emotion-cache-h44nrf) berkotak */
+    .stTabs > div:first-child + div > div:first-child {
+        background-color: #19376D; /* Warna kotak container input */
+        padding: 30px; 
+        border-radius: 12px;
+        margin-top: 10px; /* Jarak dari tab */
+        border: 1px solid #A5D7E8;
     }
     
 </style>
 """, unsafe_allow_html=True)
-
-st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
-st.markdown("---")
-
+# ... SISA KODE PYTHON TIDAK BERUBAH ...
+# ... (Pastikan Anda tetap menyertakan semua fungsi dan data di bawahnya) ...
 # ----------------------------------------------------------------------
 # BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
 # ----------------------------------------------------------------------
