@@ -1,28 +1,16 @@
 # 🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange
 
-> <font color="blue">Membuat Gizi Akurat, Cepat, dan Anti Ribet</font> dengan Kekuatan Matematika Tingkat Tinggi.
+Halo gaes! Selamat datang di project keren ini.
+
+Ini adalah aplikasi web *Streamlit* yang kita bikin pakai *Python. Fungsinya? Biar kalian bisa hitung **Angka Kecukupan Gizi (AKG)* dengan hasil yang super duper akurat karena kita pakai skill matematika tingkat tinggi: *Metode Lagrange!*
+
+Intinya: Gak perlu pusing sama perhitungan manual lagi!
 
 ---
 
-## ✨ Pencetus Semangat: Tentang Proyek Ini
-
-...
-
-**Keunggulan utama kami?** Kami menggunakan metode interpolasi **Lagrange** untuk memastikan hasil perhitungan Anda <span style="color:red;">sangat akurat</span> dan <span style="color:#1ABC9C;">super duper presisi</span>. Stop pusing, saatnya gizi jadi *effortless*!
-
----
-
-## ➡️ LANGSUNG COBAIN & BUKTIKAN AKURASINYA!
-
-...
-
-### 👉 <font color="#E74C3C">GAS, KLIK DI SINI BUAT COBA KALKULATOR LAGRANGE!</font> 👈
-
----
-
-<img width="1458" height="314" alt="Tampilan Antarmuka Aplikasi Kalkulator Gizi Lagrange" src="https://github.com/user-attachments/assets/90fd5a3b-78ce-4ad9-bea8-add0a453e65b" />
-
-Aplikasi sudah *live* dan siap digunakan. Buktikan sendiri seberapa akurat hasilnya:
+## 🤩 LANGSUNG COBAIN AJA!
+## 🖼 Tampilan Aplikasi
+<img width="1458" height="314" alt="image" src="https://github.com/user-attachments/assets/90fd5a3b-78ce-4ad9-bea8-add0a453e65b" />
 
 ### 👉 **[GAS, KLIK DI SINI BUAT COBA KALKULATOR LAGRANGE!](https://bit.ly/3KILFZb)** 👈
 
