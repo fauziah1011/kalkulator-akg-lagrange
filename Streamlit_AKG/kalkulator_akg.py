@@ -45,14 +45,18 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 5. Kotak Success (Ganti Warna Agar Terlihat) */
+    /* 5. Kotak Success (st.success) */
     .st-emotion-cache-199v4c3 { 
         background-color: #40A2E3; /* Biru Terang Mencolok */
         border-left: 8px solid #000000;
-        color: #000000; /* Teks Hitam di Success Box */
         font-weight: bold;
     }
     
+    /* 🔥 PERBAIKAN PENTING: WARNA TEKS DI KOTAK st.success */
+    .st-emotion-cache-199v4c3 p {
+        color: #FFB300 !important; /* Mengubah teks di st.success menjadi Kuning Emas */
+    }
+
     /* 6. Tombol Hitung */
     .st-emotion-cache-1cpx6a9 {
         background-color: #40A2E3;
