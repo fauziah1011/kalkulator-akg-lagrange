@@ -98,10 +98,15 @@ st.markdown("""
     }
     
     /* 12. FIX LATAR BELAKANG KOTAK INPUT (Penting untuk menghilangkan putih) */
-    /* Target untuk selectbox, number_input, dan text_input field itu sendiri */
-    [data-baseweb="input"], [data-baseweb="select"] div:first-child {
+    /* Menargetkan kontainer Streamlit untuk selectbox/number input */
+    .st-emotion-cache-1y4pm5r div, .st-emotion-cache-15tx6ry div {
         background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
-        color: #F0F0F0 !important; /* Teks dalam input field jadi terang */
+    }
+
+    /* Menargetkan input field itu sendiri (Teks input) */
+    [data-baseweb="input"] input, [data-baseweb="select"] div:first-child {
+        background-color: #0B2447 !important; 
+        color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
     }
     
     /* FIX: Teks label di atas input field yang sebelumnya hilang/mati (seperti 'Kelompok Usia') */
@@ -109,7 +114,7 @@ st.markdown("""
         color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
     }
     
-    /* FIX: Teks di dalam Selectbox/Dropdown (ketika dipilih) */
+    /* FIX: Teks di dalam Selectbox/Dropdown (ketika diklik untuk memilih) */
     [data-baseweb="menu"] li {
         color: #000000 !important; /* Teks di dropdown menu dibuat hitam agar terlihat di background putih/terang dropdown */
     }
@@ -118,7 +123,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target")
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
 st.markdown("---")
 
 # ----------------------------------------------------------------------
@@ -386,7 +391,6 @@ with tab_hasil:
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
             # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT)
-            # Metrik ini sekarang akan memiliki background #19376D
             col_bmi, col_air, col_serat = st.columns(3)
             
             with col_bmi:
