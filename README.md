@@ -37,36 +37,6 @@ Proyek ini tidak hanya sekadar kalkulator, tetapi sebuah implementasi canggih da
 
 Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya tersedia untuk kelompok usia/berat badan tertentu (titik data diskrit). Metode ini memungkinkan kami mengestimasi nilai AKG (*y*) yang presisi untuk setiap input usia/berat badan (*x*) yang berada di antara titik data standar tersebut.
 
-#### Konsep Matematis
-
-Misalkan kita memiliki $n$ titik data AKG $\left(x_0, y_0\right), \left(x_1, y_1\right), \ldots, \left(x_{n-1}, y_{n-1}\right)$. Polinomial Lagrange $P(x)$ didefinisikan sebagai:
-
-$$
-P(x) = \sum_{j=0}^{n-1} y_j L_j(x)
-$$
-
-dengan $L_j(x)$ adalah basis polinomial Lagrange yang didefinisikan sebagai:
-
-$$
-L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}
-$$
-
-#### Penerapan pada Gizi
-
-1.  **Input:** Pengguna memasukkan usia, berat, dan jenis kelamin ($x$).
-2.  **Titik Data ($x_i, y_i$):** Kami menggunakan data AKG standar dari Kemenkes/FAO/WHO yang tersedia untuk kelompok usia/berat badan tertentu.
-3.  **Output:** Aplikasi menghitung $P(x)$ untuk mendapatkan estimasi AKG (*y*) yang sangat personal dan spesifik untuk input pengguna tersebut, bukan hanya pembulatan ke kategori terdekat.
-
----
-Apakah Anda ingin saya mengganti bagian The Engine Room pada draf README lengkap Anda dengan detail materi yang baru ini?
-
-#### Penerapan pada Gizi
-
-1.  **Input:** Pengguna memasukkan usia, berat, dan jenis kelamin ($x$).
-2.  **Titik Data ($x_i, y_i$):** Kami menggunakan data AKG standar dari Kemenkes/FAO/WHO yang tersedia untuk kelompok usia/berat badan tertentu.
-3.  **Output:** Aplikasi menghitung $P(x)$ untuk mendapatkan estimasi AKG (*y*) yang sangat personal dan spesifik untuk input pengguna tersebut, bukan hanya pembulatan ke kategori terdekat.
-
----
 
 ---
 
