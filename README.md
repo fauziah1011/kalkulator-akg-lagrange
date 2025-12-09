@@ -66,7 +66,7 @@ $$
 Proyek keren ini terwujud berkat kolaborasi tim yang bersemangat. Kami terbuka untuk kontribusi!
 
 | Nama | GitHub |
-| **[Fauziah Rahma]** | [@fauziah1011](https://github.com/fauziahrahma) |
+| **[Fauziah Rahma]** | [@fauziah1011](https://github.com/fauziah1011) |
 | **[Aliffia Hilva]** | [@FIADANRARA](https://github.com/FIADANRARA) |
 
 ---
