@@ -89,20 +89,36 @@ st.markdown("""
         border-color: #FFB300 !important; /* Garis bawah Kuning Emas */
     }
 
-    /* 11. BACKGROUND METRIK HASIL (Ini adalah perbaikan yang Anda minta) */
-    /* Menargetkan kontainer yang membungkus st.metric */
-    .st-emotion-cache-1uj74qj { /* Streamlit's container for metrics */
+    /* 11. BACKGROUND METRIK HASIL */
+    .st-emotion-cache-1uj74qj { 
         background-color: #19376D; /* Biru sedang pekat (sama dengan sidebar/container) */
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #A5D7E8;
     }
-
+    
+    /* 12. FIX LATAR BELAKANG KOTAK INPUT (Penting untuk menghilangkan putih) */
+    /* Target untuk selectbox, number_input, dan text_input field itu sendiri */
+    [data-baseweb="input"], [data-baseweb="select"] div:first-child {
+        background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
+        color: #F0F0F0 !important; /* Teks dalam input field jadi terang */
+    }
+    
+    /* FIX: Teks label di atas input field yang sebelumnya hilang/mati (seperti 'Kelompok Usia') */
+    .st-emotion-cache-vk3wpw { 
+        color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
+    }
+    
+    /* FIX: Teks di dalam Selectbox/Dropdown (ketika dipilih) */
+    [data-baseweb="menu"] li {
+        color: #000000 !important; /* Teks di dropdown menu dibuat hitam agar terlihat di background putih/terang dropdown */
+    }
+    
 </style>
 """, unsafe_allow_html=True)
 
 st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target")
 st.markdown("---")
 
 # ----------------------------------------------------------------------
