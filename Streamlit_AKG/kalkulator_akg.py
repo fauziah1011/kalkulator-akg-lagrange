@@ -51,7 +51,6 @@ st.markdown("""
     }
     
     /* 7. Kotak Success (Hasil Estimasi - GANTI WARNA AGAR TERLIHAT) */
-    /* Mengubah warna latar belakang dan teks agar kontras total dengan background Deep Navy */
     .st-emotion-cache-199v4c3 { 
         background-color: #40A2E3; /* Biru Terang Mencolok */
         border-left: 8px solid #000000; /* Garis Hitam Tegas */
@@ -77,20 +76,26 @@ st.markdown("""
         font-weight: bold;
     }
     
-    /* 10. Perbaikan Warna Teks pada Tab (Ini yang menyebabkan teks "mati") */
-    /* Target: Label tab yang tidak aktif */
+    /* 10. Perbaikan Warna Teks pada Tab */
     .stTabs [data-baseweb="tab"] {
         color: #F0F0F0 !important; /* Teks Tab Tidak Aktif Putih/Terang */
         background-color: #19376D; /* Latar belakang tab */
     }
-    /* Target: Label tab yang aktif */
     .stTabs [aria-selected="true"] {
         color: #FFB300 !important; /* Teks Tab Aktif Kuning Emas */
         background-color: #0B2447; /* Latar belakang tab aktif */
     }
-    /* Target: Garis bawah tab (indikator) */
     .stTabs [data-baseweb="tab-list"] button:focus:after {
         border-color: #FFB300 !important; /* Garis bawah Kuning Emas */
+    }
+
+    /* 11. BACKGROUND METRIK HASIL (Ini adalah perbaikan yang Anda minta) */
+    /* Menargetkan kontainer yang membungkus st.metric */
+    .st-emotion-cache-1uj74qj { /* Streamlit's container for metrics */
+        background-color: #19376D; /* Biru sedang pekat (sama dengan sidebar/container) */
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #A5D7E8;
     }
 
 </style>
@@ -365,6 +370,7 @@ with tab_hasil:
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
             # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT)
+            # Metrik ini sekarang akan memiliki background #19376D
             col_bmi, col_air, col_serat = st.columns(3)
             
             with col_bmi:
@@ -458,10 +464,6 @@ with tab_hasil:
 
                 
         except Exception as e:
-            # Perhatikan: Logika penanganan error harus di dalam blok try
-            # dan harus mengikuti aturan indentasi Python.
-            # Kesalahan IndentationError yang muncul sebelumnya karena 
-            # panduan teks di akhir file tidak dihilangkan.
             st.error(f"❌ ERROR KRITIS: Terjadi Kesalahan Dalam Perhitungan: {e}")
             st.session_state['hitung'] = False
     else:
