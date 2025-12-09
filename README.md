@@ -56,7 +56,7 @@ Polinomial Lagrange P(x) didefinisikan sebagai:
 
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
 
-dengan $L_j(x)$ adalah basis polinomial Lagrange yang didefinisikan sebagai:
+dengan **![Simbol L_j(x)](assets/L_j_x.png)** adalah basis polinomial Lagrange yang didefinisikan sebagai:
 
 ![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
 #### Penerapan pada Gizi
