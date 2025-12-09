@@ -135,12 +135,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
+st.title("🧮NutriMatch : Kebutuhan Gizi yang Pas Buat Kamu🍳")
+st.markdown("💡Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
 st.markdown("---")
 
 # ----------------------------------------------------------------------
-# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
+# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE📈
 # ----------------------------------------------------------------------
 def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     n = len(X_Acuan)
@@ -217,7 +217,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subte
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN📊
 # ----------------------------------------------------------------------
 Tabel_Kebutuhan_Air_Serat = {
     'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
@@ -533,3 +533,4 @@ with tab_hasil:
             st.session_state['hitung'] = False
     else:
         st.warning("Tekan tombol **'HITUNG ESTIMASI GIZI SEKARANG 🎯'** di tab **Input Parameter** untuk memulai analisis.")
+
