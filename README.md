@@ -48,16 +48,17 @@ Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya te
 
 #### Konsep Matematis
 
-Misalkan kita memiliki $n$ titik data AKG $\left(x_0, y_0\right), \left(x_1, y_1\right), \ldots, \left(x_{n-1}, y_{n-1}\right)$. Polinomial Lagrange $P(x)$ didefinisikan sebagai:
+Misalkan kita memiliki $n$ titik data AKG yang sudah terstandarisasi:
 
-Polinomial Lagrange P(x) didefinisikan sebagai:
+![Notasi Titik Data AKG](assets/titik_data_akg.png) 
+
+Polinomial Lagrange $P(x)$ didefinisikan sebagai:
 
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
 
-dengan L_j(x) adalah basis polinomial Lagrange yang didefinisikan sebagai:
+dengan $L_j(x)$ adalah basis polinomial Lagrange yang didefinisikan sebagai:
 
 ![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
-
 #### Penerapan pada Gizi
 
 1.  **Input:** Pengguna memasukkan usia, berat, dan jenis kelamin ($x$).
