@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V3) ---
+# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V4) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -45,16 +45,16 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 5. Kotak Success (st.success) */
+    /* 5. Kotak Success (st.success) -> MENGUBAH BACKGROUND MENJADI PUTIH */
     .st-emotion-cache-199v4c3 { 
-        background-color: #40A2E3; /* Biru Terang Mencolok */
-        border-left: 8px solid #000000;
+        background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
+        border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
         font-weight: bold;
     }
     
-    /* 🔥 PERBAIKAN KRUSIAL: WARNA TEKS DI KOTAK st.success */
+    /* 🔥 PERBAIKAN KRUSIAL 1: WARNA TEKS DI KOTAK st.success JADI HITAM */
     .st-emotion-cache-199v4c3 p {
-        color: #FFFFFF !important; /* Mengubah teks di st.success menjadi PUTIH TERANG */
+        color: #000000 !important; /* Teks di st.success menjadi HITAM */
         font-weight: bold !important;
     }
 
@@ -75,28 +75,28 @@ st.markdown("""
         background-color: #0B2447;
     }
 
-    /* 8. FIX: BACKGROUND METRIK HASIL (Kotak Putih/Kontras) */
+    /* 8. FIX: BACKGROUND METRIK HASIL (Kotak Biru Gelap) */
     .st-emotion-cache-1uj74qj { 
-        background-color: #f7f3e8; /* Warna Off-White/Coklat Muda Pucat */
+        background-color: #19376D; /* Background metrik jadi Biru Sedang (gelap) */
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #A5D7E8;
     }
     
-    /* FIX: WARNA LABEL DI METRIC BOX (Hitam) */
+    /* FIX: WARNA LABEL DI METRIC BOX (Putih/Terang) */
     .st-emotion-cache-1uj74qj > div > label {
-        color: #000000 !important;
+        color: #F0F0F0 !important; /* Label Metrik (Indeks Massa Tubuh) jadi PUTIH */
         font-weight: bold;
     }
     
-    /* FIX: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
+    /* 🔥 PERBAIKAN KRUSIAL 2: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
     .st-emotion-cache-1uj74qj .st-emotion-cache-14xtmhp {
-        color: #19376D; /* Biru Gelap agar menonjol di background terang */
+        color: #A5D7E8; /* Nilai Utama (23.4, 2.5 liter) jadi BIRU MUDA */
     }
     
-    /* FIX: WARNA DELTA/SUBTEKS DI METRIC BOX (Abu-abu gelap) */
+    /* 🔥 PERBAIKAN KRUSIAL 3: WARNA DELTA/SUBTEKS DI METRIC BOX */
     .st-emotion-cache-1uj74qj > div > div:last-child {
-        color: #333333 !important;
+        color: #F0F0F0 !important; /* Subteks (Rujukan, Status Gizi) jadi PUTIH */
     }
 
     /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT (Input Field itu sendiri) */
@@ -155,21 +155,21 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# FUNGSI KLASIFIKASI BMI BARU (REVISI WARNA DELTA)
+# FUNGSI KLASIFIKASI BMI BARU (DENGAN EMBELLISHMENT/SIMBOL)
 # ----------------------------------------------------------------------
 def Klasifikasi_BMI(BMI):
     if BMI < 18.5:
-        # Kurus: Merah/Inverse
-        return "Kurus (Underweight)", "inverse" 
+        # Kurus: Merah (inverse)
+        return "⚠️ Kurus (Underweight)", "inverse" 
     elif 18.5 <= BMI < 23.0:
-        # Normal: Hijau/Normal
-        return "Normal", "normal" 
+        # Normal: Hijau (normal)
+        return "✅ Normal", "normal" 
     elif 23.0 <= BMI < 25.0:
-        # Gemuk (Overweight): Menggunakan Merah/Inverse agar lebih menonjolkan risiko
-        return "Gemuk (Overweight)", "inverse" 
+        # Gemuk (Overweight): Kuning (off/gray, tapi kita anggap sebagai kuning visual)
+        return "🟡 Gemuk (Overweight)", "off" 
     else: # BMI >= 25.0
-        # Obesitas: Merah/Inverse
-        return "Obesitas", "inverse" 
+        # Obesitas: Merah (inverse)
+        return "🚨 Obesitas", "inverse" 
 
 # ----------------------------------------------------------------------
 # FUNGSI SARAN MAKANAN DINAMIS BARU
@@ -178,11 +178,14 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Category, A
     saran = []
     
     # 1. Saran Berdasarkan Status Gizi (BMI)
-    if BMI_Category == "Kurus (Underweight)":
+    # Menghilangkan simbol emoji untuk display di saran agar tidak redundan
+    BMI_Clean = BMI_Category.split(' ', 1)[1] if len(BMI_Category.split(' ', 1)) > 1 else BMI_Category
+
+    if "Kurus" in BMI_Clean:
         saran.append("⚠️ **Status Gizi Kurang:** Fokuskan pada makanan berenergi padat dan protein tinggi seperti susu *full cream*, kacang-kacangan, dan protein hewani (daging, telur) untuk menambah berat badan secara sehat.")
-    elif BMI_Category == "Normal":
+    elif "Normal" in BMI_Clean:
         saran.append("🎉 **Status Gizi Normal:** Pertahankan pola makan seimbang (gizi lengkap dan bervariasi) dan kontrol porsi makan Anda untuk menjaga berat badan optimal.")
-    elif BMI_Category == "Gemuk (Overweight)" or BMI_Category == "Obesitas":
+    elif "Gemuk" in BMI_Clean or "Obesitas" in BMI_Clean:
         saran.append("📉 **Status Gizi Berlebih:** Prioritaskan karbohidrat kompleks (oat, nasi merah) dan perbanyak buah serta sayuran. Kurangi makanan manis, tinggi gula, dan tinggi lemak jenuh.")
 
     saran.append("---")
@@ -416,7 +419,7 @@ with tab_hasil:
                     label="Kebutuhan Air Harian",
                     value=f"{Air_Rujukan} {Unit_Air}",
                     delta="Rujukan Kelompok Usia",
-                    delta_color="off"
+                    delta_color="off" # delta_color="off" akan menghasilkan abu-abu, yang di CSS FIX V4 sudah diganti PUTIH
                 )
                 
             with col_serat:
@@ -424,7 +427,7 @@ with tab_hasil:
                     label="Kebutuhan Serat Harian",
                     value=f"{Serat_Rujukan} {Unit_Serat}",
                     delta="Rujukan Kelompok Usia",
-                    delta_color="off"
+                    delta_color="off" # delta_color="off" akan menghasilkan abu-abu, yang di CSS FIX V4 sudah diganti PUTIH
                 )
             
             st.markdown("---")
