@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V4) ---
+# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V5) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -45,14 +45,14 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 5. Kotak Success (st.success) -> MENGUBAH BACKGROUND MENJADI PUTIH */
+    /* 5. Kotak Success (st.success) -> Background PUTIH, Teks HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
         border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
         font-weight: bold;
     }
     
-    /* 🔥 PERBAIKAN KRUSIAL 1: WARNA TEKS DI KOTAK st.success JADI HITAM */
+    /* WARNA TEKS DI KOTAK st.success JADI HITAM */
     .st-emotion-cache-199v4c3 p {
         color: #000000 !important; /* Teks di st.success menjadi HITAM */
         font-weight: bold !important;
@@ -85,33 +85,42 @@ st.markdown("""
     
     /* FIX: WARNA LABEL DI METRIC BOX (Putih/Terang) */
     .st-emotion-cache-1uj74qj > div > label {
-        color: #F0F0F0 !important; /* Label Metrik (Indeks Massa Tubuh) jadi PUTIH */
+        color: #F0F0F0 !important; 
         font-weight: bold;
     }
     
-    /* 🔥 PERBAIKAN KRUSIAL 2: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
+    /* 🔥 PERBAIKAN KRUSIAL 1: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
+    /* Target ke komponen nilai utama (value) */
     .st-emotion-cache-1uj74qj .st-emotion-cache-14xtmhp {
-        color: #A5D7E8; /* Nilai Utama (23.4, 2.5 liter) jadi BIRU MUDA */
+        color: #A5D7E8 !important; /* Nilai Utama (23.4, 2.5 liter) jadi BIRU MUDA */
     }
     
-    /* 🔥 PERBAIKAN KRUSIAL 3: WARNA DELTA/SUBTEKS DI METRIC BOX */
+    /* 🔥 PERBAIKAN KRUSIAL 2: WARNA DELTA/SUBTEKS (Rujukan Usia/Status Gizi) DI METRIC BOX */
+    /* Target ke komponen delta/subteks */
     .st-emotion-cache-1uj74qj > div > div:last-child {
         color: #F0F0F0 !important; /* Subteks (Rujukan, Status Gizi) jadi PUTIH */
     }
+    
+    /* MENGUBAH WARNA HIJAU DEFAULT ST.METRIC MENJADI BIRU */
+    /* Ini menargetkan span yang memiliki warna hijau default Streamlit */
+    [data-testid="stMetricValue"] {
+        color: #A5D7E8 !important; /* Nilai utama metrik jadi BIRU MUDA */
+    }
 
-    /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT (Input Field itu sendiri) */
+
+    /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT */
     [data-baseweb="select"] div:first-child,
     [data-baseweb="input"] input,
     .st-emotion-cache-1y4pm5r div, 
     .st-emotion-cache-15tx6ry div,
     .st-emotion-cache-1u48l0g { 
-        background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
-        color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
+        background-color: #0B2447 !important; 
+        color: #F0F0F0 !important; 
     }
     
     /* FIX AGGRESSIVE: Teks label di atas input field */
     label { 
-        color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
+        color: #A5D7E8 !important; 
     }
     
     /* FIX: Teks di dalam Selectbox/Dropdown Menu */
@@ -121,10 +130,10 @@ st.markdown("""
 
     /* PERBAIKAN FINAL: CONTAINER DI TAB INPUT */
     .stTabs > div:first-child + div > div:first-child {
-        background-color: #19376D; /* Warna kotak container input */
+        background-color: #19376D; 
         padding: 30px; 
         border-radius: 12px;
-        margin-top: 10px; /* Jarak dari tab */
+        margin-top: 10px; 
         border: 1px solid #A5D7E8;
     }
     
@@ -165,7 +174,7 @@ def Klasifikasi_BMI(BMI):
         # Normal: Hijau (normal)
         return "✅ Normal", "normal" 
     elif 23.0 <= BMI < 25.0:
-        # Gemuk (Overweight): Kuning (off/gray, tapi kita anggap sebagai kuning visual)
+        # Gemuk (Overweight): Kuning (off/gray, tetapi akan terlihat kuning/orange di beberapa theme)
         return "🟡 Gemuk (Overweight)", "off" 
     else: # BMI >= 25.0
         # Obesitas: Merah (inverse)
@@ -419,7 +428,7 @@ with tab_hasil:
                     label="Kebutuhan Air Harian",
                     value=f"{Air_Rujukan} {Unit_Air}",
                     delta="Rujukan Kelompok Usia",
-                    delta_color="off" # delta_color="off" akan menghasilkan abu-abu, yang di CSS FIX V4 sudah diganti PUTIH
+                    delta_color="off" 
                 )
                 
             with col_serat:
@@ -427,7 +436,7 @@ with tab_hasil:
                     label="Kebutuhan Serat Harian",
                     value=f"{Serat_Rujukan} {Unit_Serat}",
                     delta="Rujukan Kelompok Usia",
-                    delta_color="off" # delta_color="off" akan menghasilkan abu-abu, yang di CSS FIX V4 sudah diganti PUTIH
+                    delta_color="off" 
                 )
             
             st.markdown("---")
