@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V7) ---
+# --- CSS KUSTOM & TEMA (REVISI V8 - FINAL PERMANEN) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -45,7 +45,7 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
+    /* 🔥 FIX: KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
         border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
@@ -80,6 +80,26 @@ st.markdown("""
         margin-top: 10px; 
         border: 1px solid #A5D7E8;
     }
+
+    /* 🔥 PERBAIKAN TAB KRUSIAL (Warna Oranye) */
+    .stTabs [aria-selected="true"] {
+        /* Warna teks tab aktif */
+        color: #F0F0F0 !important; 
+        /* Tambahkan garis batas tipis cerah */
+        border: 1px solid #FFB300 !important; 
+        border-radius: 6px;
+    }
+    
+    .stTabs [aria-selected="true"]::after {
+        /* Garis bawah tab aktif (Warna Oranye) */
+        background: #FFB300 !important; 
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        /* Pastikan tab tidak aktif punya border */
+        border: 1px solid transparent; 
+        border-radius: 6px;
+    }
     
     /* STYLE UNTUK METRIK CUSTOM (GANTI st.metric) */
     .custom-metric-container {
@@ -97,7 +117,7 @@ st.markdown("""
         margin-bottom: 5px;
     }
     
-    /* 🔥 PERBAIKAN KRUSIAL 2: WARNA NILAI UTAMA BIRU MUDA */
+    /* 🔥 WARNA NILAI UTAMA BIRU MUDA */
     .custom-metric-value {
         color: #A5D7E8; /* Warna Nilai Utama JADI BIRU MUDA */
         font-size: 2.2rem;
@@ -105,7 +125,7 @@ st.markdown("""
         line-height: 1.1;
     }
     
-    /* 🔥 PERBAIKAN KRUSIAL 3: WARNA SUBTEKS PUTIH */
+    /* 🔥 WARNA SUBTEKS PUTIH */
     .custom-metric-subtext {
         color: #F0F0F0; /* Subteks (Rujukan Usia/Status Gizi) JADI PUTIH */
         font-size: 0.9rem;
@@ -197,7 +217,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subte
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN (TIDAK BERUBAH)
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN
 # ----------------------------------------------------------------------
 Tabel_Kebutuhan_Air_Serat = {
     'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
@@ -404,11 +424,10 @@ with tab_hasil:
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
-            # 🚨 IMPLEMENTASI CUSTOM METRIC (WAJIB)
+            # 🚨 IMPLEMENTASI CUSTOM METRIC (WARNA BIRU MUDA & PUTIH CERAH)
             col_bmi, col_air, col_serat = st.columns(3)
             
             with col_bmi:
-                # Mengganti st.metric dengan custom_metric
                 custom_metric(
                     label="Indeks Massa Tubuh (BMI)",
                     value=f"{BMI:.1f}",
@@ -416,7 +435,6 @@ with tab_hasil:
                 )
                 
             with col_air:
-                # Mengganti st.metric dengan custom_metric
                 custom_metric(
                     label="Kebutuhan Air Harian",
                     value=f"{Air_Rujukan} {Unit_Air}",
@@ -424,7 +442,6 @@ with tab_hasil:
                 )
                 
             with col_serat:
-                # Mengganti st.metric dengan custom_metric
                 custom_metric(
                     label="Kebutuhan Serat Harian",
                     value=f"{Serat_Rujukan} {Unit_Serat}",
@@ -437,7 +454,7 @@ with tab_hasil:
             # Tampilkan Hasil Utama Gizi Lagrange
             st.subheader(f"✅ HASIL ESTIMASI LAGRANGE: {Deskripsi_Gizi}")
             
-            # Tampilkan hasil estimasi dalam kotak SUCCESS 
+            # Tampilkan hasil estimasi dalam kotak SUCCESS (PUTIH Pucat, Teks Hitam)
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
             # Saran Makanan (Dinamis)
@@ -512,8 +529,7 @@ with tab_hasil:
 
                 
         except Exception as e:
-            # Mengganti pesan error yang mungkin menimbulkan SyntaxError (image_84dfd5.png)
-            st.error(f"❌ ERROR KRITIS: Terjadi Kesalahan Dalam Perhitungan: {e}")
+            st.error(f"❌ ERROR KRITIS: Terjadi Kesalahan Dalam Perhitungan. Pastikan semua input sudah valid. Detail Error: {e}")
             st.session_state['hitung'] = False
     else:
         st.warning("Tekan tombol **'HITUNG ESTIMASI GIZI SEKARANG 🎯'** di tab **Input Parameter** untuk memulai analisis.")
