@@ -114,9 +114,7 @@ st.markdown("""
         color: #000000 !important;
     }
 
-    /* 🔥 PERBAIKAN FINAL: CONTAINER DI TAB INPUT */
-    /* Menargetkan Wrapper di Tab Input agar memiliki kotak (background) */
-    /* Ini seharusnya membuat seluruh area input (yang tidak dicakup oleh .st-emotion-cache-h44nrf) berkotak */
+    /* PERBAIKAN FINAL: CONTAINER DI TAB INPUT */
     .stTabs > div:first-child + div > div:first-child {
         background-color: #19376D; /* Warna kotak container input */
         padding: 30px; 
@@ -127,8 +125,11 @@ st.markdown("""
     
 </style>
 """, unsafe_allow_html=True)
-# ... SISA KODE PYTHON TIDAK BERUBAH ...
-# ... (Pastikan Anda tetap menyertakan semua fungsi dan data di bawahnya) ...
+
+st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
+st.markdown("---")
+
 # ----------------------------------------------------------------------
 # BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
 # ----------------------------------------------------------------------
@@ -149,6 +150,42 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
+# FUNGSI KLASIFIKASI BMI BARU
+# ----------------------------------------------------------------------
+def Klasifikasi_BMI(BMI):
+    if BMI < 18.5:
+        return "Kurus (Underweight)", "inverse" # Merah/Warning
+    elif 18.5 <= BMI < 23.0:
+        return "Normal", "normal" # Hijau/Default
+    elif 23.0 <= BMI < 25.0:
+        return "Gemuk (Overweight)", "off" # Kuning/Gray
+    else: # BMI >= 25.0
+        return "Obesitas", "inverse" # Merah/Warning
+
+# ----------------------------------------------------------------------
+# FUNGSI SARAN MAKANAN DINAMIS BARU
+# ----------------------------------------------------------------------
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Category, Air_Rujukan, Serat_Rujukan):
+    saran = []
+    
+    # 1. Saran Berdasarkan Status Gizi (BMI)
+    if BMI_Category == "Kurus (Underweight)":
+        saran.append("⚠️ **Status Gizi Kurang:** Fokuskan pada makanan berenergi padat dan protein tinggi seperti susu *full cream*, kacang-kacangan, dan protein hewani (daging, telur) untuk menambah berat badan secara sehat.")
+    elif BMI_Category == "Normal":
+        saran.append("🎉 **Status Gizi Normal:** Pertahankan pola makan seimbang (gizi lengkap dan bervariasi) dan kontrol porsi makan Anda untuk menjaga berat badan optimal.")
+    elif BMI_Category == "Gemuk (Overweight)" or BMI_Category == "Obesitas":
+        saran.append("📉 **Status Gizi Berlebih:** Prioritaskan karbohidrat kompleks (oat, nasi merah) dan perbanyak buah serta sayuran. Kurangi makanan manis, tinggi gula, dan tinggi lemak jenuh.")
+
+    saran.append("---")
+    
+    # 2. Saran Makro & Mikro Spesifik
+    saran.append(f"**Target Utama Anda ({Jenis_Gizi_Key}):** {hasil_estimasi:.0f} {Unit_Gizi}. {Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, [''])[0]}")
+    saran.append(f"**Target Air:** {Air_Rujukan} liter/hari. Pastikan minum air putih secara teratur, hindari minuman manis berlebihan.")
+    saran.append(f"**Target Serat:** {Serat_Rujukan} g/hari. Konsumsi sayur dan buah minimal 5 porsi/hari dan pilih biji-bijian utuh (whole grain).")
+    
+    return saran
+
+# ----------------------------------------------------------------------
 # BAGIAN 2: SUMBER DATA AKG RUJUKAN (TIDAK BERUBAH)
 # ----------------------------------------------------------------------
 Tabel_Kebutuhan_Air_Serat = {
@@ -158,6 +195,15 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 26, 'unit_air': 'liter', 'unit_serat': 'g'},
     'Perempuan (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
+}
+
+Tabel_Saran_Makro_Mikro = {
+    'Energi': ["Perbanyak asupan karbohidrat kompleks (nasi merah, ubi, gandum). Energi adalah kunci performa harian."], 
+    'Protein': ["Cukupi dengan daging tanpa lemak, telur, ikan, atau produk kedelai (tahu/tempe). Protein penting untuk pembentukan otot dan perbaikan sel."],
+    'Lemak Total': ["Pilih lemak sehat tak jenuh (minyak zaitun, ikan salmon, biji-bijian). Batasi lemak jenuh dari gorengan."],
+    'Karbohidrat': ["Pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh untuk energi berkelanjutan."],
+    'Kalsium (Ca)': ["Konsumsi susu, keju, yogurt, atau sayuran hijau gelap. Kalsium penting untuk kesehatan tulang dan gigi."],
+    'Besi (Fe)': ["Konsumsi daging merah, hati, bayam, atau kacang-kacangan. Konsumsi Vitamin C untuk membantu penyerapan Besi."],
 }
 
 Tabel_Kebutuhan_Gizi_Rujukan = {
@@ -230,47 +276,6 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
         }
     },
 }
-# ----------------------------------------------------------------------
-# BAGIAN 3: FUNGSI SARAN MAKANAN (TIDAK BERUBAH)
-# ----------------------------------------------------------------------
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi):
-    saran = []
-    
-    if Jenis_Gizi_Key == 'Energi':
-        saran = [
-            f"Untuk memenuhi **{hasil_estimasi:.0f} {Unit_Gizi}**, perbanyak asupan karbohidrat kompleks (nasi merah, ubi, gandum).",
-            "Sertakan makanan sumber energi padat seperti kacang-kacangan atau alpukat dalam porsi yang seimbang. Energi adalah kunci performa harian."
-        ]
-    elif Jenis_Gizi_Key == 'Protein':
-        saran = [
-            f"Target **{hasil_estimasi:.0f} {Unit_Gizi}** protein bisa dipenuhi dengan konsumsi daging tanpa lemak, telur, ikan, atau produk kedelai (tahu/tempe).",
-            "Protein sangat penting untuk pembentukan otot, perbaikan sel, dan kekebalan tubuh."
-        ]
-    elif Jenis_Gizi_Key == 'Lemak Total':
-        saran = [
-            f"Pastikan **{hasil_estimasi:.0f} {Unit_Gizi}** lemak Anda didominasi lemak sehat (tak jenuh) seperti minyak zaitun, ikan salmon, atau biji-bijian.",
-            "Batasi lemak jenuh dari gorengan atau makanan olahan untuk menjaga kesehatan jantung."
-        ]
-    elif Jenis_Gizi_Key == 'Karbohidrat':
-        saran = [
-            f"Untuk **{hasil_estimasi:.0f} {Unit_Gizi}** karbohidrat, pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh.",
-            "Karbohidrat adalah sumber energi utama tubuh, pilih yang memiliki indeks glikemik rendah."
-        ]
-    elif Jenis_Gizi_Key == 'Kalsium (Ca)':
-        saran = [
-            f"Pastikan asupan kalsium mencapai **{hasil_estimasi:.0f} {Unit_Gizi}** dengan mengonsumsi susu, keju, yogurt, atau sayuran hijau gelap.",
-            "Kalsium sangat penting untuk kesehatan tulang, gigi, dan fungsi saraf."
-        ]
-    elif Jenis_Gizi_Key == 'Besi (Fe)':
-        saran = [
-            f"Untuk mencapai **{hasil_estimasi:.0f} {Unit_Gizi}** zat besi, konsumsi daging merah, hati, bayam, atau kacang-kacangan.",
-            "Penting untuk mencegah anemia dan meningkatkan transportasi oksigen dalam darah. Konsumsi Vitamin C untuk membantu penyerapan."
-        ]
-    else:
-        saran = ["Saran makanan umum: Konsumsi lima porsi buah dan sayur setiap hari, dan pertahankan pola makan seimbang."]
-
-    return saran
-
 # ----------------------------------------------------------------------
 # BAGIAN 4: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
@@ -382,6 +387,7 @@ with tab_hasil:
             # Hitung BMI
             TB_meter = TB_Val / 100
             BMI = BB_Target_Val / (TB_meter ** 2)
+            BMI_Status, BMI_Color = Klasifikasi_BMI(BMI)
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
@@ -390,10 +396,10 @@ with tab_hasil:
             
             with col_bmi:
                 st.metric(
-                    label="Indeks Massa Tubuh (BMI)",
+                    label="Indeks Massa Tubuh (BMI) [Status Gizi]",
                     value=f"{BMI:.1f}",
-                    delta=f"BB: {BB_Target_Val} kg, TB: {TB_Val} cm",
-                    delta_color="off"
+                    delta=BMI_Status, # Status Gizi ditampilkan di sini
+                    delta_color=BMI_Color # Warna dinamis berdasarkan status
                 )
                 
             with col_air:
@@ -420,11 +426,12 @@ with tab_hasil:
             # Tampilkan hasil estimasi dalam kotak SUCCESS 
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
-            # Saran Makanan
-            st.subheader("💡 Saran Makanan Harian")
-            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi)
+            # Saran Makanan (Dinamis)
+            st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
+            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Status, Air_Rujukan, Serat_Rujukan)
+            
             for saran in saran_list:
-                st.markdown(f"**-** {saran}")
+                st.markdown(saran)
                 
             st.markdown("---")
 
