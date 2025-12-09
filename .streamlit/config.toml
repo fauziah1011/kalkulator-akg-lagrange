@@ -1,0 +1,16 @@
+# .streamlit/config.toml
+
+[theme]
+# Warna primer (digunakan untuk tombol, slider, link) - Hijau segar
+primaryColor = "#4CAF50" 
+
+# Warna latar belakang halaman
+backgroundColor = "#F7F9FB" 
+
+# Warna latar belakang elemen (Sidebar, widget input)
+secondaryBackgroundColor = "#E8F5E9"
+
+# Warna teks utama
+textColor = "#1B5E20" 
+
+font = "sans serif"
