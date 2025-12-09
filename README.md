@@ -16,8 +16,6 @@ Ini adalah aplikasi web **Streamlit** yang kita bangun menggunakan **Python**. A
 
 ## ➡️ LANGSUNG COBAIN & BUKTIKAN AKURASINYA!
 
-Berikut adalah tampilan antarmuka aplikasi kita yang intuitif:
-
 <img width="1458" height="314" alt="Tampilan Antarmuka Aplikasi Kalkulator Gizi Lagrange" src="https://github.com/user-attachments/assets/90fd5a3b-78ce-4ad9-bea8-add0a453e65b" />
 
 Aplikasi sudah *live* dan siap digunakan. Buktikan sendiri seberapa akurat hasilnya:
