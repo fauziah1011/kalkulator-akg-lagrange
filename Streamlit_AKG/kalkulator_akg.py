@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V5) ---
+# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V6) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -13,7 +13,7 @@ st.markdown("""
         font-family: 'Georgia', serif; 
     }
 
-    /* 2. Latar Belakang Sidebar & Containers (Kotak Utama Input & Hasil) */
+    /* 2. Latar Belakang Sidebar & Containers */
     .st-emotion-cache-1ldfqsx, .st-emotion-cache-h44nrf, .st-emotion-cache-12fm521 { 
         background-color: #19376D; /* Biru sedang pekat */
         border-radius: 12px;
@@ -45,96 +45,71 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 5. Kotak Success (st.success) -> Background PUTIH, Teks HITAM */
+    /* 🔥 PERBAIKAN KRUSIAL 1: KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
         border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
         font-weight: bold;
     }
     
-    /* WARNA TEKS DI KOTAK st.success JADI HITAM */
     .st-emotion-cache-199v4c3 p {
         color: #000000 !important; /* Teks di st.success menjadi HITAM */
         font-weight: bold !important;
     }
 
-    /* 6. Tombol Hitung */
-    .st-emotion-cache-1cpx6a9 {
-        background-color: #40A2E3;
-        color: #000000;
-        font-weight: bold;
-    }
-    
-    /* 7. Perbaikan Warna Teks pada Tab */
-    .stTabs [data-baseweb="tab"] {
-        color: #F0F0F0 !important;
-        background-color: #19376D;
-    }
-    .stTabs [aria-selected="true"] {
-        color: #FFB300 !important;
-        background-color: #0B2447;
-    }
-
-    /* 8. FIX: BACKGROUND METRIK HASIL (Kotak Biru Gelap) */
-    .st-emotion-cache-1uj74qj { 
-        background-color: #19376D; /* Background metrik jadi Biru Sedang (gelap) */
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #A5D7E8;
-    }
-    
-    /* FIX: WARNA LABEL DI METRIC BOX (Putih/Terang) */
-    .st-emotion-cache-1uj74qj > div > label {
-        color: #F0F0F0 !important; 
-        font-weight: bold;
-    }
-    
-    /* 🔥 PERBAIKAN KRUSIAL 1: WARNA NILAI UTAMA (VALUE) DI METRIC BOX */
-    /* Target ke komponen nilai utama (value) */
-    .st-emotion-cache-1uj74qj .st-emotion-cache-14xtmhp {
-        color: #A5D7E8 !important; /* Nilai Utama (23.4, 2.5 liter) jadi BIRU MUDA */
-    }
-    
-    /* 🔥 PERBAIKAN KRUSIAL 2: WARNA DELTA/SUBTEKS (Rujukan Usia/Status Gizi) DI METRIC BOX */
-    /* Target ke komponen delta/subteks */
-    .st-emotion-cache-1uj74qj > div > div:last-child {
-        color: #F0F0F0 !important; /* Subteks (Rujukan, Status Gizi) jadi PUTIH */
-    }
-    
-    /* MENGUBAH WARNA HIJAU DEFAULT ST.METRIC MENJADI BIRU */
-    /* Ini menargetkan span yang memiliki warna hijau default Streamlit */
-    [data-testid="stMetricValue"] {
-        color: #A5D7E8 !important; /* Nilai utama metrik jadi BIRU MUDA */
-    }
-
-
-    /* 9. FIX AGGRESSIVE: LATAR BELAKANG KOTAK INPUT */
+    /* 5. FIX: BACKGROUND KOTAK INPUT */
     [data-baseweb="select"] div:first-child,
     [data-baseweb="input"] input,
     .st-emotion-cache-1y4pm5r div, 
     .st-emotion-cache-15tx6ry div,
     .st-emotion-cache-1u48l0g { 
-        background-color: #0B2447 !important; 
-        color: #F0F0F0 !important; 
+        background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
+        color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
     }
     
     /* FIX AGGRESSIVE: Teks label di atas input field */
     label { 
-        color: #A5D7E8 !important; 
+        color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
     }
     
-    /* FIX: Teks di dalam Selectbox/Dropdown Menu */
-    [data-baseweb="menu"] li {
-        color: #000000 !important;
-    }
-
     /* PERBAIKAN FINAL: CONTAINER DI TAB INPUT */
     .stTabs > div:first-child + div > div:first-child {
-        background-color: #19376D; 
+        background-color: #19376D; /* Warna kotak container input */
         padding: 30px; 
         border-radius: 12px;
         margin-top: 10px; 
         border: 1px solid #A5D7E8;
+    }
+    
+    /* STYLE UNTUK METRIK CUSTOM (GANTI st.metric) */
+    .custom-metric-container {
+        background-color: #19376D; 
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #A5D7E8;
+        height: 100%;
+    }
+    
+    .custom-metric-label {
+        color: #F0F0F0;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+    
+    /* 🔥 PERBAIKAN KRUSIAL 2: WARNA NILAI UTAMA BIRU MUDA */
+    .custom-metric-value {
+        color: #A5D7E8; /* Warna Nilai Utama JADI BIRU MUDA */
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+    
+    /* 🔥 PERBAIKAN KRUSIAL 3: WARNA SUBTEKS PUTIH */
+    .custom-metric-subtext {
+        color: #F0F0F0; /* Subteks (Rujukan Usia/Status Gizi) JADI PUTIH */
+        font-size: 0.9rem;
+        margin-top: 5px;
     }
     
 </style>
@@ -152,7 +127,7 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     hasil_estimasi = 0.0
     
     if len(np.unique(X_Acuan)) < n:
-        st.error("Daftar Berat Badan Acuan (X) memiliki nilai ganda. Estimasi tidak dapat dilakukan.")
+        # Pindahkan pesan error ke Streamlit, di sini hanya return 0.0
         return 0.0
 
     for i in range(n):
@@ -164,39 +139,58 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# FUNGSI KLASIFIKASI BMI BARU (DENGAN EMBELLISHMENT/SIMBOL)
+# FUNGSI KLASIFIKASI BMI PALING INFORMATIF (MERAH, KUNING, HIJAU)
 # ----------------------------------------------------------------------
-def Klasifikasi_BMI(BMI):
+def Klasifikasi_BMI_HTML(BMI, BB, TB):
+    
     if BMI < 18.5:
-        # Kurus: Merah (inverse)
-        return "⚠️ Kurus (Underweight)", "inverse" 
+        # Kurus: Merah
+        status = "⚠️ Kurang (Underweight)"
+        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Waspada!** Status Gizi Kurang. Perlu peningkatan asupan energi dan protein."
+        color_code = "#FF4B4B" # Merah
     elif 18.5 <= BMI < 23.0:
-        # Normal: Hijau (normal)
-        return "✅ Normal", "normal" 
+        # Normal: Hijau
+        status = "✅ Normal"
+        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Pertahankan!** Status Gizi Normal. Pola makan seimbang."
+        color_code = "#00BFA6" # Hijau
     elif 23.0 <= BMI < 25.0:
-        # Gemuk (Overweight): Kuning (off/gray, tetapi akan terlihat kuning/orange di beberapa theme)
-        return "🟡 Gemuk (Overweight)", "off" 
+        # Gemuk (Overweight): Kuning
+        status = "🟡 Gemuk (Overweight)"
+        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Perhatian!** Status Gizi Berlebih. Perlu kontrol porsi dan batasi lemak/gula."
+        color_code = "#FFC82C" # Kuning
     else: # BMI >= 25.0
-        # Obesitas: Merah (inverse)
-        return "🚨 Obesitas", "inverse" 
+        # Obesitas: Merah
+        status = "🚨 Obesitas"
+        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Segera Koreksi!** Status Obesitas. Perlu konsultasi gizi dan perubahan gaya hidup drastis."
+        color_code = "#FF4B4B" # Merah
+        
+    # Mengembalikan nilai status dan subteks yang sudah di-format
+    return status, saran, color_code
+    
+# ----------------------------------------------------------------------
+# FUNGSI CUSTOM METRIC (Pengganti st.metric)
+# ----------------------------------------------------------------------
+def custom_metric(label, value, subtext):
+    # Menggunakan HTML/Markdown untuk kontrol warna total
+    html_code = f"""
+    <div class="custom-metric-container">
+        <div class="custom-metric-label">{label}</div>
+        <div class="custom-metric-value">{value}</div>
+        <div class="custom-metric-subtext">{subtext}</div>
+    </div>
+    """
+    st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
 # FUNGSI SARAN MAKANAN DINAMIS BARU
 # ----------------------------------------------------------------------
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Category, Air_Rujukan, Serat_Rujukan):
+# (Fungsi ini tidak berubah, hanya menggunakan output Klasifikasi_BMI_HTML yang sudah diformat)
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Status_Saran, Air_Rujukan, Serat_Rujukan):
     saran = []
     
     # 1. Saran Berdasarkan Status Gizi (BMI)
-    # Menghilangkan simbol emoji untuk display di saran agar tidak redundan
-    BMI_Clean = BMI_Category.split(' ', 1)[1] if len(BMI_Category.split(' ', 1)) > 1 else BMI_Category
-
-    if "Kurus" in BMI_Clean:
-        saran.append("⚠️ **Status Gizi Kurang:** Fokuskan pada makanan berenergi padat dan protein tinggi seperti susu *full cream*, kacang-kacangan, dan protein hewani (daging, telur) untuk menambah berat badan secara sehat.")
-    elif "Normal" in BMI_Clean:
-        saran.append("🎉 **Status Gizi Normal:** Pertahankan pola makan seimbang (gizi lengkap dan bervariasi) dan kontrol porsi makan Anda untuk menjaga berat badan optimal.")
-    elif "Gemuk" in BMI_Clean or "Obesitas" in BMI_Clean:
-        saran.append("📉 **Status Gizi Berlebih:** Prioritaskan karbohidrat kompleks (oat, nasi merah) dan perbanyak buah serta sayuran. Kurangi makanan manis, tinggi gula, dan tinggi lemak jenuh.")
-
+    saran.append(f"**Status Gizi (BMI):** {BMI_Status_Saran}")
+    
     saran.append("---")
     
     # 2. Saran Makro & Mikro Spesifik
@@ -396,7 +390,7 @@ with tab_hasil:
             Unit_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['unit']
             Deskripsi_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['desc']
             
-            # Ambil Data Air dan Serat (untuk metrik terpisah)
+            # Ambil Data Air dan Serat
             Air_Rujukan = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['Air']
             Serat_Rujukan = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['Serat']
             Unit_Air = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['unit_air']
@@ -408,35 +402,34 @@ with tab_hasil:
             # Hitung BMI
             TB_meter = TB_Val / 100
             BMI = BB_Target_Val / (TB_meter ** 2)
-            BMI_Status, BMI_Color = Klasifikasi_BMI(BMI)
+            
+            # Klasifikasi BMI Kustom
+            BMI_Status, BMI_Saran_Subtext, BMI_Color_Code = Klasifikasi_BMI_HTML(BMI, BB_Target_Val, TB_Val)
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
-            # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT)
+            # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT) - Menggunakan CUSTOM MARKDOWN
             col_bmi, col_air, col_serat = st.columns(3)
             
             with col_bmi:
-                st.metric(
-                    label="Indeks Massa Tubuh (BMI) [Status Gizi]",
+                custom_metric(
+                    label="Indeks Massa Tubuh (BMI)",
                     value=f"{BMI:.1f}",
-                    delta=BMI_Status, # Status Gizi ditampilkan di sini
-                    delta_color=BMI_Color # Warna dinamis berdasarkan status
+                    subtext=f'<span style="color:{BMI_Color_Code}; font-weight:bold;">{BMI_Status}</span><br>{BMI_Saran_Subtext}'
                 )
                 
             with col_air:
-                st.metric(
+                custom_metric(
                     label="Kebutuhan Air Harian",
                     value=f"{Air_Rujukan} {Unit_Air}",
-                    delta="Rujukan Kelompok Usia",
-                    delta_color="off" 
+                    subtext="💧 Rujukan Kelompok Usia"
                 )
                 
             with col_serat:
-                st.metric(
+                custom_metric(
                     label="Kebutuhan Serat Harian",
                     value=f"{Serat_Rujukan} {Unit_Serat}",
-                    delta="Rujukan Kelompok Usia",
-                    delta_color="off" 
+                    subtext="🥦 Rujukan Kelompok Usia"
                 )
             
             st.markdown("---")
@@ -449,7 +442,7 @@ with tab_hasil:
 
             # Saran Makanan (Dinamis)
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
-            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Status, Air_Rujukan, Serat_Rujukan)
+            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan)
             
             for saran in saran_list:
                 st.markdown(saran)
