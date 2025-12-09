@@ -49,5 +49,5 @@ Proyek keren ini terwujud berkat kolaborasi tim yang bersemangat. Kami terbuka u
 
 ## 📄 Lisensi & Status
 
-* **Status Proyek:** Aktif / Selesai (Pilih salah satu)
+* **Status Proyek:** Aktif 
 * **Versi Saat Ini:** v1.0.0
