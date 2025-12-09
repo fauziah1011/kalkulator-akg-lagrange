@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 # --- CSS KUSTOM & TEMA ---
-# Pastikan file .streamlit/config.toml juga ada di akar repo Anda
 st.markdown("""
 <style>
     h1 {
@@ -25,7 +24,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
-st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target")
+st.markdown("Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
 st.markdown("---")
 
 # ----------------------------------------------------------------------
@@ -51,22 +50,22 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN (BATASAN USIA DIPERBARUI)
 # ----------------------------------------------------------------------
-# Tambahan data Rujukan Air dan Serat (berdasarkan kelompok usia)
+# Data Air dan Serat (Keys sudah diperbarui)
 Tabel_Kebutuhan_Air_Serat = {
-    'Laki-laki (Remaja 10-18 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Laki-laki (Dewasa 19-64 th)': {'Air': 2.5, 'Serat': 37, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Laki-laki (Lansia 65-80+ th)': {'Air': 2.5, 'Serat': 30, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Perempuan (Remaja 10-18 th)': {'Air': 2.2, 'Serat': 26, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Perempuan (Dewasa 19-64 th)': {'Air': 2.5, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Perempuan (Lansia 65-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
+    'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
+    'Laki-laki (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 37, 'unit_air': 'liter', 'unit_serat': 'g'},
+    'Laki-laki (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 30, 'unit_air': 'liter', 'unit_serat': 'g'},
+    'Perempuan (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 26, 'unit_air': 'liter', 'unit_serat': 'g'},
+    'Perempuan (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
+    'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# Data AKG lainnya (diambil dari kode Anda sebelumnya)
+# Data AKG (Keys sudah diperbarui)
 Tabel_Kebutuhan_Gizi_Rujukan = {
-    # Data Anda sebelumnya... (Dipotong agar fokus pada perbaikan, tetapi ini harus berisi data lengkap)
-    'Laki-laki (Remaja 10-18 th)': {
+    # A. LAKI-LAKI
+    'Laki-laki (Remaja 10-20 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1750, 2000, 2400, 3000, 3600]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -77,7 +76,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Besi (Fe)': {'data': np.array([9, 10, 11, 11, 11]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
         }
     },
-    'Laki-laki (Dewasa 19-64 th)': {
+    'Laki-laki (Dewasa 21-60 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 60.0, 75.0, 90.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1900, 2477.5, 2900, 3200, 3400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -88,8 +87,42 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Besi (Fe)': {'data': np.array([9, 9, 9, 9, 9]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
         }
     },
-    # ... pastikan Anda menyertakan semua data yang hilang dari file Anda sebelumnya ...
-    'Perempuan (Lansia 65-80+ th)': {
+    'Laki-laki (Lansia 61-80+ th)': {
+        'Berat_Badan_Acuan_X': np.array([30.0, 55.0, 70.0, 85.0, 100.0]), 
+        'Kebutuhan_Gizi': {
+            'Energi': {'data': np.array([1500, 1900, 2200, 2500, 2800]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([50, 64, 75, 90, 105]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([40, 50, 70, 90, 110]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([220, 285, 330, 380, 430]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
+            'Besi (Fe)': {'data': np.array([8, 9, 9, 9, 9]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+        }
+    },
+    
+    # B. PEREMPUAN
+    'Perempuan (Remaja 10-20 th)': {
+        'Berat_Badan_Acuan_X': np.array([30.0, 38.0, 52.0, 75.0, 100.0]), 
+        'Kebutuhan_Gizi': {
+            'Energi': {'data': np.array([1600, 1900, 2100, 2700, 3300]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([50, 55, 65, 90, 115]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([50, 65, 70, 100, 130]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([240, 280, 300, 420, 550]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
+            'Besi (Fe)': {'data': np.array([13, 15, 15, 15, 15]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+        }
+    },
+    'Perempuan (Dewasa 21-60 th)': {
+        'Berat_Badan_Acuan_X': np.array([30.0, 55.0, 70.0, 85.0, 100.0]), 
+        'Kebutuhan_Gizi': {
+            'Energi': {'data': np.array([1700, 2250, 2500, 2800, 3100]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
+            'Protein': {'data': np.array([50, 60, 75, 90, 105]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
+            'Lemak Total': {'data': np.array([50, 65, 80, 100, 120]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
+            'Karbohidrat': {'data': np.array([260, 360, 410, 460, 510]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
+            'Kalsium (Ca)': {'data': np.array([1000, 1000, 1000, 1000, 1000]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
+            'Besi (Fe)': {'data': np.array([15, 18, 15, 15, 15]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+        }
+    },
+    'Perempuan (Lansia 61-80+ th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 50.0, 75.0, 100.0]), 
         'Kebutuhan_Gizi': {
             'Energi': {'data': np.array([1300, 1600, 2000, 2400]), 'unit': 'kkal', 'desc': 'Kebutuhan Energi'}, 
@@ -102,7 +135,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
     },
 }
 # ----------------------------------------------------------------------
-# BAGIAN 3: FUNGSI SARAN MAKANAN (Diperlukan untuk Tab Hasil)
+# BAGIAN 3: FUNGSI SARAN MAKANAN
 # ----------------------------------------------------------------------
 def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi):
     """Memberikan saran makanan/minuman berdasarkan jenis gizi yang diestimasi."""
@@ -144,8 +177,15 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi):
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 4: ANTARMUKA STREAMLIT (VERSI TAB INTERAKTIF LENGKAP)
+# BAGIAN 4: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
+
+# Konfigurasi Halaman 
+st.set_page_config(
+    page_title="Kalkulator AKG Lagrange",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Inisialisasi session state
 if 'hitung' not in st.session_state:
@@ -198,7 +238,7 @@ with tab_input:
         )
         
     with col_tb:
-        # 4. Tinggi Badan (Input yang Hilang)
+        # 4. Tinggi Badan
         TB_Val = st.number_input(
             '4. Tinggi Badan (cm):',
             min_value=100.0,
@@ -235,7 +275,7 @@ with tab_hasil:
             Unit_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['unit']
             Deskripsi_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['desc']
             
-            # Data Air dan Serat (Input yang Hilang)
+            # Data Air dan Serat
             Air_Rujukan = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['Air']
             Serat_Rujukan = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['Serat']
             Unit_Air = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['unit_air']
@@ -283,7 +323,7 @@ with tab_hasil:
             st.subheader(f"🎯 Estimasi {Deskripsi_Gizi}")
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
-            # Saran Makanan (Fitur yang Hilang)
+            # Saran Makanan
             st.subheader("💡 Saran Makanan dan Minuman")
             saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi)
             for saran in saran_list:
@@ -291,7 +331,7 @@ with tab_hasil:
                 
             st.markdown("---")
 
-            # Interpretasi Tabel dan Visualisasi (Fitur yang Hilang)
+            # Analisis Data dan Visualisasi
             st.header("📊 Analisis Data dan Kurva")
             col_data, col_viz = st.columns([1, 1])
             
@@ -303,7 +343,7 @@ with tab_hasil:
                 })
                 st.dataframe(df_data, use_container_width=True)
                 
-                # Interpretasi Tabel (Fitur yang Hilang)
+                # Interpretasi Tabel
                 st.markdown("**Interpretasi Tabel:**")
                 st.write(f"Tabel ini menunjukkan pasangan data yang digunakan sebagai input untuk interpolasi. Kolom X adalah Berat Badan acuan, dan Kolom Y adalah {Deskripsi_Gizi} yang diatur oleh pedoman AKG untuk {Kelompok_Populasi_Key}.")
                 st.write(f"Metode Lagrange menggunakan semua titik data ini untuk membuat kurva estimasi.")
@@ -330,7 +370,7 @@ with tab_hasil:
                 
                 st.pyplot(fig)
                 
-                # Interpretasi Grafik (Fitur yang Hilang)
+                # Interpretasi Grafik
                 st.markdown("**Interpretasi Grafik:**")
                 st.write("Garis biru menunjukkan **Kurva Polinomial Lagrange** yang mulus. Kurva ini melewati semua Titik Data Rujukan (lingkaran merah) yang Anda masukkan.")
                 st.write(f"Tanda **X hijau** menunjukkan hasil estimasi Anda: pada Berat Badan **{BB_Target_Val:.1f} kg**, kebutuhan Anda diproyeksikan berada tepat di atas kurva pada nilai **{hasil_estimasi:.2f} {Unit_Gizi}**.")
@@ -354,3 +394,13 @@ with tab_metode:
     st.latex(r"""
         \text{dimana Basis Polinomial } L_j(x) = \prod_{i=0, i \neq j}^{n} \frac{x - x_i}{x_j - x_i}
     """)
+
+---
+## 📝 Langkah Selanjutnya
+
+1.  **Ganti Total File:** *Copy* dan *paste* seluruh kode di atas untuk menggantikan isi file **`Streamlit_AKG/kalkulator_akg.py`** Anda di GitHub.
+2.  **Commit Perubahan:** Simpan dan *commit* perubahan di GitHub.
+3.  **Reboot Aplikasi:** Kembali ke dasbor Streamlit Cloud Anda, klik **(⋮)**, dan pilih **"Reboot"**.
+4.  **Buka Ulang:** Buka URL aplikasi Anda dan lakukan *hard refresh* (**Ctrl + F5** atau **Cmd + Shift + R**).
+
+**Catatan:** Batasan usia di *dropdown* sekarang akan berbunyi **10-20 th**, **21-60 th**, dan **61-80+ th**. Jika Anda memiliki data kelompok usia lain (misalnya Anak-anak), Anda harus menambahkannya kembali ke bagian **BAGIAN 2**.
