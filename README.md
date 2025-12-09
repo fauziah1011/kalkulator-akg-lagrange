@@ -39,8 +39,9 @@ Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya te
 
 #### Konsep Matematis
 
-Misalkan kita memiliki <img width="348" height="70" alt="image" src="https://github.com/user-attachments/assets/23e3de3f-71d2-4528-b3d0-aff91eb332e2" />
- Polinomial Lagrange $P(x)$ didefinisikan sebagai:
+Misalkan kita memiliki 
+<img width="348" height="70" alt="image" src="https://github.com/user-attachments/assets/23e3de3f-71d2-4528-b3d0-aff91eb332e2" />
+Polinomial Lagrange $P(x)$ didefinisikan sebagai:
 
 $$
 P(x) = \sum_{j=0}^{n-1} y_j L_j(x)
