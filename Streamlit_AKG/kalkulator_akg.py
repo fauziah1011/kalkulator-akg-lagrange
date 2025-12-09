@@ -3,32 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-st.markdown("""
-<style>
-    /* Styling Header: Rapi dan Sesuai Tema */
-    h1 {
-        color: #4CAF50; /* Hijau Tema */
-        text-align: center;
-        padding-bottom: 10px;
-    }
-
-    /* Memperindah Teks Utama */
-    .stApp {
-        font-family: 'Arial', sans-serif;
-        color: #333333;
-    }
-
-    /* Styling Kotak Output/Widget (Opsional) */
-    .st-emotion-cache-h44nrf { /* Class unik Streamlit untuk widget/container */
-        border-radius: 10px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
-        padding: 15px;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# Ganti judul Anda agar sesuai dengan CSS (jika ada)
-st.title("🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange")
 # ----------------------------------------------------------------------
 # BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
 # ----------------------------------------------------------------------
@@ -126,7 +100,6 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
     },
 }
 
-# ----------------------------------------------------------------------
 # ----------------------------------------------------------------------
 # BAGIAN 3: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
@@ -248,23 +221,4 @@ if st.session_state['hitung']:
             st.pyplot(fig) 
             
     except Exception as e:
-
-# --- TAB 3: Tentang Metode ---
-with tab_metode:
-    st.header("🧠 Otak di Balik Akurasi: Metode Interpolasi Lagrange")
-    st.info("Kalkulator ini menggunakan Interpolasi Lagrange, sebuah metode matematika canggih yang memungkinkan kita mengestimasi nilai Angka Kecukupan Gizi (AKG) yang sangat spesifik, bahkan untuk Berat Badan yang tidak tercantum langsung dalam tabel rujukan Kemenkes/WHO.")
-    st.subheader("Kenapa Lagrange?")
-    st.write("Standar AKG biasanya disediakan dalam bentuk **titik data diskrit** (misalnya, AKG untuk BB 50 kg dan 70 kg). Lagrange membuat **polinomial unik** yang melewati semua titik data ini, memungkinkan kita untuk **menginterpolasi** nilai AKG (*y*) yang akurat untuk setiap Berat Badan (*x*) di antara titik-titik tersebut, daripada sekadar melakukan pembulatan ke kategori terdekat.")
-    
-    # Menampilkan rumus sebagai blok kode yang rapi (opsional)
-    st.markdown("---")
-    st.subheader("Konsep Matematis Polinomial Lagrange")
-    st.latex(r"""
-        P(x) = \sum_{j=0}^{n} y_j L_j(x)
-    """)
-    st.latex(r"""
-        \text{dimana Basis Polinomial } L_j(x) = \prod_{i=0, i \neq j}^{n} \frac{x - x_i}{x_j - x_i}
-    """)
-
         st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
-
