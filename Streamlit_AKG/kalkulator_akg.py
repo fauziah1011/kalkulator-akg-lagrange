@@ -3,52 +3,67 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (PERUBAHAN WARNA PEKAT) ---
+# --- CSS KUSTOM & TEMA (PERUBAHAN WARNA PEKAT/BOLD) ---
 st.markdown("""
 <style>
-    /* 1. Latar Belakang Utama Aplikasi (Tidak Putih Monoton) */
+    /* 1. Latar Belakang Utama Aplikasi (Kembali Putih agar Aksen Menjadi Bold) */
     .stApp {
-        background-color: #F8F8F8; /* Abu-abu muda/krem lembut */
-        color: #333333; /* Warna teks utama lebih pekat */
+        background-color: #FFFFFF; 
+        color: #1A1A1A; /* Warna teks utama sangat pekat */
         font-family: 'Arial', sans-serif;
     }
 
-    /* 2. Latar Belakang Sidebar (Kontras) */
+    /* 2. Latar Belakang Sidebar (Kontras Gelap) */
     .st-emotion-cache-1ldfqsx { 
-        background-color: #333333; /* Abu-abu gelap untuk sidebar */
+        background-color: #2C3E50; /* Biru Tua/Navy yang sangat pekat */
     }
 
     /* 3. Warna Teks di Sidebar (Agar terbaca) */
     .st-emotion-cache-1ldfqsx label, .st-emotion-cache-1ldfqsx h2 {
-        color: #FFFFFF !important; /* Teks putih di sidebar */
+        color: #F8F8F8 !important; /* Teks putih di sidebar */
     }
 
-    /* 4. Judul Utama (Lebih mencolok) */
+    /* 4. Judul Utama (Sangat Mencolok) */
     h1 {
-        color: #1E8449; /* Hijau tua yang pekat */
+        color: #C0392B; /* Merah Marun/Bata yang pekat */
         text-align: center;
         padding-bottom: 10px;
     }
+    
+    /* 5. Subjudul & Header lainnya */
+    h2, h3, h4 {
+        color: #2980B9; /* Biru cerah yang pekat */
+    }
 
-    /* 5. Styling Kotak Output/Widget (Memberi bentuk) */
+    /* 6. Styling Kotak Output/Widget */
     .st-emotion-cache-h44nrf, .st-emotion-cache-12fm521 { 
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Shadow lebih pekat */
+        border-radius: 12px;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Shadow super pekat */
+        padding: 20px;
+        background-color: #FDFEFE; 
+        border: 1px solid #BDC3C7;
+    }
+    
+    /* 7. Kotak Success (Hasil Estimasi) */
+    .st-emotion-cache-199v4c3 { /* Success Box */
+        background-color: #F9EBEA; /* Latar Merah Muda Soft */
+        border-left: 6px solid #E74C3C; /* Garis Merah Menyala */
         padding: 15px;
-        background-color: #FFFFFF; /* Kontainer tetap putih agar mudah dibaca */
+        border-radius: 8px;
+        font-size: 18px;
     }
     
-    /* 6. Kotak Info & Success (Aksen Warna) */
-    .st-emotion-cache-1mmpn3a, .st-emotion-cache-199v4c3 { /* Info/Success Box */
-        background-color: #EBF5FB; /* Biru muda */
-        border-left: 5px solid #3498DB; /* Garis biru pekat */
-        padding: 10px;
-        border-radius: 5px;
-    }
-    
-    /* 7. Metric (Aksen Cepat) */
+    /* 8. Metric (Nilai Angka Sangat Menonjol) */
     .st-emotion-cache-14xtmhp {
-        color: #D35400; /* Warna oranye untuk nilai metric */
+        color: #E67E22; /* Warna Oranye Terang untuk nilai metric */
+        font-weight: 900; /* Extra Bold */
+        font-size: 32px;
+    }
+    
+    /* 9. Tombol Hitung */
+    .st-emotion-cache-1cpx6a9 {
+        background-color: #1ABC9C; /* Hijau Mint yang cerah */
+        color: white;
         font-weight: bold;
     }
 </style>
@@ -65,6 +80,10 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     """Melakukan estimasi Kebutuhan Gizi harian (Y) berdasarkan Berat Badan (X)
     menggunakan metode Interpolasi Polinomial Lagrange.
     """
+    # Jika data rujukan hanya punya 1 nilai (seperti Air dan Serat), langsung kembalikan nilai itu.
+    if len(Y_Nilai_Gizi) == 1:
+        return Y_Nilai_Gizi[0]
+        
     n = len(X_Acuan)
     hasil_estimasi = 0.0
     
@@ -81,18 +100,8 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN (BATASAN USIA DIPERBARUI)
+# BAGIAN 2: SUMBER DATA AKG RUJUKAN (AIR DAN SERAT DIINTEGRASIKAN)
 # ----------------------------------------------------------------------
-# Data Air dan Serat
-Tabel_Kebutuhan_Air_Serat = {
-    'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Laki-laki (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 37, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Laki-laki (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 30, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Perempuan (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 26, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Perempuan (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
-    'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
-}
-
 # Data AKG 
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
@@ -105,6 +114,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Karbohidrat': {'data': np.array([270, 300, 350, 480, 600]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([9, 10, 11, 11, 11]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Air': {'data': np.array([2.2]), 'unit': 'liter', 'desc': 'Kebutuhan Air'}, # Nilai tunggal
+            'Serat': {'data': np.array([32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},   # Nilai tunggal
         }
     },
     'Laki-laki (Dewasa 21-60 th)': {
@@ -116,6 +127,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Karbohidrat': {'data': np.array([280, 395, 470, 520, 560]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Kalsium (Ca)': {'data': np.array([1000, 1000, 1000, 1000, 1000]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([9, 9, 9, 9, 9]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Air': {'data': np.array([2.5]), 'unit': 'liter', 'desc': 'Kebutuhan Air'},   # Nilai tunggal
+            'Serat': {'data': np.array([37]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},   # Nilai tunggal
         }
     },
     'Laki-laki (Lansia 61-80+ th)': {
@@ -127,6 +140,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Karbohidrat': {'data': np.array([220, 285, 330, 380, 430]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([8, 9, 9, 9, 9]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Air': {'data': np.array([2.5]), 'unit': 'liter', 'desc': 'Kebutuhan Air'},   # Nilai tunggal
+            'Serat': {'data': np.array([30]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},   # Nilai tunggal
         }
     },
     
@@ -140,6 +155,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Karbohidrat': {'data': np.array([240, 280, 300, 420, 550]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([13, 15, 15, 15, 15]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Air': {'data': np.array([2.2]), 'unit': 'liter', 'desc': 'Kebutuhan Air'},   # Nilai tunggal
+            'Serat': {'data': np.array([26]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},   # Nilai tunggal
         }
     },
     'Perempuan (Dewasa 21-60 th)': {
@@ -151,6 +168,8 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Karbohidrat': {'data': np.array([260, 360, 410, 460, 510]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Kalsium (Ca)': {'data': np.array([1000, 1000, 1000, 1000, 1000]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([15, 18, 15, 15, 15]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Air': {'data': np.array([2.5]), 'unit': 'liter', 'desc': 'Kebutuhan Air'},   # Nilai tunggal
+            'Serat': {'data': np.array([32]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},   # Nilai tunggal
         }
     },
     'Perempuan (Lansia 61-80+ th)': {
@@ -162,45 +181,57 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Karbohidrat': {'data': np.array([200, 230, 300, 370]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
             'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([8, 8, 8, 8]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
+            'Air': {'data': np.array([2.5]), 'unit': 'liter', 'desc': 'Kebutuhan Air'},   # Nilai tunggal
+            'Serat': {'data': np.array([25]), 'unit': 'g', 'desc': 'Kebutuhan Serat'},   # Nilai tunggal
         }
     },
 }
 # ----------------------------------------------------------------------
 # BAGIAN 3: FUNGSI SARAN MAKANAN
 # ----------------------------------------------------------------------
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi):
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi):
     """Memberikan saran makanan/minuman berdasarkan jenis gizi yang diestimasi."""
     saran = []
     
     if Jenis_Gizi_Key == 'Energi':
         saran = [
-            f"Untuk memenuhi {hasil_estimasi:.0f} kkal, perbanyak asupan karbohidrat kompleks (nasi, ubi, gandum).",
+            f"Untuk memenuhi {hasil_estimasi:.0f} {Unit_Gizi}, perbanyak asupan karbohidrat kompleks (nasi, ubi, gandum).",
             "Sertakan makanan sumber energi padat seperti kacang-kacangan atau alpukat dalam porsi yang seimbang."
         ]
     elif Jenis_Gizi_Key == 'Protein':
         saran = [
-            f"Target {hasil_estimasi:.0f} gram protein bisa dipenuhi dengan konsumsi daging tanpa lemak, telur, ikan, atau produk kedelai (tahu/tempe).",
+            f"Target {hasil_estimasi:.0f} {Unit_Gizi} protein bisa dipenuhi dengan konsumsi daging tanpa lemak, telur, ikan, atau produk kedelai (tahu/tempe).",
             "Protein juga penting untuk pembentukan otot dan perbaikan sel."
         ]
     elif Jenis_Gizi_Key == 'Lemak Total':
         saran = [
-            f"Pastikan {hasil_estimasi:.0f} gram lemak Anda didominasi lemak sehat (tak jenuh) seperti minyak zaitun, ikan salmon, atau biji-bijian.",
+            f"Pastikan {hasil_estimasi:.0f} {Unit_Gizi} lemak Anda didominasi lemak sehat (tak jenuh) seperti minyak zaitun, ikan salmon, atau biji-bijian.",
             "Batasi lemak jenuh dari gorengan atau makanan olahan."
         ]
     elif Jenis_Gizi_Key == 'Karbohidrat':
         saran = [
-            f"Untuk {hasil_estimasi:.0f} gram karbohidrat, pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh.",
+            f"Untuk {hasil_estimasi:.0f} {Unit_Gizi} karbohidrat, pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh.",
             "Karbohidrat adalah sumber energi utama tubuh."
         ]
     elif Jenis_Gizi_Key == 'Kalsium (Ca)':
         saran = [
-            f"Pastikan asupan kalsium mencapai {hasil_estimasi:.0f} mg dengan mengonsumsi susu, keju, yogurt, atau sayuran hijau gelap.",
+            f"Pastikan asupan kalsium mencapai {hasil_estimasi:.0f} {Unit_Gizi} dengan mengonsumsi susu, keju, yogurt, atau sayuran hijau gelap.",
             "Kalsium sangat penting untuk kesehatan tulang dan gigi."
         ]
     elif Jenis_Gizi_Key == 'Besi (Fe)':
         saran = [
-            f"Untuk mencapai {hasil_estimasi:.0f} mg zat besi, konsumsi daging merah, hati, bayam, atau kacang-kacangan.",
+            f"Untuk mencapai {hasil_estimasi:.0f} {Unit_Gizi} zat besi, konsumsi daging merah, hati, bayam, atau kacang-kacangan.",
             "Vitamin C membantu penyerapan zat besi!"
+        ]
+    elif Jenis_Gizi_Key == 'Air':
+        saran = [
+            f"Kebutuhan air harian adalah {hasil_estimasi:.1f} {Unit_Gizi}. Pastikan Anda minum secara teratur sepanjang hari, tidak hanya saat haus.",
+            "Air penting untuk semua fungsi tubuh, termasuk metabolisme dan regulasi suhu."
+        ]
+    elif Jenis_Gizi_Key == 'Serat':
+        saran = [
+            f"Target serat harian Anda adalah {hasil_estimasi:.0f} {Unit_Gizi}. Penuhi dengan buah-buahan, sayuran, dan biji-bijian utuh.",
+            "Serat membantu melancarkan pencernaan dan mengontrol kadar gula darah."
         ]
     else:
         saran = ["Saran makanan umum: Konsumsi lima porsi buah dan sayur setiap hari, dan pertahankan pola makan seimbang."]
@@ -246,7 +277,7 @@ with tab_input:
             key='kelompok'
         )
         
-        # 2. Jenis Gizi
+        # 2. Jenis Gizi (Air & Serat termasuk di sini)
         Gizi_options = list(Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'].keys())
         Jenis_Gizi_Key = st.selectbox(
             '2. Jenis Kebutuhan Gizi:',
@@ -286,7 +317,7 @@ with tab_input:
     # Tombol Hitung
     if st.button('Hitung Estimasi Sekarang 🚀', use_container_width=True, type="primary"):
         st.session_state['hitung'] = True
-        st.success("Perhitungan AKG Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
+        st.success(f"Perhitungan {Jenis_Gizi_Key} Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
         st.balloons()
 
 
@@ -306,12 +337,6 @@ with tab_hasil:
             Unit_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['unit']
             Deskripsi_Gizi = Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'][Jenis_Gizi_Key]['desc']
             
-            # Data Air dan Serat
-            Air_Rujukan = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['Air']
-            Serat_Rujukan = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['Serat']
-            Unit_Air = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['unit_air']
-            Unit_Serat = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['unit_serat']
-
             # Estimasi Nilai Lagrange
             hasil_estimasi = Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, BB_Target_Val)
             
@@ -319,96 +344,83 @@ with tab_hasil:
             TB_meter = TB_Val / 100
             BMI = BB_Target_Val / (TB_meter ** 2)
 
-            st.header(f"Ringkasan Hasil Estimasi AKG untuk {Kelompok_Populasi_Key}")
+            st.header(f"Ringkasan Profil untuk {Kelompok_Populasi_Key}")
 
-            # Tampilkan Hasil Utama (Metric)
-            col_bmi, col_air, col_serat = st.columns(3)
+            # Tampilkan Hasil BMI (Metric)
+            st.metric(
+                label="Indeks Massa Tubuh (BMI)",
+                value=f"{BMI:.1f}",
+                delta=f"BB: {BB_Target_Val} kg, TB: {TB_Val} cm",
+                delta_color="off"
+            )
             
-            with col_bmi:
-                st.metric(
-                    label="Indeks Massa Tubuh (BMI)",
-                    value=f"{BMI:.1f}",
-                    delta=f"BB: {BB_Target_Val} kg, TB: {TB_Val} cm",
-                    delta_color="off"
-                )
-                
-            with col_air:
-                st.metric(
-                    label="Kebutuhan Air Harian",
-                    value=f"{Air_Rujukan} {Unit_Air}",
-                    delta="Berdasarkan Kelompok Usia",
-                    delta_color="off"
-                )
-                
-            with col_serat:
-                st.metric(
-                    label="Kebutuhan Serat Harian",
-                    value=f"{Serat_Rujukan} {Unit_Serat}",
-                    delta="Berdasarkan Kelompok Usia",
-                    delta_color="off"
-                )
-                
             st.markdown("---")
             
             # Tampilkan Hasil Utama Gizi Lagrange
             st.subheader(f"🎯 Estimasi {Deskripsi_Gizi}")
-            st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+            
+            if Jenis_Gizi_Key in ['Air', 'Serat']:
+                 st.info(f"Kebutuhan **{Deskripsi_Gizi}** harian Anda (berdasarkan kelompok usia) adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+            else:
+                 st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
             # Saran Makanan
             st.subheader("💡 Saran Makanan dan Minuman")
-            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi)
+            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi)
             for saran in saran_list:
                 st.markdown(f"* {saran}")
                 
             st.markdown("---")
 
-            # Analisis Data dan Visualisasi
-            st.header("📊 Analisis Data dan Kurva")
-            col_data, col_viz = st.columns([1, 1])
-            
-            with col_data:
-                st.subheader("1. Titik Data Rujukan AKG")
-                df_data = pd.DataFrame({
-                    f'Berat Badan Acuan (kg, X)': X_data_BB,
-                    f'{Deskripsi_Gizi} Rujukan ({Unit_Gizi}, Y)': Y_data_Gizi
-                })
-                st.dataframe(df_data, use_container_width=True)
+            # Analisis Data dan Visualisasi (Hanya tampilkan jika bukan Air/Serat)
+            if Jenis_Gizi_Key not in ['Air', 'Serat']:
+                st.header("📊 Analisis Data dan Kurva")
+                col_data, col_viz = st.columns([1, 1])
                 
-                # Interpretasi Tabel
-                st.markdown("**Interpretasi Tabel:**")
-                st.write(f"Tabel ini menunjukkan pasangan data yang digunakan sebagai input untuk interpolasi. Kolom X adalah Berat Badan acuan, dan Kolom Y adalah {Deskripsi_Gizi} yang diatur oleh pedoman AKG untuk {Kelompok_Populasi_Key}.")
-                st.write(f"Metode Lagrange menggunakan semua titik data ini untuk membuat kurva estimasi.")
-                
-            with col_viz:
-                st.subheader("2. Kurva Estimasi Lagrange")
-                
-                # Visualisasi Plot Matplotlib
-                min_BB = X_data_BB.min()
-                max_BB = X_data_BB.max()
-                X_plot = np.linspace(min_BB, max_BB, 100)
-                Y_plot = [Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, x) for x in X_plot]
-                
-                fig, ax = plt.subplots(figsize=(8, 5))
-                ax.scatter(X_data_BB, Y_data_Gizi, color='red', s=100, label='Titik Data AKG Rujukan', zorder=5)
-                ax.plot(X_plot, Y_plot, color='blue', linestyle='-', label='Kurva Model Estimasi Lagrange')
-                ax.scatter(BB_Target_Val, hasil_estimasi, color='green', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6)
-                
-                ax.set_title(f"Estimasi {Deskripsi_Gizi} vs Berat Badan")
-                ax.set_xlabel("Berat Badan (kg)")
-                ax.set_ylabel(f"Kebutuhan Harian ({Unit_Gizi})")
-                ax.grid(True, linestyle='--', alpha=0.6)
-                ax.legend()
-                
-                st.pyplot(fig)
-                
-                # Interpretasi Grafik
-                st.markdown("**Interpretasi Grafik:**")
-                st.write("Garis biru menunjukkan **Kurva Polinomial Lagrange** yang mulus. Kurva ini melewati semua Titik Data Rujukan (lingkaran merah) yang Anda masukkan.")
-                st.write(f"Tanda **X hijau** menunjukkan hasil estimasi Anda: pada Berat Badan **{BB_Target_Val:.1f} kg**, kebutuhan Anda diproyeksikan berada tepat di atas kurva pada nilai **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+                with col_data:
+                    st.subheader("1. Titik Data Rujukan AKG")
+                    df_data = pd.DataFrame({
+                        f'Berat Badan Acuan (kg, X)': X_data_BB,
+                        f'{Deskripsi_Gizi} Rujukan ({Unit_Gizi}, Y)': Y_data_Gizi
+                    })
+                    st.dataframe(df_data, use_container_width=True)
+                    
+                    # Interpretasi Tabel
+                    st.markdown("**Interpretasi Tabel:**")
+                    st.write(f"Tabel ini menunjukkan pasangan data yang digunakan sebagai input untuk interpolasi. Kolom X adalah Berat Badan acuan, dan Kolom Y adalah {Deskripsi_Gizi} yang diatur oleh pedoman AKG untuk {Kelompok_Populasi_Key}.")
+                    st.write(f"Metode Lagrange menggunakan semua titik data ini untuk membuat kurva estimasi.")
+                    
+                with col_viz:
+                    st.subheader("2. Kurva Estimasi Lagrange")
+                    
+                    # Visualisasi Plot Matplotlib
+                    min_BB = X_data_BB.min()
+                    max_BB = X_data_BB.max()
+                    X_plot = np.linspace(min_BB, max_BB, 100)
+                    Y_plot = [Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, x) for x in X_plot]
+                    
+                    fig, ax = plt.subplots(figsize=(8, 5))
+                    ax.scatter(X_data_BB, Y_data_Gizi, color='#C0392B', s=100, label='Titik Data AKG Rujukan', zorder=5) # Merah Marun
+                    ax.plot(X_plot, Y_plot, color='#2980B9', linestyle='-', label='Kurva Model Estimasi Lagrange') # Biru Pekat
+                    ax.scatter(BB_Target_Val, hasil_estimasi, color='#1ABC9C', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6) # Hijau Mint
+                    
+                    ax.set_title(f"Estimasi {Deskripsi_Gizi} vs Berat Badan")
+                    ax.set_xlabel("Berat Badan (kg)")
+                    ax.set_ylabel(f"Kebutuhan Harian ({Unit_Gizi})")
+                    ax.grid(True, linestyle='--', alpha=0.6)
+                    ax.legend()
+                    
+                    st.pyplot(fig)
+                    
+                    # Interpretasi Grafik
+                    st.markdown("**Interpretasi Grafik:**")
+                    st.write("Garis biru menunjukkan **Kurva Polinomial Lagrange** yang mulus. Kurva ini melewati semua Titik Data Rujukan (lingkaran merah marun) yang Anda masukkan.")
+                    st.write(f"Tanda **X hijau** menunjukkan hasil estimasi Anda: pada Berat Badan **{BB_Target_Val:.1f} kg**, kebutuhan Anda diproyeksikan berada tepat di atas kurva pada nilai **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+            else:
+                 st.warning("Visualisasi kurva Lagrange tidak ditampilkan untuk Kebutuhan Air dan Serat karena nilainya adalah rujukan tetap berdasarkan kelompok usia, bukan hasil interpolasi berat badan.")
 
                 
         except Exception as e:
-            # Baris ini telah diperbaiki dari IndentationError
             st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
             st.session_state['hitung'] = False
     else:
@@ -426,6 +438,3 @@ with tab_metode:
     st.latex(r"""
         \text{dimana Basis Polinomial } L_j(x) = \prod_{i=0, i \neq j}^{n} \frac{x - x_i}{x_j - x_i}
     """)
-    # Panduan di bawah ini telah dihapus/dimodifikasi untuk menghilangkan karakter khusus yang menyebabkan error:
-    # 3. **Reboot Aplikasi:** Kembali ke dasbor Streamlit Cloud Anda, klik **(⋮)**, dan pilih **"Reboot"**.
-    # Syntax error terjadi karena ada karakter khusus di sini.
