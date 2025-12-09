@@ -42,35 +42,8 @@ Proyek ini dibangun di atas fondasi teknologi dan algoritma yang kuat:
 Proyek keren ini terwujud berkat kolaborasi tim yang bersemangat. Kami terbuka untuk kontribusi!
 
 | Nama | GitHub |
-| :--- | :--- | :--- |
-| **[Fauziah Rahma]** | [@UsernameAnda](https://github.com/UsernameAnda) |
-| **[Aliffia Hilva]** | [@UsernameAnggota2](https://github.com/UsernameAnggota2) |
-
----
-
-## 🛠️ Cara Menjalankan Secara Lokal (Setup)
-
-Tertarik untuk memodifikasi atau berkontribusi? Ikuti langkah-langkah sederhana ini:
-
-1.  **Clone Repository:**
-    ```bash
-    git clone [https://github.com/UsernameAnda/nama-repo-anda.git](https://github.com/UsernameAnda/nama-repo-anda.git)
-    cd nama-repo-anda
-    ```
-2.  **Buat & Aktifkan Virtual Environment:**
-    ```bash
-    python -m venv venv
-    # Pada Linux/MacOS
-    source venv/bin/activate
-    ```
-3.  **Instal Dependensi:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  **Jalankan Aplikasi Streamlit:**
-    ```bash
-    streamlit run app.py
-    ```
+| **[Fauziah Rahma]** | [@fauziah1011](https://github.com/UsernameAnda) |
+| **[Aliffia Hilva]** | [@FIADANRARA](https://github.com/UsernameAnggota2) |
 
 ---
 
@@ -78,4 +51,3 @@ Tertarik untuk memodifikasi atau berkontribusi? Ikuti langkah-langkah sederhana 
 
 * **Status Proyek:** Aktif / Selesai (Pilih salah satu)
 * **Versi Saat Ini:** v1.0.0
-* Proyek ini didistribusikan di bawah **[Nama Lisensi, contoh: MIT License]**. Lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
