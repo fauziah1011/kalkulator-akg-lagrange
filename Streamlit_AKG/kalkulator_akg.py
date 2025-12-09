@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V6) ---
+# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V7) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -45,7 +45,7 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 🔥 PERBAIKAN KRUSIAL 1: KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
+    /* KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
         border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
@@ -56,8 +56,8 @@ st.markdown("""
         color: #000000 !important; /* Teks di st.success menjadi HITAM */
         font-weight: bold !important;
     }
-
-    /* 5. FIX: BACKGROUND KOTAK INPUT */
+    
+    /* FIX: BACKGROUND KOTAK INPUT */
     [data-baseweb="select"] div:first-child,
     [data-baseweb="input"] input,
     .st-emotion-cache-1y4pm5r div, 
@@ -127,7 +127,6 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     hasil_estimasi = 0.0
     
     if len(np.unique(X_Acuan)) < n:
-        # Pindahkan pesan error ke Streamlit, di sini hanya return 0.0
         return 0.0
 
     for i in range(n):
@@ -164,7 +163,6 @@ def Klasifikasi_BMI_HTML(BMI, BB, TB):
         saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Segera Koreksi!** Status Obesitas. Perlu konsultasi gizi dan perubahan gaya hidup drastis."
         color_code = "#FF4B4B" # Merah
         
-    # Mengembalikan nilai status dan subteks yang sudah di-format
     return status, saran, color_code
     
 # ----------------------------------------------------------------------
@@ -184,12 +182,10 @@ def custom_metric(label, value, subtext):
 # ----------------------------------------------------------------------
 # FUNGSI SARAN MAKANAN DINAMIS BARU
 # ----------------------------------------------------------------------
-# (Fungsi ini tidak berubah, hanya menggunakan output Klasifikasi_BMI_HTML yang sudah diformat)
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Status_Saran, Air_Rujukan, Serat_Rujukan):
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan):
     saran = []
     
-    # 1. Saran Berdasarkan Status Gizi (BMI)
-    saran.append(f"**Status Gizi (BMI):** {BMI_Status_Saran}")
+    saran.append(f"**Status Gizi (BMI):** {BMI_Saran_Subtext}")
     
     saran.append("---")
     
@@ -408,10 +404,11 @@ with tab_hasil:
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
-            # Tampilkan 3 METRIC UTAMA (BMI, AIR, SERAT) - Menggunakan CUSTOM MARKDOWN
+            # 🚨 IMPLEMENTASI CUSTOM METRIC (WAJIB)
             col_bmi, col_air, col_serat = st.columns(3)
             
             with col_bmi:
+                # Mengganti st.metric dengan custom_metric
                 custom_metric(
                     label="Indeks Massa Tubuh (BMI)",
                     value=f"{BMI:.1f}",
@@ -419,6 +416,7 @@ with tab_hasil:
                 )
                 
             with col_air:
+                # Mengganti st.metric dengan custom_metric
                 custom_metric(
                     label="Kebutuhan Air Harian",
                     value=f"{Air_Rujukan} {Unit_Air}",
@@ -426,11 +424,13 @@ with tab_hasil:
                 )
                 
             with col_serat:
+                # Mengganti st.metric dengan custom_metric
                 custom_metric(
                     label="Kebutuhan Serat Harian",
                     value=f"{Serat_Rujukan} {Unit_Serat}",
                     subtext="🥦 Rujukan Kelompok Usia"
                 )
+            # 🚨 AKHIR IMPLEMENTASI CUSTOM METRIC
             
             st.markdown("---")
             
@@ -461,8 +461,15 @@ with tab_hasil:
                 })
                 st.dataframe(df_data, use_container_width=True)
                 
-                st.markdown("**Interpretasi Tabel:**")
-                st.write("Tabel ini menunjukkan pasangan data yang digunakan sebagai input untuk interpolasi Lagrange. Metode ini menjamin kurva estimasi melewati semua titik rujukan ini.")
+                # --- PENJELASAN TABEL LEBIH SPESIFIK ---
+                st.markdown("**Interpretasi Tabel Rujukan:**")
+                st.write(f"""
+                Tabel ini menunjukkan **pasangan data rujukan resmi AKG** (Angka Kecukupan Gizi) untuk kelompok usia **{Kelompok_Populasi_Key}**. 
+                * Kolom **X (Berat Badan Acuan)**: Merupakan titik-titik Berat Badan yang sudah ditetapkan dalam data AKG.
+                * Kolom **Y ({Deskripsi_Gizi} Rujukan)**: Adalah kebutuhan gizi yang sesuai dengan masing-masing Berat Badan di kolom X.
+                * Metode Interpolasi Lagrange menjamin **kurva estimasi akan melewati semua titik data** yang ada di tabel ini untuk memastikan akurasi model.
+                """)
+                # --- AKHIR PENJELASAN TABEL ---
                 
             with col_viz:
                 st.subheader("2. Kurva Estimasi Lagrange")
@@ -494,12 +501,18 @@ with tab_hasil:
                 
                 st.pyplot(fig)
                 
-                # Interpretasi Grafik
-                st.markdown("**Interpretasi Grafik:**")
-                st.write("Garis (Kurva Polinomial Lagrange) mewakili estimasi kebutuhan gizi untuk rentang berat badan. Titik **X biru terang** adalah hasil estimasi spesifik Anda.")
+                # --- PENJELASAN GRAFIK LEBIH SPESIFIK ---
+                st.markdown("**Interpretasi Kurva Lagrange:**")
+                st.write(f"""
+                1.  **Kurva Biru Muda (—)**: Ini adalah Kurva Polinomial Lagrange yang dibuat berdasarkan semua titik data di tabel. Kurva ini **menginterpolasi** (mengisi celah) antara titik-titik rujukan.
+                2.  **Titik Kuning (•)**: Ini adalah Titik-Titik Data Rujukan AKG asli dari tabel. Perhatikan bahwa Kurva Lagrange **pasti melewati** titik-titik ini.
+                3.  **Tanda X Biru Cerah (X)**: Ini adalah **Hasil Estimasi Anda** ({hasil_estimasi:.2f} {Unit_Gizi}) yang diprediksi oleh kurva Lagrange berdasarkan Berat Badan Target Anda ({BB_Target_Val:.1f} kg).
+                """)
+                # --- AKHIR PENJELASAN GRAFIK ---
 
                 
         except Exception as e:
+            # Mengganti pesan error yang mungkin menimbulkan SyntaxError (image_84dfd5.png)
             st.error(f"❌ ERROR KRITIS: Terjadi Kesalahan Dalam Perhitungan: {e}")
             st.session_state['hitung'] = False
     else:
