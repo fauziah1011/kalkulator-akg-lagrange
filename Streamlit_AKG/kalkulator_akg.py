@@ -408,6 +408,7 @@ with tab_hasil:
 
                 
         except Exception as e:
+            # Baris ini telah diperbaiki dari IndentationError
             st.error(f"❌ ERROR DALAM PERHITUNGAN: Terjadi Kesalahan: {e}")
             st.session_state['hitung'] = False
     else:
@@ -425,3 +426,6 @@ with tab_metode:
     st.latex(r"""
         \text{dimana Basis Polinomial } L_j(x) = \prod_{i=0, i \neq j}^{n} \frac{x - x_i}{x_j - x_i}
     """)
+    # Panduan di bawah ini telah dihapus/dimodifikasi untuk menghilangkan karakter khusus yang menyebabkan error:
+    # 3. **Reboot Aplikasi:** Kembali ke dasbor Streamlit Cloud Anda, klik **(⋮)**, dan pilih **"Reboot"**.
+    # Syntax error terjadi karena ada karakter khusus di sini.
