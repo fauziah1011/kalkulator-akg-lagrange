@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX) ---
+# --- CSS KUSTOM & TEMA (ULTRA AGGRESSIVE FIX V3) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -52,9 +52,10 @@ st.markdown("""
         font-weight: bold;
     }
     
-    /* 🔥 PERBAIKAN PENTING: WARNA TEKS DI KOTAK st.success */
+    /* 🔥 PERBAIKAN KRUSIAL: WARNA TEKS DI KOTAK st.success */
     .st-emotion-cache-199v4c3 p {
-        color: #FFB300 !important; /* Mengubah teks di st.success menjadi Kuning Emas */
+        color: #FFFFFF !important; /* Mengubah teks di st.success menjadi PUTIH TERANG */
+        font-weight: bold !important;
     }
 
     /* 6. Tombol Hitung */
@@ -154,17 +155,21 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# FUNGSI KLASIFIKASI BMI BARU
+# FUNGSI KLASIFIKASI BMI BARU (REVISI WARNA DELTA)
 # ----------------------------------------------------------------------
 def Klasifikasi_BMI(BMI):
     if BMI < 18.5:
-        return "Kurus (Underweight)", "inverse" # Merah/Warning
+        # Kurus: Merah/Inverse
+        return "Kurus (Underweight)", "inverse" 
     elif 18.5 <= BMI < 23.0:
-        return "Normal", "normal" # Hijau/Default
+        # Normal: Hijau/Normal
+        return "Normal", "normal" 
     elif 23.0 <= BMI < 25.0:
-        return "Gemuk (Overweight)", "off" # Kuning/Gray
+        # Gemuk (Overweight): Menggunakan Merah/Inverse agar lebih menonjolkan risiko
+        return "Gemuk (Overweight)", "inverse" 
     else: # BMI >= 25.0
-        return "Obesitas", "inverse" # Merah/Warning
+        # Obesitas: Merah/Inverse
+        return "Obesitas", "inverse" 
 
 # ----------------------------------------------------------------------
 # FUNGSI SARAN MAKANAN DINAMIS BARU
