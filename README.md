@@ -50,15 +50,13 @@ Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya te
 
 Misalkan kita memiliki $n$ titik data AKG $\left(x_0, y_0\right), \left(x_1, y_1\right), \ldots, \left(x_{n-1}, y_{n-1}\right)$. Polinomial Lagrange $P(x)$ didefinisikan sebagai:
 
-$$
-P(x) = \sum_{j=0}^{n-1} y_j L_j(x)
-$$
+Polinomial Lagrange $P(x)$ didefinisikan sebagai:
+
+![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
 
 dengan $L_j(x)$ adalah basis polinomial Lagrange yang didefinisikan sebagai:
 
-$$
-L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}
-$$
+![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
 
 #### Penerapan pada Gizi
 
