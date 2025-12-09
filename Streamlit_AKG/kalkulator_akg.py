@@ -3,22 +3,53 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA ---
+# --- CSS KUSTOM & TEMA (PERUBAHAN WARNA PEKAT) ---
 st.markdown("""
 <style>
+    /* 1. Latar Belakang Utama Aplikasi (Tidak Putih Monoton) */
+    .stApp {
+        background-color: #F8F8F8; /* Abu-abu muda/krem lembut */
+        color: #333333; /* Warna teks utama lebih pekat */
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* 2. Latar Belakang Sidebar (Kontras) */
+    .st-emotion-cache-1ldfqsx { 
+        background-color: #333333; /* Abu-abu gelap untuk sidebar */
+    }
+
+    /* 3. Warna Teks di Sidebar (Agar terbaca) */
+    .st-emotion-cache-1ldfqsx label, .st-emotion-cache-1ldfqsx h2 {
+        color: #FFFFFF !important; /* Teks putih di sidebar */
+    }
+
+    /* 4. Judul Utama (Lebih mencolok) */
     h1 {
-        color: #4CAF50; /* Hijau Tema */
+        color: #1E8449; /* Hijau tua yang pekat */
         text-align: center;
         padding-bottom: 10px;
     }
-    .stApp {
-        font-family: 'Arial', sans-serif;
-        color: #333333;
-    }
+
+    /* 5. Styling Kotak Output/Widget (Memberi bentuk) */
     .st-emotion-cache-h44nrf, .st-emotion-cache-12fm521 { 
         border-radius: 10px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Shadow lebih pekat */
         padding: 15px;
+        background-color: #FFFFFF; /* Kontainer tetap putih agar mudah dibaca */
+    }
+    
+    /* 6. Kotak Info & Success (Aksen Warna) */
+    .st-emotion-cache-1mmpn3a, .st-emotion-cache-199v4c3 { /* Info/Success Box */
+        background-color: #EBF5FB; /* Biru muda */
+        border-left: 5px solid #3498DB; /* Garis biru pekat */
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    /* 7. Metric (Aksen Cepat) */
+    .st-emotion-cache-14xtmhp {
+        color: #D35400; /* Warna oranye untuk nilai metric */
+        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -52,7 +83,7 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
 # ----------------------------------------------------------------------
 # BAGIAN 2: SUMBER DATA AKG RUJUKAN (BATASAN USIA DIPERBARUI)
 # ----------------------------------------------------------------------
-# Data Air dan Serat (Keys sudah diperbarui)
+# Data Air dan Serat
 Tabel_Kebutuhan_Air_Serat = {
     'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
     'Laki-laki (Dewasa 21-60 th)': {'Air': 2.5, 'Serat': 37, 'unit_air': 'liter', 'unit_serat': 'g'},
@@ -62,7 +93,7 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# Data AKG (Keys sudah diperbarui)
+# Data AKG 
 Tabel_Kebutuhan_Gizi_Rujukan = {
     # A. LAKI-LAKI
     'Laki-laki (Remaja 10-20 th)': {
@@ -394,6 +425,3 @@ with tab_metode:
     st.latex(r"""
         \text{dimana Basis Polinomial } L_j(x) = \prod_{i=0, i \neq j}^{n} \frac{x - x_i}{x_j - x_i}
     """)
-
----
-
