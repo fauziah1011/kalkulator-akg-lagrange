@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (REVISI V8 - FINAL PERMANEN) ---
+# --- CSS KUSTOM & TEMA (REVISI V9 - Saran Makanan Dinamis BMI) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -167,23 +167,26 @@ def Klasifikasi_BMI_HTML(BMI, BB, TB):
         status = "⚠️ Kurang (Underweight)"
         saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Waspada!** Status Gizi Kurang. Perlu peningkatan asupan energi dan protein."
         color_code = "#FF4B4B" # Merah
+        bmi_key = 'Saran_Kurus'
     elif 18.5 <= BMI < 23.0:
         # Normal: Hijau
         status = "✅ Normal"
         saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Pertahankan!** Status Gizi Normal. Pola makan seimbang."
         color_code = "#00BFA6" # Hijau
-    elif 23.0 <= BMI < 25.0:
-        # Gemuk (Overweight): Kuning
-        status = "🟡 Gemuk (Overweight)"
-        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Perhatian!** Status Gizi Berlebih. Perlu kontrol porsi dan batasi lemak/gula."
-        color_code = "#FFC82C" # Kuning
-    else: # BMI >= 25.0
-        # Obesitas: Merah
-        status = "🚨 Obesitas"
-        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Segera Koreksi!** Status Obesitas. Perlu konsultasi gizi dan perubahan gaya hidup drastis."
-        color_code = "#FF4B4B" # Merah
+        bmi_key = 'Saran_Normal'
+    else: # BMI >= 23.0 (Gemuk/Obesitas)
+        # Gemuk/Obesitas: Kuning/Merah
+        if BMI < 25.0:
+            status = "🟡 Gemuk (Overweight)"
+            color_code = "#FFC82C" # Kuning
+        else:
+            status = "🚨 Obesitas"
+            color_code = "#FF4B4B" # Merah
         
-    return status, saran, color_code
+        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Perhatian!** Status Gizi Berlebih. Perlu kontrol porsi dan batasi lemak/gula."
+        bmi_key = 'Saran_Gemuk_Obesitas'
+        
+    return status, saran, color_code, bmi_key
     
 # ----------------------------------------------------------------------
 # FUNGSI CUSTOM METRIC (Pengganti st.metric)
@@ -200,17 +203,20 @@ def custom_metric(label, value, subtext):
     st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# FUNGSI SARAN MAKANAN DINAMIS BARU
+# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI)
 # ----------------------------------------------------------------------
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan):
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key):
     saran = []
     
     saran.append(f"**Status Gizi (BMI):** {BMI_Saran_Subtext}")
     
     saran.append("---")
     
+    # Ambil saran makro/mikro berdasarkan Jenis Gizi dan Status BMI
+    saran_gizi_spesifik = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {}).get(BMI_Key, [f"Saran umum untuk {Jenis_Gizi_Key}."])[0]
+    
     # 2. Saran Makro & Mikro Spesifik
-    saran.append(f"**Target Utama Anda ({Jenis_Gizi_Key}):** {hasil_estimasi:.0f} {Unit_Gizi}. {Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, [''])[0]}")
+    saran.append(f"**Target Utama Anda ({Jenis_Gizi_Key}):** {hasil_estimasi:.0f} {Unit_Gizi}. {saran_gizi_spesifik}")
     saran.append(f"**Target Air:** {Air_Rujukan} liter/hari. Pastikan minum air putih secara teratur, hindari minuman manis berlebihan.")
     saran.append(f"**Target Serat:** {Serat_Rujukan} g/hari. Konsumsi sayur dan buah minimal 5 porsi/hari dan pilih biji-bijian utuh (whole grain).")
     
@@ -228,13 +234,38 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
+# REVISI STRUKTUR SARAN MAKANAN BERDASARKAN BMI
 Tabel_Saran_Makro_Mikro = {
-    'Energi': ["Perbanyak asupan karbohidrat kompleks (nasi merah, ubi, gandum). Energi adalah kunci performa harian."], 
-    'Protein': ["Cukupi dengan daging tanpa lemak, telur, ikan, atau produk kedelai (tahu/tempe). Protein penting untuk pembentukan otot dan perbaikan sel."],
-    'Lemak Total': ["Pilih lemak sehat tak jenuh (minyak zaitun, ikan salmon, biji-bijian). Batasi lemak jenuh dari gorengan."],
-    'Karbohidrat': ["Pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh untuk energi berkelanjutan."],
-    'Kalsium (Ca)': ["Konsumsi susu, keju, yogurt, atau sayuran hijau gelap. Kalsium penting untuk kesehatan tulang dan gigi."],
-    'Besi (Fe)': ["Konsumsi daging merah, hati, bayam, atau kacang-kacangan. Konsumsi Vitamin C untuk membantu penyerapan Besi."],
+    'Energi': {
+        'Saran_Kurus': "Fokus pada makanan padat kalori tapi bernutrisi (avokad, kacang-kacangan, susu *full cream*). Konsumsi porsi lebih besar.",
+        'Saran_Normal': "Jaga keseimbangan asupan kalori. Pilih karbohidrat kompleks (nasi merah, ubi) untuk energi stabil.",
+        'Saran_Gemuk_Obesitas': "Kurangi makanan tinggi kalori, terutama yang mengandung gula dan lemak jenuh. Pilih porsi kecil dan makanan rendah GI."
+    }, 
+    'Protein': {
+        'Saran_Kurus': "Tingkatkan konsumsi protein (daging, telur, ikan) untuk membantu pembentukan massa otot. Prioritaskan protein berkualitas tinggi.",
+        'Saran_Normal': "Cukupi dengan daging tanpa lemak, telur, ikan, atau produk kedelai. Protein penting untuk perbaikan sel.",
+        'Saran_Gemuk_Obesitas': "Pilih sumber protein rendah lemak (ikan, dada ayam tanpa kulit, tahu/tempe) untuk meningkatkan rasa kenyang dan menjaga massa otot selama defisit kalori."
+    },
+    'Lemak Total': {
+        'Saran_Kurus': "Masukkan lemak sehat (alpukat, minyak zaitun, kacang-kacangan) untuk menambah kalori tanpa volume berlebihan.",
+        'Saran_Normal': "Pilih lemak sehat tak jenuh (minyak zaitun, ikan salmon, biji-bijian). Batasi lemak jenuh dari gorengan.",
+        'Saran_Gemuk_Obesitas': "Batasi asupan lemak total, terutama lemak jenuh dan trans (gorengan, makanan cepat saji). Utamakan lemak tak jenuh dalam jumlah minimal."
+    },
+    'Karbohidrat': {
+        'Saran_Kurus': "Pilih karbohidrat kompleks dalam porsi besar. Sertakan buah-buahan dan sayuran bertepung.",
+        'Saran_Normal': "Pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh untuk energi berkelanjutan.",
+        'Saran_Gemuk_Obesitas': "Pilih karbohidrat dengan indeks glikemik rendah dan tinggi serat (sayuran, kacang-kacangan). Kontrol porsi karbohidrat."
+    },
+    'Kalsium (Ca)': {
+        'Saran_Kurus': "Konsumsi produk susu dan sayuran hijau. Kalsium penting, terutama jika asupan energi ditingkatkan.",
+        'Saran_Normal': "Konsumsi susu, keju, yogurt, atau sayuran hijau gelap. Kalsium penting untuk kesehatan tulang dan gigi.",
+        'Saran_Gemuk_Obesitas': "Pilih produk susu rendah lemak atau non-fat untuk memenuhi kebutuhan Kalsium tanpa menambah kalori berlebih."
+    },
+    'Besi (Fe)': {
+        'Saran_Kurus': "Prioritaskan sumber zat Besi hewani (daging merah, hati) dan konsumsi dengan Vitamin C untuk penyerapan optimal.",
+        'Saran_Normal': "Konsumsi daging merah, hati, bayam, atau kacang-kacangan. Konsumsi Vitamin C untuk membantu penyerapan Besi.",
+        'Saran_Gemuk_Obesitas': "Pilih sumber Besi nabati atau hewani rendah lemak. Besi penting untuk transportasi oksigen."
+    },
 }
 
 Tabel_Kebutuhan_Gizi_Rujukan = {
@@ -419,8 +450,8 @@ with tab_hasil:
             TB_meter = TB_Val / 100
             BMI = BB_Target_Val / (TB_meter ** 2)
             
-            # Klasifikasi BMI Kustom
-            BMI_Status, BMI_Saran_Subtext, BMI_Color_Code = Klasifikasi_BMI_HTML(BMI, BB_Target_Val, TB_Val)
+            # Klasifikasi BMI Kustom (MENDAPATKAN BMI_Key)
+            BMI_Status, BMI_Saran_Subtext, BMI_Color_Code, BMI_Key = Klasifikasi_BMI_HTML(BMI, BB_Target_Val, TB_Val)
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
@@ -457,9 +488,9 @@ with tab_hasil:
             # Tampilkan hasil estimasi dalam kotak SUCCESS (PUTIH Pucat, Teks Hitam)
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
-            # Saran Makanan (Dinamis)
+            # Saran Makanan (Dinamis BMI)
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
-            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan)
+            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key)
             
             for saran in saran_list:
                 st.markdown(saran)
@@ -533,4 +564,3 @@ with tab_hasil:
             st.session_state['hitung'] = False
     else:
         st.warning("Tekan tombol **'HITUNG ESTIMASI GIZI SEKARANG 🎯'** di tab **Input Parameter** untuk memulai analisis.")
-
