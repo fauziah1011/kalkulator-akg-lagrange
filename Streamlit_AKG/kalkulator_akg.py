@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (REVISI V9 - Saran Makanan Dinamis BMI) ---
+# --- CSS KUSTOM & TEMA (REVISI V10 - Saran Makanan Aksi Spesifik) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -62,7 +62,7 @@ st.markdown("""
     [data-baseweb="input"] input,
     .st-emotion-cache-1y4pm5r div, 
     .st-emotion-cache-15tx6ry div,
-    .st-emotion-cache-1u48l0g { 
+    .st.emotion-cache-1u48l0g { 
         background-color: #0B2447 !important; /* Background input field jadi Deep Navy */
         color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
     }
@@ -203,22 +203,34 @@ def custom_metric(label, value, subtext):
     st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI)
+# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI - REV V10)
 # ----------------------------------------------------------------------
 def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key):
     saran = []
     
+    # 1. Status BMI
     saran.append(f"**Status Gizi (BMI):** {BMI_Saran_Subtext}")
+    saran.append("---")
+    
+    # 2. Saran Utama Gizi (dengan format TINGKATKAN/KURANGI)
+    saran_data = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {})
+    
+    saran.append(f"### Target Utama: {hasil_estimasi:.0f} {Unit_Gizi} ({Jenis_Gizi_Key})")
+    
+    # TINGKATKAN/JAGA
+    tingkatkan_jaga = saran_data.get(BMI_Key, {}).get('Tingkatkan/Jaga', "Informasi saran belum tersedia.")
+    saran.append(f"**⬆️ FOKUS TINGKATKAN/JAGA:** {tingkatkan_jaga}")
+    
+    # KURANGI/BATASI
+    kurangi_batasi = saran_data.get(BMI_Key, {}).get('Kurangi/Batasi', "Informasi saran belum tersedia.")
+    saran.append(f"**⬇️ FOKUS KURANGI/BATASI:** {kurangi_batasi}")
     
     saran.append("---")
     
-    # Ambil saran makro/mikro berdasarkan Jenis Gizi dan Status BMI
-    saran_gizi_spesifik = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {}).get(BMI_Key, [f"Saran umum untuk {Jenis_Gizi_Key}."])[0]
-    
-    # 2. Saran Makro & Mikro Spesifik
-    saran.append(f"**Target Utama Anda ({Jenis_Gizi_Key}):** {hasil_estimasi:.0f} {Unit_Gizi}. {saran_gizi_spesifik}")
-    saran.append(f"**Target Air:** {Air_Rujukan} liter/hari. Pastikan minum air putih secara teratur, hindari minuman manis berlebihan.")
-    saran.append(f"**Target Serat:** {Serat_Rujukan} g/hari. Konsumsi sayur dan buah minimal 5 porsi/hari dan pilih biji-bijian utuh (whole grain).")
+    # 3. Saran Air dan Serat (Rujukan Tetap)
+    saran.append(f"### Kebutuhan Pelengkap Harian")
+    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Pastikan minum air putih secara teratur, hindari minuman manis berlebihan.")
+    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Konsumsi sayur dan buah minimal 5 porsi/hari dan pilih biji-bijian utuh (whole grain).")
     
     return saran
 
@@ -234,37 +246,91 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# REVISI STRUKTUR SARAN MAKANAN BERDASARKAN BMI
+# REVISI STRUKTUR SARAN MAKANAN BERDASARKAN BMI (V10: Tingkatkan vs Kurangi)
 Tabel_Saran_Makro_Mikro = {
     'Energi': {
-        'Saran_Kurus': "Fokus pada makanan padat kalori tapi bernutrisi (avokad, kacang-kacangan, susu *full cream*). Konsumsi porsi lebih besar.",
-        'Saran_Normal': "Jaga keseimbangan asupan kalori. Pilih karbohidrat kompleks (nasi merah, ubi) untuk energi stabil.",
-        'Saran_Gemuk_Obesitas': "Kurangi makanan tinggi kalori, terutama yang mengandung gula dan lemak jenuh. Pilih porsi kecil dan makanan rendah GI."
+        'Saran_Kurus': {
+            'Tingkatkan/Jaga': "Asupan karbohidrat kompleks (nasi, roti, ubi) dan protein. Pilih makanan padat kalori (alpukat, kacang-kacangan) dan makan porsi lebih sering/besar.",
+            'Kurangi/Batasi': "Minuman dan makanan yang terlalu banyak serat di awal makan (untuk memaksimalkan penyerapan kalori), makanan rendah kalori."
+        }, 
+        'Saran_Normal': {
+            'Tingkatkan/Jaga': "Keseimbangan sumber energi (Karbohidrat, Protein, Lemak) sesuai target AKG. Fokus pada sumber energi yang bersih (whole foods).",
+            'Kurangi/Batasi': "Kalori kosong seperti *snack* tinggi gula, minuman manis, dan *fast food* berlebihan."
+        },
+        'Saran_Gemuk_Obesitas': {
+            'Tingkatkan/Jaga': "Sayuran non-pati dan serat (untuk kenyang tanpa kalori berlebih). Jaga asupan protein untuk massa otot.",
+            'Kurangi/Batasi': "Porsi keseluruhan makanan (defisit kalori), gula tambahan, minuman manis, makanan yang digoreng, dan sumber karbohidrat sederhana."
+        }
     }, 
     'Protein': {
-        'Saran_Kurus': "Tingkatkan konsumsi protein (daging, telur, ikan) untuk membantu pembentukan massa otot. Prioritaskan protein berkualitas tinggi.",
-        'Saran_Normal': "Cukupi dengan daging tanpa lemak, telur, ikan, atau produk kedelai. Protein penting untuk perbaikan sel.",
-        'Saran_Gemuk_Obesitas': "Pilih sumber protein rendah lemak (ikan, dada ayam tanpa kulit, tahu/tempe) untuk meningkatkan rasa kenyang dan menjaga massa otot selama defisit kalori."
+        'Saran_Kurus': {
+            'Tingkatkan/Jaga': "Asupan protein berkualitas tinggi (daging tanpa lemak, telur, ikan, whey) pada setiap kali makan untuk membangun massa otot.",
+            'Kurangi/Batasi': "Hanya makan sayuran sebagai sumber protein utama; perlu kombinasi dengan protein hewani."
+        },
+        'Saran_Normal': {
+            'Tingkatkan/Jaga': "Sumber protein beragam (daging, telur, ikan, tahu/tempe) untuk menjaga dan memperbaiki sel tubuh.",
+            'Kurangi/Batasi': "Protein yang datang bersamaan dengan lemak jenuh berlebih (misalnya: kulit ayam, sosis, *bacon*)."
+        },
+        'Saran_Gemuk_Obesitas': {
+            'Tingkatkan/Jaga': "Protein tinggi serat dan rendah lemak (dada ayam tanpa kulit, ikan, produk kedelai) untuk meningkatkan rasa kenyang.",
+            'Kurangi/Batasi': "Potongan daging berlemak tinggi; hindari pengolahan protein dengan cara digoreng (pilih panggang/rebus)."
+        }
     },
     'Lemak Total': {
-        'Saran_Kurus': "Masukkan lemak sehat (alpukat, minyak zaitun, kacang-kacangan) untuk menambah kalori tanpa volume berlebihan.",
-        'Saran_Normal': "Pilih lemak sehat tak jenuh (minyak zaitun, ikan salmon, biji-bijian). Batasi lemak jenuh dari gorengan.",
-        'Saran_Gemuk_Obesitas': "Batasi asupan lemak total, terutama lemak jenuh dan trans (gorengan, makanan cepat saji). Utamakan lemak tak jenuh dalam jumlah minimal."
+        'Saran_Kurus': {
+            'Tingkatkan/Jaga': "Lemak tak jenuh tunggal dan ganda (alpukat, kacang, minyak zaitun, ikan berlemak) untuk tambahan kalori bersih.",
+            'Kurangi/Batasi': "Lemak trans buatan (roti-roti kemasan, makanan instan) dan lemak jenuh yang sangat tinggi."
+        },
+        'Saran_Normal': {
+            'Tingkatkan/Jaga': "Proporsi Lemak Sehat (omega-3 dan tak jenuh) untuk kesehatan otak dan jantung.",
+            'Kurangi/Batasi': "Lemak jenuh dari *junk food* dan lemak trans. Pertahankan jumlah lemak sesuai target AKG."
+        },
+        'Saran_Gemuk_Obesitas': {
+            'Tingkatkan/Jaga': "Batasi lemak hingga batas minimum yang direkomendasikan AKG. Jika mengonsumsi lemak, pilih lemak tak jenuh.",
+            'Kurangi/Batasi': "Semua sumber lemak jenuh (mentega, minyak kelapa sawit, *deep fried* food), serta semua makanan/minuman yang mengandung krim atau santan kental."
+        }
     },
     'Karbohidrat': {
-        'Saran_Kurus': "Pilih karbohidrat kompleks dalam porsi besar. Sertakan buah-buahan dan sayuran bertepung.",
-        'Saran_Normal': "Pilih sumber karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh untuk energi berkelanjutan.",
-        'Saran_Gemuk_Obesitas': "Pilih karbohidrat dengan indeks glikemik rendah dan tinggi serat (sayuran, kacang-kacangan). Kontrol porsi karbohidrat."
+        'Saran_Kurus': {
+            'Tingkatkan/Jaga': "Karbohidrat kompleks (nasi, pasta, roti gandum utuh) dalam porsi besar sebagai sumber energi utama.",
+            'Kurangi/Batasi': "Diet rendah karbohidrat yang tidak perlu; hindari melewatkan jam makan utama berkarbohidrat."
+        },
+        'Saran_Normal': {
+            'Tingkatkan/Jaga': "Pilih sumber Karbohidrat kompleks (oat, nasi merah, roti gandum) dan serat yang cukup.",
+            'Kurangi/Batasi': "Gula sederhana (permen, *soft drink*, kue-kue) dan karbohidrat olahan."
+        },
+        'Saran_Gemuk_Obesitas': {
+            'Tingkatkan/Jaga': "Karbohidrat yang datang bersamaan dengan serat tinggi (sayuran, kacang-kacangan, biji-bijian utuh) untuk rasa kenyang.",
+            'Kurangi/Batasi': "Porsi nasi, mie, atau roti putih (Karbohidrat sederhana). Hindari minuman manis berkalori tinggi."
+        }
     },
     'Kalsium (Ca)': {
-        'Saran_Kurus': "Konsumsi produk susu dan sayuran hijau. Kalsium penting, terutama jika asupan energi ditingkatkan.",
-        'Saran_Normal': "Konsumsi susu, keju, yogurt, atau sayuran hijau gelap. Kalsium penting untuk kesehatan tulang dan gigi.",
-        'Saran_Gemuk_Obesitas': "Pilih produk susu rendah lemak atau non-fat untuk memenuhi kebutuhan Kalsium tanpa menambah kalori berlebih."
+        'Saran_Kurus': {
+            'Tingkatkan/Jaga': "Susu *full cream* atau produk olahannya (keju/yogurt), bayam, dan brokoli.",
+            'Kurangi/Batasi': "Minuman bersoda atau berkafein berlebih yang dapat mengganggu penyerapan Kalsium."
+        },
+        'Saran_Normal': {
+            'Tingkatkan/Jaga': "Produk susu (rendah/sedang lemak), tahu/tempe, dan sayuran hijau gelap.",
+            'Kurangi/Batasi': "Konsumsi fosfor berlebihan (misalnya dari minuman ringan) yang dapat mengganggu keseimbangan Ca."
+        },
+        'Saran_Gemuk_Obesitas': {
+            'Tingkatkan/Jaga': "Susu atau produk olahan rendah lemak/non-fat, serta sumber nabati Kalsium (untuk membatasi kalori).",
+            'Kurangi/Batasi': "Susu tinggi lemak atau produk *dessert* tinggi gula yang mengandung Kalsium."
+        }
     },
     'Besi (Fe)': {
-        'Saran_Kurus': "Prioritaskan sumber zat Besi hewani (daging merah, hati) dan konsumsi dengan Vitamin C untuk penyerapan optimal.",
-        'Saran_Normal': "Konsumsi daging merah, hati, bayam, atau kacang-kacangan. Konsumsi Vitamin C untuk membantu penyerapan Besi.",
-        'Saran_Gemuk_Obesitas': "Pilih sumber Besi nabati atau hewani rendah lemak. Besi penting untuk transportasi oksigen."
+        'Saran_Kurus': {
+            'Tingkatkan/Jaga': "Sumber Besi Heme (daging merah, hati) dikombinasikan dengan sumber Vitamin C (jeruk, jambu).",
+            'Kurangi/Batasi': "Minum teh/kopi segera setelah makan karena kandungan tanin dapat menghambat penyerapan Besi."
+        },
+        'Saran_Normal': {
+            'Tingkatkan/Jaga': "Sumber Besi beragam (hewani dan nabati) dan Vitamin C untuk penyerapan optimal.",
+            'Kurangi/Batasi': "Antasida atau suplemen Kalsium dalam waktu yang sama dengan makanan kaya Besi."
+        },
+        'Saran_Gemuk_Obesitas': {
+            'Tingkatkan/Jaga': "Sumber Besi hewani rendah lemak (misalnya ikan) atau sumber nabati (kacang-kacangan).",
+            'Kurangi/Batasi': "Daging merah berlemak tinggi sebagai satu-satunya sumber Besi."
+        }
     },
 }
 
@@ -488,7 +554,7 @@ with tab_hasil:
             # Tampilkan hasil estimasi dalam kotak SUCCESS (PUTIH Pucat, Teks Hitam)
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
-            # Saran Makanan (Dinamis BMI)
+            # Saran Makanan (Dinamis BMI - V10)
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
             saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key)
             
