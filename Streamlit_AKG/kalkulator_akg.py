@@ -136,7 +136,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🧮NutriMatch : Kebutuhan Gizi yang Pas Buat Kamu🍳")
-st.markdown("💡Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target (30 kg - 100 kg) dari data rujukan.")
+st.markdown("💡Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target dari data rujukan.")
 st.markdown("---")
 
 # ----------------------------------------------------------------------
@@ -443,7 +443,7 @@ with tab_input:
             key='kelompok'
         )
         
-        # 2. Jenis Gizi (Hanya gizi yang diinterpolasi)
+        # 2. Jenis Gizi 
         Gizi_options = list(Tabel_Kebutuhan_Gizi_Rujukan[Kelompok_Populasi_Key]['Kebutuhan_Gizi'].keys())
         Jenis_Gizi_Key = st.selectbox(
             '2. Jenis Kebutuhan Gizi:',
@@ -484,7 +484,7 @@ with tab_input:
     if st.button('HITUNG ESTIMASI GIZI SEKARANG 🎯', use_container_width=True, type="primary"):
         st.session_state['hitung'] = True
         st.info(f"Perhitungan {Jenis_Gizi_Key} Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
-        st.snow()
+        st.balloons()
 
 
 # --- TAB 2: Logika Perhitungan & Output Utama ---
@@ -551,10 +551,10 @@ with tab_hasil:
             # Tampilkan Hasil Utama Gizi Lagrange
             st.subheader(f"✅ HASIL ESTIMASI LAGRANGE: {Deskripsi_Gizi}")
             
-            # Tampilkan hasil estimasi dalam kotak SUCCESS (PUTIH Pucat, Teks Hitam)
+            # Tampilkan hasil estimasi dalam kotak SUCCESS 
             st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
-            # Saran Makanan (Dinamis BMI - V10)
+            # Saran Makanan 
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
             saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key)
             
@@ -633,7 +633,6 @@ with tab_hasil:
 
 # --- TAB 3: Tentang Metode ---
 with tab_metode:
-    # PERBAIKAN: Menghilangkan spasi non-standar (U+00A0) di Baris ini.
     st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
     st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
 
@@ -647,12 +646,12 @@ with tab_metode:
     st.subheader("Rumus Polinomial Lagrange")
     st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
     
-    # PERBAIKAN: Menggunakan st.latex() dan Raw String (r"...")
+    # Menggunakan st.latex() dan Raw String (r"...")
     st.latex(r"P(x) = \sum_{i=0}^{n-1} y_i L_i(x)")
     
     st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
     
-    # PERBAIKAN: Menggunakan st.latex() dan Raw String (r"...")
+    # Menggunakan st.latex() dan Raw String (r"...")
     st.latex(r"L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}")
     
     st.markdown("""
@@ -673,5 +672,6 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
+
 
 
