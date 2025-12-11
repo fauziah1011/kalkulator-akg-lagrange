@@ -2,11 +2,11 @@
 
 ## 🎉 Selamat Datang di NutriMatch!
 
-Halo teman-teman pelajar dan pegiat hidup sehat!
+Halo teman-teman pelajar dan pejuang hidup sehat!
 
-Selamat datang di **GIZI ANTI RIBET**, sebuah proyek keren yang membuat perhitungan Angka Kecukupan Gizi (AKG) jadi super mudah dan sangat akurat.
+Selamat datang di **GIZI ANTI RIBET** yaa, kalkulator keren yang bisa ngitungin Angka Kecukupan Gizi (AKG) kamu dengan  gampang dan akurat.
 
-Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi, bukan hanya perkiraan kasar.**
+Disini, kami ingin **Memberikan estimasi kebutuhan gizi harian yang presisi dan bukan hanya perkiraan kasar.**
 
 ### 🖼 Tampilan Aplikasi
 <img width="1250" height="541" alt="image" src="https://github.com/user-attachments/assets/a1cbeb30-656c-4c69-8019-5ae3fbecbc1a" />
@@ -15,11 +15,11 @@ Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi,
 
 ---
 
-## ✨ Kenapa Kalkulator Ini Spesial?
+## Kenapa Kalkulator Ini Spesial?
 
 Kalkulator Gizi biasa seringkali hanya membulatkan kebutuhan Anda ke kategori usia atau berat badan terdekat. Kami tidak! Kami menggunakan ilmu pasti, yaitu **Metode Numerik Interpolasi Lagrange**, untuk memberikan estimasi yang benar-benar personal.
 
-### 🧠 Otak di Balik Akurasi: Interpolasi Lagrange
+### Otak di Balik Akurasi: Interpolasi Lagrange
 
 Kami membangun sebuah model matematika untuk mengisi celah antara data AKG standar (titik-titik rujukan).
 
