@@ -208,38 +208,47 @@ def custom_metric(label, value, subtext):
     st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# FUNGSI SARAN MAKANAN DINAMIS (MEMASUKKAN TUJUAN BB)
+# FUNGSI SARAN MAKANAN DINAMIS (MEMASUKKAN TUJUAN BB - BAHASA SANTAI)
 # ----------------------------------------------------------------------
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, BB_Awal, BB_Target, BMI_Key):
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BB_Awal, BB_Target):
     saran = []
     saran_data = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {})
     
-    # Menentukan Tujuan Berat Badan
+    # Menentukan Tujuan Berat Badan (Menggunakan Bahasa Santai)
     if BB_Target > BB_Awal + 0.5:
         Tujuan_Key = 'Saran_Naik'
-        Tujuan_Text = f"Anda bertujuan **NAIK** BB dari {BB_Awal:.1f} kg menjadi {BB_Target:.1f} kg (Surplus Kalori)."
+        Tujuan_Goal = "Makan Lebih Banyak Kalori (Surplus) dari Kebutuhan Energi Harian."
+        Tujuan_Text = f"Anda bertujuan **MENAIKKAN** BB dari {BB_Awal:.1f} kg menjadi {BB_Target:.1f} kg."
     elif BB_Target < BB_Awal - 0.5:
         Tujuan_Key = 'Saran_Turun'
-        Tujuan_Text = f"Anda bertujuan **TURUN** BB dari {BB_Awal:.1f} kg menjadi {BB_Target:.1f} kg (Defisit Kalori)."
+        Tujuan_Goal = "Makan Lebih Hemat Kalori (Defisit) dari Kebutuhan Energi Harian."
+        Tujuan_Text = f"Anda bertujuan **MENURUNKAN** BB dari {BB_Awal:.1f} kg menjadi {BB_Target:.1f} kg."
     else:
         Tujuan_Key = 'Saran_Jaga'
-        Tujuan_Text = f"Anda bertujuan **MEMPERTAHANKAN** BB di sekitar {BB_Target:.1f} kg (Kalori Maintenance)."
+        Tujuan_Goal = "Jaga Kalori Tetap Stabil sesuai Kebutuhan Energi Harian."
+        Tujuan_Text = f"Anda bertujuan **MEMPERTAHANKAN** BB di sekitar {BB_Target:.1f} kg."
         
     # --- BAGIAN 1: TARGET GIZI UTAMA & TUJUAN BB ---
-    saran.append(f"### 🎯 Kebutuhan Harian **{Jenis_Gizi_Key}**: {hasil_estimasi:.0f} {Unit_Gizi}")
-    saran.append(f"**Tujuan BB Anda:** {Tujuan_Text}")
+    saran.append(f"### 🎯 Kebutuhan Harian **{Jenis_Gizi_Key}** (untuk BB Target {BB_Target:.1f} kg): {hasil_estimasi:.0f} {Unit_Gizi}")
+    saran.append(f"**Tujuan Besar Anda:** {Tujuan_Text}")
+    saran.append(f"**Strategi Utama Energi:** {Tujuan_Goal}")
     saran.append("---")
     
     # --- BAGIAN 2: STRATEGI UTAMA BERDASARKAN TUJUAN BB ---
-    saran.append(f"### Strategi Gizi ({Tujuan_Key.replace('_', ' ').title()})")
+    saran.append(f"### Strategi Gizi Khusus ({Jenis_Gizi_Key})")
     
     # TINGKATKAN/JAGA
     tingkatkan_jaga = saran_data.get(Tujuan_Key, {}).get('Tingkatkan/Jaga', "Informasi strategi peningkatan belum tersedia.")
-    saran.append(f"**⬆️ FOKUS TINGKATKAN/JAGA:** {tingkatkan_jaga}")
+    saran.append(f"**⬆️ FOKUS TINGKATKAN / JAGA:**")
+    # Tampilkan sebagai list yang mudah dibaca
+    for item in tingkatkan_jaga.split(';'):
+        saran.append(f"* {item.strip()}")
     
     # KURANGI/BATASI
     kurangi_batasi = saran_data.get(Tujuan_Key, {}).get('Kurangi/Batasi', "Informasi strategi pembatasan belum tersedia.")
-    saran.append(f"**⬇️ FOKUS KURANGI/BATASI:** {kurangi_batasi}")
+    saran.append(f"**⬇️ FOKUS KURANGI / BATASI:**")
+    for item in kurangi_batasi.split(';'):
+        saran.append(f"* {item.strip()}")
     
     saran.append("---")
     
@@ -248,19 +257,21 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subte
     
     # CONTOH PRAKTIS SPESIFIK
     contoh_praktis = saran_data.get(Tujuan_Key, {}).get('Contoh Praktis', "Contoh makanan spesifik belum tersedia.")
-    saran.append(f"**🍽️ SUBSTITUSI/OPSI MENU:** {contoh_praktis}")
+    saran.append(f"**🍽️ SUBSTITUSI / OPSI MENU YANG GAMPANG DICOBA:**")
+    for item in contoh_praktis.split(';'):
+        saran.append(f"* {item.strip()}")
     saran.append("") # Baris kosong
 
     # Saran Air dan Serat (Rujukan Tetap)
     Air_Rujukan = Tabel_Kebutuhan_Air_Serat[st.session_state['kelompok']]['Air']
     Serat_Rujukan = Tabel_Kebutuhan_Air_Serat[st.session_state['kelompok']]['Serat']
-    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Pastikan minum air putih secara teratur.")
-    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Konsumsi sayur dan buah minimal 5 porsi/hari.")
+    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Jangan tunggu haus untuk minum!")
+    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Pastikan ada sayur dan buah di setiap piring Anda.")
     
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 3: SUMBER DATA AKG RUJUKAN📊 & SARAN VARIATIF BERDASARKAN TUJUAN BB
+# BAGIAN 3: SUMBER DATA AKG RUJUKAN📊 & SARAN VARIATIF (BAHASA SANTAI)
 # ----------------------------------------------------------------------
 Tabel_Kebutuhan_Air_Serat = {
     'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
@@ -275,109 +286,111 @@ Tabel_Kebutuhan_Air_Serat = {
 Tabel_Saran_Makro_Mikro = {
     'Energi': {
         'Saran_Naik': {
-            'Tingkatkan/Jaga': "Asupan energi total (surplus kalori). Fokus pada makanan padat gizi tinggi kalori.",
-            'Kurangi/Batasi': "Minuman rendah kalori, porsi sayuran terlalu besar yang membuat cepat kenyang.",
-            'Contoh Praktis': "Tambahkan *topping* keju, alpukat, atau *nut butter* pada makanan. Minum susu *full cream* atau *smoothie* buah dan kacang."
+            'Tingkatkan/Jaga': "Asupan kalori total (makan lebih banyak); Fokus pada makanan padat gizi tinggi kalori seperti alpukat, kacang-kacangan; Makan porsi lebih sering atau lebih besar; Tambahkan sumber lemak sehat seperti minyak zaitun di makanan.",
+            'Kurangi/Batasi': "Minuman rendah kalori atau diet; Porsi sayuran yang terlalu besar (karena cepat membuat kenyang) sebelum makan utama.",
+            'Contoh Praktis': "Tambahkan *topping* keju, alpukat, atau *nut butter* pada roti/bubur; Minum susu *full cream* atau *smoothie* buah + kacang di sela waktu makan; Jangan lewatkan waktu makan utama."
         }, 
         'Saran_Turun': {
-            'Tingkatkan/Jaga': "Defisit kalori (kurang dari AKG). Fokus pada makanan tinggi serat dan air untuk kenyang lebih lama.",
-            'Kurangi/Batasi': "Gula tambahan, makanan yang digoreng, minuman berkalori, dan porsi Karbohidrat sederhana.",
-            'Contoh Praktis': "Pilih *snack* protein rendah lemak (telur rebus, yogurt plain). Gunakan metode masak rebus/kukus/panggang."
+            'Tingkatkan/Jaga': "Makan lebih sedikit kalori (Makan Lebih Hemat Kalori); Fokus pada makanan yang tinggi serat dan banyak air (seperti buah dan sayur) agar kenyang lebih lama; Minum air putih yang cukup.",
+            'Kurangi/Batasi': "Gula tambahan (permen, minuman kemasan manis); Makanan yang diolah dengan cara digoreng (*deep fried*); Porsi Karbohidrat sederhana seperti nasi putih/mie instan.",
+            'Contoh Praktis': "Pilih *snack* protein rendah lemak (telur rebus, *yogurt plain*); Ganti nasi biasa dengan nasi merah/shirataki/sayuran rebus; Olah makanan dengan metode rebus/kukus/panggang."
         },
         'Saran_Jaga': {
-            'Tingkatkan/Jaga': "Keseimbangan makronutrien sesuai AKG target. Pertahankan kebiasaan makan yang sudah baik.",
-            'Kurangi/Batasi': "Hindari *binge eating* atau *snack* berlebihan yang dapat melewati batas kalori *maintenance*.",
-            'Contoh Praktis': "Jaga porsi sesuai piring makan sehat Indonesia (isi piring seimbang). Coba variasi Karbohidrat kompleks."
+            'Tingkatkan/Jaga': "Keseimbangan piring makan (Karbo, Protein, Sayur) sesuai porsi; Pertahankan kebiasaan makan yang sudah baik (tidak melewatkan makan); Variasikan sumber gizi.",
+            'Kurangi/Batasi': "Hindari *binge eating* (makan berlebihan setelah kelaparan); Batasi *snack* tinggi gula/garam yang dapat melewati batas kalori stabil (maintenance).",
+            'Contoh Praktis': "Terapkan konsep 'Isi Piringku' (separuh piring berisi sayur/buah); Coba variasi Karbohidrat kompleks seperti ubi, kentang, atau sereal utuh; Ganti minuman manis dengan air putih atau teh tawar."
         }
     }, 
     'Protein': {
         'Saran_Naik': {
-            'Tingkatkan/Jaga': "Protein berkualitas tinggi untuk membangun massa otot (jika diiringi latihan). Konsumsi di setiap sesi makan.",
-            'Kurangi/Batasi': "Sumber protein yang terlalu tinggi serat dan membuat cepat kenyang (misal: kacang-kacangan dalam jumlah besar).",
-            'Contoh Praktis': "Makan 100g dada ayam/ikan atau 2 butir telur per porsi makan. Minum protein shake sebagai pengganti camilan."
+            'Tingkatkan/Jaga': "Protein berkualitas tinggi di setiap sesi makan untuk membantu membangun massa otot (jika diiringi latihan beban); Konsumsi protein dari berbagai sumber (hewani dan nabati).",
+            'Kurangi/Batasi': "Protein yang digoreng atau diolah dengan krim/santan yang tinggi kalori; Sumber protein yang terlalu tinggi serat dan membuat cepat kenyang (seperti kacang-kacangan besar).",
+            'Contoh Praktis': "Makan 100g dada ayam/ikan atau 2 butir telur per porsi makan; Minum protein shake (whey/kedelai) sebagai camilan; Tambahkan kacang-kacangan seperti almond/mete dalam bubur/sereal."
         },
         'Saran_Turun': {
-            'Tingkatkan/Jaga': "Protein tinggi serat dan rendah lemak. Protein sangat penting untuk menjaga massa otot saat defisit kalori.",
-            'Kurangi/Batasi': "Potongan daging berlemak tinggi (sapi berlemak/kulit ayam), sosis, atau *nugget* olahan.",
-            'Contoh Praktis': "Pilih ikan (tuna/bandeng), tahu/tempe, atau ayam tanpa kulit. Hindari menambah minyak saat memasak protein."
+            'Tingkatkan/Jaga': "Protein tinggi dan rendah lemak; Ini sangat penting untuk menjaga massa otot saat kalori sedang dibatasi; Pilih metode masak yang tidak menggunakan minyak banyak.",
+            'Kurangi/Batasi': "Potongan daging berlemak tinggi (sapi berlemak/kulit ayam); Produk olahan seperti sosis, *bacon*, atau *nugget* yang digoreng.",
+            'Contoh Praktis': "Pilih ikan (tuna/bandeng), tahu/tempe, atau ayam tanpa kulit; Pilih *low fat yogurt* atau susu *skim*; Masak dengan cara dipanggang, direbus, atau dikukus."
         },
         'Saran_Jaga': {
-            'Tingkatkan/Jaga': "Protein hewani dan nabati yang beragam untuk menjaga dan memperbaiki sel tubuh.",
-            'Kurangi/Batasi': "Protein yang digoreng atau diolah dengan krim/santan yang tinggi kalori.",
-            'Contoh Praktis': "Variasikan sumber protein (ayam, ikan, telur, tempe). Olah dengan cara dibakar, pepes, atau tumis dengan sedikit minyak."
+            'Tingkatkan/Jaga': "Sumber protein yang beragam (daging, telur, ikan, tahu/tempe); Perhatikan porsi agar sesuai target AKG harian.",
+            'Kurangi/Batasi': "Protein yang datang bersamaan dengan lemak jenuh berlebih (misalnya: jeroan); Hindari protein yang diolah dengan cara digoreng atau menggunakan minyak berlebihan.",
+            'Contoh Praktis': "Variasikan sumber protein (ayam, ikan, telur, tempe); Coba olahan ikan/ayam dengan bumbu pepes atau tumis dengan sedikit minyak; Pastikan porsi protein cukup besar di piring Anda."
         }
     },
     'Lemak Total': {
         'Saran_Naik': {
-            'Tingkatkan/Jaga': "Lemak sehat (tak jenuh) yang padat kalori untuk mencapai surplus energi.",
-            'Kurangi/Batasi': "Lemak trans buatan (makanan kemasan yang digoreng) dan lemak jenuh berlebihan.",
-            'Contoh Praktis': "Tambahkan 1 sdm minyak zaitun ke salad. Makan kacang mede, almond, atau biji-bijian (labu) sebagai *snack* harian."
+            'Tingkatkan/Jaga': "Lemak sehat (tak jenuh) yang padat kalori untuk mencapai target kenaikan energi; Contoh: alpukat, kacang-kacangan, minyak zaitun.",
+            'Kurangi/Batasi': "Lemak trans buatan (pada makanan kemasan yang digoreng ulang); Batasi makanan yang tinggi gula/karbohidrat sederhana saja (harus diimbangi lemak/protein).",
+            'Contoh Praktis': "Tambahkan 1 sdm minyak zaitun ke salad atau sup; Makan kacang mede, almond, atau biji-bijian (labu) sebagai *snack* harian; Gunakan minyak kelapa/mentega dalam jumlah wajar untuk memasak."
         },
         'Saran_Turun': {
-            'Tingkatkan/Jaga': "Batasi asupan lemak total, utamakan sumber Lemak tak jenuh esensial.",
-            'Kurangi/Batasi': "Semua sumber lemak jenuh (mentega, minyak kelapa sawit, krim kental, santan) dan minyak yang digunakan untuk menggoreng.",
-            'Contoh Praktis': "Pilih alpukat (dalam batas porsi), minyak kanola, atau *mustard* sebagai pengganti mayones/dressing creamy."
+            'Tingkatkan/Jaga': "Batasi asupan lemak total serendah mungkin; Jika harus makan lemak, pilih Lemak tak jenuh esensial (omega-3) yang baik untuk jantung.",
+            'Kurangi/Batasi': "Semua sumber lemak jenuh tinggi (mentega, santan kental, krim kental) dan minyak yang digunakan untuk menggoreng; Hindari *dressing* salad yang berbasis krim/mayones.",
+            'Contoh Praktis': "Pilih alpukat (dalam batas porsi kecil); Gunakan minyak kanola atau minyak biji bunga matahari untuk menumis; Ganti santan dengan susu rendah lemak atau krimer nabati non-santan."
         },
         'Saran_Jaga': {
-            'Tingkatkan/Jaga': "Proporsi Lemak Sehat (omega-3 dan tak jenuh) sesuai anjuran AKG.",
-            'Kurangi/Batasi': "Batasi *deep fried* food. Kontrol porsi kacang-kacangan dan biji-bijian agar tidak berlebihan.",
-            'Contoh Praktis': "Masak dengan porsi minyak terukur (1-2 sdm per hari). Konsumsi ikan berlemak (salmon, sarden) 1-2 kali seminggu."
+            'Tingkatkan/Jaga': "Proporsi Lemak Sehat (omega-3 dan tak jenuh) sesuai anjuran AKG; Konsumsi ikan berlemak untuk asupan omega-3.",
+            'Kurangi/Batasi': "Batasi *deep fried* food (gorengan); Kontrol porsi kacang-kacangan dan biji-bijian agar tidak berlebihan (karena padat kalori).",
+            'Contoh Praktis': "Masak dengan porsi minyak terukur (1-2 sdm per hari); Konsumsi ikan berlemak (salmon, sarden) 1-2 kali seminggu; Pilih *dressing* salad berbasis cuka atau lemon."
         }
     },
     'Karbohidrat': {
         'Saran_Naik': {
-            'Tingkatkan/Jaga': "Karbohidrat kompleks dalam porsi besar sebagai sumber energi utama untuk surplus kalori.",
-            'Kurangi/Batasi': "Sayuran terlalu berserat yang mengurangi porsi Karbohidrat di piring Anda.",
-            'Contoh Praktis': "Makan nasi dengan lauk pauk protein. Pilih Karbohidrat padat seperti ubi, kentang, atau sereal fortifikasi."
+            'Tingkatkan/Jaga': "Karbohidrat kompleks dalam porsi yang lebih besar sebagai sumber energi utama untuk mencapai target kalori; Konsumsi Karbohidrat di sela waktu makan.",
+            'Kurangi/Batasi': "Mengganti nasi/roti dengan hanya sayuran yang berserat tinggi (ini akan membuat Anda cepat kenyang dan sulit menambah kalori); Jangan tinggalkan Karbohidrat saat makan utama.",
+            'Contoh Praktis': "Makan kentang, ubi, atau pasta sebagai sumber Karbohidrat selain nasi; Tambahkan 1 porsi roti di sarapan/camilan; Jangan mengurangi porsi nasi saat makan siang."
         },
         'Saran_Turun': {
-            'Tingkatkan/Jaga': "Pilih Karbohidrat kompleks yang tinggi serat dan memiliki indeks glikemik rendah (slow energy release).",
-            'Kurangi/Batasi': "Porsi nasi, mie, roti putih, dan gula sederhana (minuman manis, permen).",
-            'Contoh Praktis': "Ganti 1/2 porsi nasi putih dengan nasi merah, beras shirataki, atau quinoa. Tambahkan buncis atau wortel rebus."
+            'Tingkatkan/Jaga': "Pilih Karbohidrat kompleks yang tinggi serat dan memiliki indeks glikemik rendah (energi dilepas perlahan dan lebih kenyang); Contoh: oat, nasi merah, roti gandum utuh.",
+            'Kurangi/Batasi': "Porsi nasi putih, mie, atau roti putih (Karbohidrat sederhana); Gula tambahan dan minuman manis yang tinggi Karbohidrat dan kalori.",
+            'Contoh Praktis': "Ganti 1/2 porsi nasi putih dengan nasi merah, beras shirataki, atau sayuran rebus; Prioritaskan sayur/buah di awal makan; Sarapan dengan *oatmeal* tanpa gula tambahan."
         },
         'Saran_Jaga': {
-            'Tingkatkan/Jaga': "Karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh.",
-            'Kurangi/Batasi': "Karbohidrat olahan dan gula tambahan. Batasi Karbohidrat malam hari (jika tidak aktif).",
-            'Contoh Praktis': "Coba sarapan dengan oat. Pastikan Anda mengonsumsi serat bersamaan dengan Karbohidrat utama."
+            'Tingkatkan/Jaga': "Variasikan sumber Karbohidrat kompleks (nasi merah, oat, roti gandum utuh); Pastikan asupan Karbohidrat stabil dan tidak berlebihan.",
+            'Kurangi/Batasi': "Karbohidrat olahan dan gula tambahan; Batasi Karbohidrat dalam jumlah besar di malam hari (jika Anda tidak aktif setelah itu).",
+            'Contoh Praktis': "Pilih roti gandum utuh 100%; Selalu konsumsi serat (sayur/buah) bersamaan dengan Karbohidrat utama; Batasi *dessert* manis maksimal 1-2 kali seminggu."
         }
     },
     'Kalsium (Ca)': {
         'Saran_Naik': {
-            'Tingkatkan/Jaga': "Produk susu *full cream* atau *whole milk* untuk bonus kalori dan kalsium.",
-            'Kurangi/Batasi': "Minuman bersoda yang dapat mengganggu penyerapan kalsium.",
-            'Contoh Praktis': "Minum 2 gelas susu *full cream* per hari. Tambahkan keju parut ke dalam omelet/masakan Anda."
+            'Tingkatkan/Jaga': "Produk susu *full cream* atau *whole milk* untuk bonus kalori dan kalsium; Konsumsi sayuran hijau gelap.",
+            'Kurangi/Batasi': "Minuman bersoda atau berkafein berlebih yang dapat mengganggu penyerapan kalsium.",
+            'Contoh Praktis': "Minum 2 gelas susu *full cream* per hari; Tambahkan keju parut ke dalam omelet/masakan Anda; Coba *yogurt* dengan madu dan buah."
         },
         'Saran_Turun': {
-            'Tingkatkan/Jaga': "Susu atau produk olahan rendah lemak/non-fat, sayuran hijau, dan sumber nabati.",
-            'Kurangi/Batasi': "Susu tinggi lemak. Jaga porsi kalsium agar tidak mengganggu penyerapan zat besi.",
-            'Contoh Praktis': "Pilih yogurt *plain* rendah lemak. Konsumsi tempe atau tahu sebagai sumber kalsium non-susu."
+            'Tingkatkan/Jaga': "Susu atau produk olahan rendah lemak/non-fat (tanpa gula); Sumber nabati Kalsium (tahu/tempe, brokoli).",
+            'Kurangi/Batasi': "Susu tinggi lemak atau produk *dessert* yang tinggi gula dan kalsium.",
+            'Contoh Praktis': "Pilih *yogurt plain* rendah lemak; Pilih susu nabati yang sudah difortifikasi Kalsium; Makan tempe atau tahu 1-2 porsi sehari."
         },
         'Saran_Jaga': {
-            'Tingkatkan/Jaga': "Produk susu (rendah/sedang lemak), tahu/tempe, dan sayuran hijau gelap.",
-            'Kurangi/Batasi': "Mengonsumsi suplemen kalsium bersamaan dengan makanan kaya zat besi.",
-            'Contoh Praktis': "Jadikan yogurt atau kefir sebagai camilan sore. Variasikan sayuran hijau (bayam, kale)."
+            'Tingkatkan/Jaga': "Produk susu (rendah/sedang lemak), tahu/tempe, dan sayuran hijau gelap secara teratur.",
+            'Kurangi/Batasi': "Mengonsumsi suplemen kalsium bersamaan dengan makanan kaya zat besi (harus diberi jeda waktu).",
+            'Contoh Praktis': "Jadikan *yogurt* atau kefir sebagai camilan sore; Variasikan sayuran hijau (bayam, kale); Minum susu rendah lemak setiap pagi."
         }
     },
     'Besi (Fe)': {
         'Saran_Naik': {
-            'Tingkatkan/Jaga': "Sumber Besi Heme (daging merah, hati) dikombinasikan dengan Vitamin C untuk penyerapan.",
-            'Kurangi/Batasi': "Mengonsumsi teh/kopi segera setelah makan karena tanin dapat menghambat Besi.",
-            'Contoh Praktis': "Konsumsi hati ayam/sapi 1 porsi seminggu. Minum jus jeruk/jambu saat makan daging."
+            'Tingkatkan/Jaga': "Sumber Besi Heme (daging merah, hati) dikombinasikan dengan Vitamin C untuk penyerapan terbaik.",
+            'Kurangi/Batasi': "Mengonsumsi teh/kopi segera setelah makan karena kandungan tanin dapat menghambat penyerapan Besi.",
+            'Contoh Praktis': "Konsumsi hati ayam/sapi 1 porsi seminggu; Minum jus jeruk/jambu saat makan daging; Pilih daging tanpa lemak untuk menghindari lemak jenuh berlebih."
         },
         'Saran_Turun': {
-            'Tingkatkan/Jaga': "Sumber Besi hewani rendah lemak (ikan/daging tanpa lemak) dan sumber nabati.",
+            'Tingkatkan/Jaga': "Sumber Besi hewani rendah lemak (ikan/daging tanpa lemak) dan sumber nabati (kacang-kacangan).",
             'Kurangi/Batasi': "Daging merah yang sangat berlemak tinggi.",
-            'Contoh Praktis': "Pilih ikan tuna, salmon, atau daging ayam. Makan kacang-kacangan (lentil, buncis) sebagai lauk 3 kali seminggu."
+            'Contoh Praktis': "Pilih ikan tuna, salmon, atau daging ayam; Makan kacang-kacangan (lentil, buncis) sebagai lauk 3 kali seminggu; Masak menggunakan panci besi cor."
         },
         'Saran_Jaga': {
-            'Tingkatkan/Jaga': "Sumber Besi beragam (hewani dan nabati) dan Vitamin C untuk penyerapan optimal.",
-            'Kurangi/Batasi': "Antasida atau suplemen Kalsium dalam waktu yang sama dengan makanan kaya Besi.",
-            'Contoh Praktis': "Jaga konsumsi Vitamin C. Masak dengan panci besi cor untuk meningkatkan kandungan Besi pada makanan."
+            'Tingkatkan/Jaga': "Sumber Besi beragam (hewani dan nabati); Pastikan asupan Vitamin C cukup untuk membantu penyerapan.",
+            'Kurangi/Batasi': "Menghindari antasida atau suplemen Kalsium dalam waktu yang sama dengan makanan kaya Besi.",
+            'Contoh Praktis': "Jaga konsumsi Vitamin C dari buah-buahan; Masak dengan panci besi cor untuk meningkatkan kandungan Besi pada makanan; Konsumsi daging 3-4 kali seminggu."
         }
     },
 }
 
-# (Tabel_Kebutuhan_Gizi_Rujukan tetap sama, tidak ditampilkan di sini untuk efisiensi)
+# ----------------------------------------------------------------------
+# BAGIAN 4: DATA AKG RUJUKAN (TETAP SAMA, DITAMPILKAN LAGI UNTUK KELENGKAPAN)
+# ----------------------------------------------------------------------
 Tabel_Kebutuhan_Gizi_Rujukan = {
     'Laki-laki (Remaja 10-20 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
@@ -449,7 +462,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
     },
 }
 # ----------------------------------------------------------------------
-# BAGIAN 4: ANTARMUKA STREAMLIT
+# BAGIAN 5: ANTARMUKA STREAMLIT
 # ----------------------------------------------------------------------
 
 # Konfigurasi Halaman 
@@ -462,7 +475,7 @@ st.set_page_config(
 # Inisialisasi session state
 if 'hitung' not in st.session_state:
     st.session_state['hitung'] = False
-if 'bb_awal' not in st.session_state: # NEW: BB Awal
+if 'bb_awal' not in st.session_state: 
     st.session_state['bb_awal'] = 60.0
 if 'bb_target' not in st.session_state:
     st.session_state['bb_target'] = 60.0
@@ -559,8 +572,8 @@ with tab_hasil:
             # Ambil nilai dari session state
             Kelompok_Populasi_Key = st.session_state['kelompok']
             Jenis_Gizi_Key = st.session_state['gizi']
-            BB_Awal_Val = st.session_state['bb_awal'] # BB Awal
-            BB_Target_Val = st.session_state['bb_target'] # BB Target
+            BB_Awal_Val = st.session_state['bb_awal'] 
+            BB_Target_Val = st.session_state['bb_target'] 
             TB_Val = st.session_state['tb_val']
 
             # Ambil Data Lagrange Gizi yang Dipilih
@@ -600,20 +613,20 @@ with tab_hasil:
             with col_bb_target:
                 diff = BB_Target_Val - BB_Awal_Val
                 if diff > 0.5:
-                    label_diff = "Target: Naik BB"
+                    label_diff = "Tujuan: Naik BB"
                     val_diff = f"+{diff:.1f} kg"
                     color_diff = "#FFB300"
                 elif diff < -0.5:
-                    label_diff = "Target: Turun BB"
+                    label_diff = "Tujuan: Turun BB"
                     val_diff = f"{diff:.1f} kg"
                     color_diff = "#FF4B4B"
                 else:
-                    label_diff = "Target: Pertahankan BB"
+                    label_diff = "Tujuan: Jaga BB"
                     val_diff = f"{diff:.1f} kg"
                     color_diff = "#00BFA6"
                     
                 custom_metric(
-                    label="Tujuan Berat Badan",
+                    label="Berat Badan Target",
                     value=f"{BB_Target_Val:.1f} kg",
                     subtext=f'Perubahan: <span style="color:{color_diff}; font-weight:bold;">{val_diff}</span>'
                 )
@@ -636,15 +649,13 @@ with tab_hasil:
             # Saran Makanan 
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
             
-            # Tentukan saran berdasarkan BB Awal dan BB Target
+            # Tentukan saran berdasarkan BB Awal dan BB Target (FUNGSI BARU BAHASA SANTAI)
             saran_list = get_saran_makanan(
                 Jenis_Gizi_Key, 
                 hasil_estimasi, 
                 Unit_Gizi, 
-                BMI_Saran_Subtext, 
                 BB_Awal_Val, 
                 BB_Target_Val, 
-                BMI_Key
             )
             
             for saran in saran_list:
