@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA ---
+# --- CSS KUSTOM & TEMA (TETAP SAMA) ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -145,7 +145,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🧮NutriMatch : Kebutuhan Gizi yang Pas Buat Kamu🍳")
-st.markdown("💡Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan Berat Badan target dari data rujukan.")
+st.markdown("💡Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** untuk mengestimasi Angka Kecukupan Gizi (AKG) berdasarkan **Berat Badan Target** dari data rujukan.")
 st.markdown("---")
 
 # ----------------------------------------------------------------------
@@ -156,7 +156,6 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     hasil_estimasi = 0.0
     
     if len(np.unique(X_Acuan)) < n:
-        # Jika ada BB acuan yang sama, hindari pembagian nol
         return 0.0
 
     for i in range(n):
@@ -168,24 +167,21 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     return hasil_estimasi
 
 # ----------------------------------------------------------------------
-# FUNGSI KLASIFIKASI BMI PALING INFORMATIF (MERAH, KUNING, HIJAU)
+# FUNGSI KLASIFIKASI BMI
 # ----------------------------------------------------------------------
 def Klasifikasi_BMI_HTML(BMI, BB, TB):
     
     if BMI < 18.5:
-        # Kurus: Merah
         status = "⚠️ Kurang (Underweight)"
-        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Waspada!** Status Gizi Kurang. Perlu peningkatan asupan energi dan protein."
+        saran = f"BB Awal {BB:.1f} kg, TB {TB:.1f} cm. **Waspada!** Status Gizi Kurang."
         color_code = "#FF4B4B" # Merah
         bmi_key = 'Saran_Kurus'
     elif 18.5 <= BMI < 23.0:
-        # Normal: Hijau
         status = "✅ Normal"
-        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Pertahankan!** Status Gizi Normal. Pola makan seimbang."
+        saran = f"BB Awal {BB:.1f} kg, TB {TB:.1f} cm. **Pertahankan!** Status Gizi Normal."
         color_code = "#00BFA6" # Hijau
         bmi_key = 'Saran_Normal'
-    else: # BMI >= 23.0 (Gemuk/Obesitas)
-        # Gemuk/Obesitas: Kuning/Merah
+    else:
         if BMI < 25.0:
             status = "🟡 Gemuk (Overweight)"
             color_code = "#FFC82C" # Kuning
@@ -193,16 +189,15 @@ def Klasifikasi_BMI_HTML(BMI, BB, TB):
             status = "🚨 Obesitas"
             color_code = "#FF4B4B" # Merah
         
-        saran = f"BB {BB:.1f} kg, TB {TB:.1f} cm. **Perhatian!** Status Gizi Berlebih. Perlu kontrol porsi dan batasi lemak/gula."
+        saran = f"BB Awal {BB:.1f} kg, TB {TB:.1f} cm. **Perhatian!** Status Gizi Berlebih."
         bmi_key = 'Saran_Gemuk_Obesitas'
         
     return status, saran, color_code, bmi_key
     
 # ----------------------------------------------------------------------
-# FUNGSI CUSTOM METRIC (Pengganti st.metric)
+# FUNGSI CUSTOM METRIC
 # ----------------------------------------------------------------------
 def custom_metric(label, value, subtext):
-    # Menggunakan HTML/Markdown untuk kontrol warna total
     html_code = f"""
     <div class="custom-metric-container">
         <div class="custom-metric-label">{label}</div>
@@ -213,26 +208,37 @@ def custom_metric(label, value, subtext):
     st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI & VARIATIF)
+# FUNGSI SARAN MAKANAN DINAMIS (MEMASUKKAN TUJUAN BB)
 # ----------------------------------------------------------------------
-def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key):
+def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, BB_Awal, BB_Target, BMI_Key):
     saran = []
     saran_data = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {})
-
-    # --- BAGIAN 1: TARGET GIZI UTAMA ---
-    saran.append(f"### Kebutuhan Harian **{Jenis_Gizi_Key}**: {hasil_estimasi:.0f} {Unit_Gizi}")
-    saran.append(f"**Status Gizi Anda:** {BMI_Saran_Subtext}")
+    
+    # Menentukan Tujuan Berat Badan
+    if BB_Target > BB_Awal + 0.5:
+        Tujuan_Key = 'Saran_Naik'
+        Tujuan_Text = f"Anda bertujuan **NAIK** BB dari {BB_Awal:.1f} kg menjadi {BB_Target:.1f} kg (Surplus Kalori)."
+    elif BB_Target < BB_Awal - 0.5:
+        Tujuan_Key = 'Saran_Turun'
+        Tujuan_Text = f"Anda bertujuan **TURUN** BB dari {BB_Awal:.1f} kg menjadi {BB_Target:.1f} kg (Defisit Kalori)."
+    else:
+        Tujuan_Key = 'Saran_Jaga'
+        Tujuan_Text = f"Anda bertujuan **MEMPERTAHANKAN** BB di sekitar {BB_Target:.1f} kg (Kalori Maintenance)."
+        
+    # --- BAGIAN 1: TARGET GIZI UTAMA & TUJUAN BB ---
+    saran.append(f"### 🎯 Kebutuhan Harian **{Jenis_Gizi_Key}**: {hasil_estimasi:.0f} {Unit_Gizi}")
+    saran.append(f"**Tujuan BB Anda:** {Tujuan_Text}")
     saran.append("---")
     
-    # --- BAGIAN 2: STRATEGI UTAMA BERDASARKAN BMI ---
-    saran.append(f"### Strategi Gizi ({BMI_Key.replace('_', ' ').title()})")
+    # --- BAGIAN 2: STRATEGI UTAMA BERDASARKAN TUJUAN BB ---
+    saran.append(f"### Strategi Gizi ({Tujuan_Key.replace('_', ' ').title()})")
     
     # TINGKATKAN/JAGA
-    tingkatkan_jaga = saran_data.get(BMI_Key, {}).get('Tingkatkan/Jaga', "Informasi strategi peningkatan belum tersedia.")
+    tingkatkan_jaga = saran_data.get(Tujuan_Key, {}).get('Tingkatkan/Jaga', "Informasi strategi peningkatan belum tersedia.")
     saran.append(f"**⬆️ FOKUS TINGKATKAN/JAGA:** {tingkatkan_jaga}")
     
     # KURANGI/BATASI
-    kurangi_batasi = saran_data.get(BMI_Key, {}).get('Kurangi/Batasi', "Informasi strategi pembatasan belum tersedia.")
+    kurangi_batasi = saran_data.get(Tujuan_Key, {}).get('Kurangi/Batasi', "Informasi strategi pembatasan belum tersedia.")
     saran.append(f"**⬇️ FOKUS KURANGI/BATASI:** {kurangi_batasi}")
     
     saran.append("---")
@@ -241,18 +247,20 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subte
     saran.append(f"### Contoh Praktis & Pelengkap Harian")
     
     # CONTOH PRAKTIS SPESIFIK
-    contoh_praktis = saran_data.get(BMI_Key, {}).get('Contoh Praktis', "Contoh makanan spesifik belum tersedia.")
+    contoh_praktis = saran_data.get(Tujuan_Key, {}).get('Contoh Praktis', "Contoh makanan spesifik belum tersedia.")
     saran.append(f"**🍽️ SUBSTITUSI/OPSI MENU:** {contoh_praktis}")
     saran.append("") # Baris kosong
 
     # Saran Air dan Serat (Rujukan Tetap)
-    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Pastikan minum air putih secara teratur, hindari minuman manis berlebihan.")
-    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Konsumsi sayur dan buah minimal 5 porsi/hari dan pilih biji-bijian utuh (whole grain).")
+    Air_Rujukan = Tabel_Kebutuhan_Air_Serat[st.session_state['kelompok']]['Air']
+    Serat_Rujukan = Tabel_Kebutuhan_Air_Serat[st.session_state['kelompok']]['Serat']
+    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Pastikan minum air putih secara teratur.")
+    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Konsumsi sayur dan buah minimal 5 porsi/hari.")
     
     return saran
 
 # ----------------------------------------------------------------------
-# BAGIAN 2: SUMBER DATA AKG RUJUKAN📊
+# BAGIAN 3: SUMBER DATA AKG RUJUKAN📊 & SARAN VARIATIF BERDASARKAN TUJUAN BB
 # ----------------------------------------------------------------------
 Tabel_Kebutuhan_Air_Serat = {
     'Laki-laki (Remaja 10-20 th)': {'Air': 2.2, 'Serat': 32, 'unit_air': 'liter', 'unit_serat': 'g'},
@@ -263,112 +271,113 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# STRUKTUR SARAN MAKANAN BERDASARKAN BMI (VERSI LEBIH VARIASI)
+# STRUKTUR SARAN MAKANAN BERDASARKAN TUJUAN BB (Naik, Turun, Jaga)
 Tabel_Saran_Makro_Mikro = {
     'Energi': {
-        'Saran_Kurus': {
-            'Tingkatkan/Jaga': "Asupan karbohidrat kompleks (nasi, roti, ubi) dan protein. Pilih makanan padat kalori (alpukat, kacang-kacangan) dan makan porsi lebih sering/besar.",
-            'Kurangi/Batasi': "Minuman dan makanan yang terlalu banyak serat di awal makan (untuk memaksimalkan penyerapan kalori), makanan rendah kalori.",
-            'Contoh Praktis': "Substitusi nasi putih dengan nasi uduk/beras merah dan tambahkan 1 sdm minyak zaitun. Ngemil alpukat atau kacang almond di sela waktu makan."
+        'Saran_Naik': {
+            'Tingkatkan/Jaga': "Asupan energi total (surplus kalori). Fokus pada makanan padat gizi tinggi kalori.",
+            'Kurangi/Batasi': "Minuman rendah kalori, porsi sayuran terlalu besar yang membuat cepat kenyang.",
+            'Contoh Praktis': "Tambahkan *topping* keju, alpukat, atau *nut butter* pada makanan. Minum susu *full cream* atau *smoothie* buah dan kacang."
         }, 
-        'Saran_Normal': {
-            'Tingkatkan/Jaga': "Keseimbangan sumber energi (Karbohidrat, Protein, Lemak) sesuai target AKG. Fokus pada sumber energi yang bersih (whole foods).",
-            'Kurangi/Batasi': "Kalori kosong seperti *snack* tinggi gula, minuman manis, dan *fast food* berlebihan.",
-            'Contoh Praktis': "Ganti sereal sarapan dengan oatmeal utuh. Coba *snack* buah potong atau *yogurt* daripada kue kemasan."
+        'Saran_Turun': {
+            'Tingkatkan/Jaga': "Defisit kalori (kurang dari AKG). Fokus pada makanan tinggi serat dan air untuk kenyang lebih lama.",
+            'Kurangi/Batasi': "Gula tambahan, makanan yang digoreng, minuman berkalori, dan porsi Karbohidrat sederhana.",
+            'Contoh Praktis': "Pilih *snack* protein rendah lemak (telur rebus, yogurt plain). Gunakan metode masak rebus/kukus/panggang."
         },
-        'Saran_Gemuk_Obesitas': {
-            'Tingkatkan/Jaga': "Sayuran non-pati dan serat (untuk kenyang tanpa kalori berlebih). Jaga asupan protein untuk massa otot.",
-            'Kurangi/Batasi': "Porsi keseluruhan makanan (defisit kalori), gula tambahan, minuman manis, makanan yang digoreng, dan sumber karbohidrat sederhana.",
-            'Contoh Praktis': "Ganti 1 porsi nasi dengan sayuran rebus atau salad. Minum air putih/teh tawar daripada jus kemasan atau minuman manis."
+        'Saran_Jaga': {
+            'Tingkatkan/Jaga': "Keseimbangan makronutrien sesuai AKG target. Pertahankan kebiasaan makan yang sudah baik.",
+            'Kurangi/Batasi': "Hindari *binge eating* atau *snack* berlebihan yang dapat melewati batas kalori *maintenance*.",
+            'Contoh Praktis': "Jaga porsi sesuai piring makan sehat Indonesia (isi piring seimbang). Coba variasi Karbohidrat kompleks."
         }
     }, 
     'Protein': {
-        'Saran_Kurus': {
-            'Tingkatkan/Jaga': "Asupan protein berkualitas tinggi (daging tanpa lemak, telur, ikan, whey) pada setiap kali makan untuk membangun massa otot.",
-            'Kurangi/Batasi': "Hanya makan sayuran sebagai sumber protein utama; perlu kombinasi dengan protein hewani.",
-            'Contoh Praktis': "Tambahkan 1 butir telur setiap sarapan. Coba protein shake (whey atau kedelai) sebagai camilan."
+        'Saran_Naik': {
+            'Tingkatkan/Jaga': "Protein berkualitas tinggi untuk membangun massa otot (jika diiringi latihan). Konsumsi di setiap sesi makan.",
+            'Kurangi/Batasi': "Sumber protein yang terlalu tinggi serat dan membuat cepat kenyang (misal: kacang-kacangan dalam jumlah besar).",
+            'Contoh Praktis': "Makan 100g dada ayam/ikan atau 2 butir telur per porsi makan. Minum protein shake sebagai pengganti camilan."
         },
-        'Saran_Normal': {
-            'Tingkatkan/Jaga': "Sumber protein beragam (daging, telur, ikan, tahu/tempe) untuk menjaga dan memperbaiki sel tubuh.",
-            'Kurangi/Batasi': "Protein yang datang bersamaan dengan lemak jenuh berlebih (misalnya: kulit ayam, sosis, *bacon*).",
-            'Contoh Praktis': "Pilih dada ayam tanpa kulit dan olah dengan dipanggang. Konsumsi ikan berlemak (salmon/sarden) 2 kali seminggu."
+        'Saran_Turun': {
+            'Tingkatkan/Jaga': "Protein tinggi serat dan rendah lemak. Protein sangat penting untuk menjaga massa otot saat defisit kalori.",
+            'Kurangi/Batasi': "Potongan daging berlemak tinggi (sapi berlemak/kulit ayam), sosis, atau *nugget* olahan.",
+            'Contoh Praktis': "Pilih ikan (tuna/bandeng), tahu/tempe, atau ayam tanpa kulit. Hindari menambah minyak saat memasak protein."
         },
-        'Saran_Gemuk_Obesitas': {
-            'Tingkatkan/Jaga': "Protein tinggi serat dan rendah lemak (dada ayam tanpa kulit, ikan, produk kedelai) untuk meningkatkan rasa kenyang.",
-            'Kurangi/Batasi': "Potongan daging berlemak tinggi; hindari pengolahan protein dengan cara digoreng (pilih panggang/rebus).",
-            'Contoh Praktis': "Ganti daging merah dengan tahu atau tempe. Pilih susu *skim* atau *low fat yogurt* sebagai sumber protein."
+        'Saran_Jaga': {
+            'Tingkatkan/Jaga': "Protein hewani dan nabati yang beragam untuk menjaga dan memperbaiki sel tubuh.",
+            'Kurangi/Batasi': "Protein yang digoreng atau diolah dengan krim/santan yang tinggi kalori.",
+            'Contoh Praktis': "Variasikan sumber protein (ayam, ikan, telur, tempe). Olah dengan cara dibakar, pepes, atau tumis dengan sedikit minyak."
         }
     },
     'Lemak Total': {
-        'Saran_Kurus': {
-            'Tingkatkan/Jaga': "Lemak tak jenuh tunggal dan ganda (alpukat, kacang, minyak zaitun, ikan berlemak) untuk tambahan kalori bersih.",
-            'Kurangi/Batasi': "Lemak trans buatan (roti-roti kemasan, makanan instan) dan lemak jenuh yang sangat tinggi.",
-            'Contoh Praktis': "Gunakan minyak zaitun atau minyak kanola untuk menumis. Taburi salad dengan biji chia atau biji bunga matahari."
+        'Saran_Naik': {
+            'Tingkatkan/Jaga': "Lemak sehat (tak jenuh) yang padat kalori untuk mencapai surplus energi.",
+            'Kurangi/Batasi': "Lemak trans buatan (makanan kemasan yang digoreng) dan lemak jenuh berlebihan.",
+            'Contoh Praktis': "Tambahkan 1 sdm minyak zaitun ke salad. Makan kacang mede, almond, atau biji-bijian (labu) sebagai *snack* harian."
         },
-        'Saran_Normal': {
-            'Tingkatkan/Jaga': "Proporsi Lemak Sehat (omega-3 dan tak jenuh) untuk kesehatan otak dan jantung.",
-            'Kurangi/Batasi': "Lemak jenuh dari *junk food* dan lemak trans. Pertahankan jumlah lemak sesuai target AKG.",
-            'Contoh Praktis': "Batasi konsumsi gorengan, ganti dengan *air fryer* atau rebus. Masukkan seperempat alpukat ke dalam sandwich Anda."
+        'Saran_Turun': {
+            'Tingkatkan/Jaga': "Batasi asupan lemak total, utamakan sumber Lemak tak jenuh esensial.",
+            'Kurangi/Batasi': "Semua sumber lemak jenuh (mentega, minyak kelapa sawit, krim kental, santan) dan minyak yang digunakan untuk menggoreng.",
+            'Contoh Praktis': "Pilih alpukat (dalam batas porsi), minyak kanola, atau *mustard* sebagai pengganti mayones/dressing creamy."
         },
-        'Saran_Gemuk_Obesitas': {
-            'Tingkatkan/Jaga': "Batasi lemak hingga batas minimum yang direkomendasikan AKG. Jika mengonsumsi lemak, pilih lemak tak jenuh.",
-            'Kurangi/Batasi': "Semua sumber lemak jenuh (mentega, minyak kelapa sawit, *deep fried* food), serta semua makanan/minuman yang mengandung krim atau santan kental.",
-            'Contoh Praktis': "Pilih daging *lean* (tanpa lemak). Ganti santan dengan susu rendah lemak atau krimer nabati non-santan."
+        'Saran_Jaga': {
+            'Tingkatkan/Jaga': "Proporsi Lemak Sehat (omega-3 dan tak jenuh) sesuai anjuran AKG.",
+            'Kurangi/Batasi': "Batasi *deep fried* food. Kontrol porsi kacang-kacangan dan biji-bijian agar tidak berlebihan.",
+            'Contoh Praktis': "Masak dengan porsi minyak terukur (1-2 sdm per hari). Konsumsi ikan berlemak (salmon, sarden) 1-2 kali seminggu."
         }
     },
     'Karbohidrat': {
-        'Saran_Kurus': {
-            'Tingkatkan/Jaga': "Karbohidrat kompleks (nasi, pasta, roti gandum utuh) dalam porsi besar sebagai sumber energi utama.",
-            'Kurangi/Batasi': "Diet rendah karbohidrat yang tidak perlu; hindari melewatkan jam makan utama berkarbohidrat.",
-            'Contoh Praktis': "Makan kentang atau ubi sebagai pengganti nasi sesekali. Tambahkan 1 porsi pasta di malam hari."
+        'Saran_Naik': {
+            'Tingkatkan/Jaga': "Karbohidrat kompleks dalam porsi besar sebagai sumber energi utama untuk surplus kalori.",
+            'Kurangi/Batasi': "Sayuran terlalu berserat yang mengurangi porsi Karbohidrat di piring Anda.",
+            'Contoh Praktis': "Makan nasi dengan lauk pauk protein. Pilih Karbohidrat padat seperti ubi, kentang, atau sereal fortifikasi."
         },
-        'Saran_Normal': {
-            'Tingkatkan/Jaga': "Pilih sumber Karbohidrat kompleks (oat, nasi merah, roti gandum) dan serat yang cukup.",
-            'Kurangi/Batasi': "Gula sederhana (permen, *soft drink*, kue-kue) dan karbohidrat olahan.",
-            'Contoh Praktis': "Pilih roti gandum utuh 100%. Batasi kue dan minuman manis maksimum 1 kali sehari."
+        'Saran_Turun': {
+            'Tingkatkan/Jaga': "Pilih Karbohidrat kompleks yang tinggi serat dan memiliki indeks glikemik rendah (slow energy release).",
+            'Kurangi/Batasi': "Porsi nasi, mie, roti putih, dan gula sederhana (minuman manis, permen).",
+            'Contoh Praktis': "Ganti 1/2 porsi nasi putih dengan nasi merah, beras shirataki, atau quinoa. Tambahkan buncis atau wortel rebus."
         },
-        'Saran_Gemuk_Obesitas': {
-            'Tingkatkan/Jaga': "Karbohidrat yang datang bersamaan dengan serat tinggi (sayuran, kacang-kacangan, biji-bijian utuh) untuk rasa kenyang.",
-            'Kurangi/Batasi': "Porsi nasi, mie, atau roti putih (Karbohidrat sederhana). Hindari minuman manis berkalori tinggi.",
-            'Contoh Praktis': "Ganti sarapan dengan 1/2 porsi nasi merah. Pastikan separuh piring Anda diisi sayuran non-pati (selada, brokoli)."
+        'Saran_Jaga': {
+            'Tingkatkan/Jaga': "Karbohidrat kompleks seperti nasi merah, oat, atau roti gandum utuh.",
+            'Kurangi/Batasi': "Karbohidrat olahan dan gula tambahan. Batasi Karbohidrat malam hari (jika tidak aktif).",
+            'Contoh Praktis': "Coba sarapan dengan oat. Pastikan Anda mengonsumsi serat bersamaan dengan Karbohidrat utama."
         }
     },
     'Kalsium (Ca)': {
-        'Saran_Kurus': {
-            'Tingkatkan/Jaga': "Susu *full cream* atau produk olahannya (keju/yogurt), bayam, dan brokoli.",
-            'Kurangi/Batasi': "Minuman bersoda atau berkafein berlebih yang dapat mengganggu penyerapan Kalsium.",
-            'Contoh Praktis': "Minum susu 2 gelas sehari. Tambahkan keju (atau produk olahan susu) pada camilan sore Anda."
+        'Saran_Naik': {
+            'Tingkatkan/Jaga': "Produk susu *full cream* atau *whole milk* untuk bonus kalori dan kalsium.",
+            'Kurangi/Batasi': "Minuman bersoda yang dapat mengganggu penyerapan kalsium.",
+            'Contoh Praktis': "Minum 2 gelas susu *full cream* per hari. Tambahkan keju parut ke dalam omelet/masakan Anda."
         },
-        'Saran_Normal': {
+        'Saran_Turun': {
+            'Tingkatkan/Jaga': "Susu atau produk olahan rendah lemak/non-fat, sayuran hijau, dan sumber nabati.",
+            'Kurangi/Batasi': "Susu tinggi lemak. Jaga porsi kalsium agar tidak mengganggu penyerapan zat besi.",
+            'Contoh Praktis': "Pilih yogurt *plain* rendah lemak. Konsumsi tempe atau tahu sebagai sumber kalsium non-susu."
+        },
+        'Saran_Jaga': {
             'Tingkatkan/Jaga': "Produk susu (rendah/sedang lemak), tahu/tempe, dan sayuran hijau gelap.",
-            'Kurangi/Batasi': "Konsumsi fosfor berlebihan (misalnya dari minuman ringan) yang dapat mengganggu keseimbangan Ca.",
-            'Contoh Praktis': "Pilih yogurt atau kefir. Konsumsi satu porsi kecil sayuran hijau gelap setiap hari."
-        },
-        'Saran_Gemuk_Obesitas': {
-            'Tingkatkan/Jaga': "Susu atau produk olahan rendah lemak/non-fat, serta sumber nabati Kalsium (untuk membatasi kalori).",
-            'Kurangi/Batasi': "Susu tinggi lemak atau produk *dessert* tinggi gula yang mengandung Kalsium.",
-            'Contoh Praktis': "Pilih susu nabati yang difortifikasi Kalsium. Makan tempe/tahu 1-2 porsi sehari."
+            'Kurangi/Batasi': "Mengonsumsi suplemen kalsium bersamaan dengan makanan kaya zat besi.",
+            'Contoh Praktis': "Jadikan yogurt atau kefir sebagai camilan sore. Variasikan sayuran hijau (bayam, kale)."
         }
     },
     'Besi (Fe)': {
-        'Saran_Kurus': {
-            'Tingkatkan/Jaga': "Sumber Besi Heme (daging merah, hati) dikombinasikan dengan sumber Vitamin C (jeruk, jambu).",
-            'Kurangi/Batasi': "Minum teh/kopi segera setelah makan karena kandungan tanin dapat menghambat penyerapan Besi.",
-            'Contoh Praktis': "Konsumsi hati ayam/sapi 1 porsi seminggu. Minum jus jeruk saat mengonsumsi suplemen Besi."
+        'Saran_Naik': {
+            'Tingkatkan/Jaga': "Sumber Besi Heme (daging merah, hati) dikombinasikan dengan Vitamin C untuk penyerapan.",
+            'Kurangi/Batasi': "Mengonsumsi teh/kopi segera setelah makan karena tanin dapat menghambat Besi.",
+            'Contoh Praktis': "Konsumsi hati ayam/sapi 1 porsi seminggu. Minum jus jeruk/jambu saat makan daging."
         },
-        'Saran_Normal': {
+        'Saran_Turun': {
+            'Tingkatkan/Jaga': "Sumber Besi hewani rendah lemak (ikan/daging tanpa lemak) dan sumber nabati.",
+            'Kurangi/Batasi': "Daging merah yang sangat berlemak tinggi.",
+            'Contoh Praktis': "Pilih ikan tuna, salmon, atau daging ayam. Makan kacang-kacangan (lentil, buncis) sebagai lauk 3 kali seminggu."
+        },
+        'Saran_Jaga': {
             'Tingkatkan/Jaga': "Sumber Besi beragam (hewani dan nabati) dan Vitamin C untuk penyerapan optimal.",
             'Kurangi/Batasi': "Antasida atau suplemen Kalsium dalam waktu yang sama dengan makanan kaya Besi.",
-            'Contoh Praktis': "Pilih daging tanpa lemak. Masak dengan panci besi cor untuk meningkatkan kandungan Besi."
-        },
-        'Saran_Gemuk_Obesitas': {
-            'Tingkatkan/Jaga': "Sumber Besi hewani rendah lemak (misalnya ikan) atau sumber nabati (kacang-kacangan).",
-            'Kurangi/Batasi': "Daging merah berlemak tinggi sebagai satu-satunya sumber Besi.",
-            'Contoh Praktis': "Pilih ikan tuna, salmon, atau daging ayam. Makan kacang-kacangan (lentil, buncis) sebagai lauk."
+            'Contoh Praktis': "Jaga konsumsi Vitamin C. Masak dengan panci besi cor untuk meningkatkan kandungan Besi pada makanan."
         }
     },
 }
 
+# (Tabel_Kebutuhan_Gizi_Rujukan tetap sama, tidak ditampilkan di sini untuk efisiensi)
 Tabel_Kebutuhan_Gizi_Rujukan = {
     'Laki-laki (Remaja 10-20 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
@@ -453,6 +462,8 @@ st.set_page_config(
 # Inisialisasi session state
 if 'hitung' not in st.session_state:
     st.session_state['hitung'] = False
+if 'bb_awal' not in st.session_state: # NEW: BB Awal
+    st.session_state['bb_awal'] = 60.0
 if 'bb_target' not in st.session_state:
     st.session_state['bb_target'] = 60.0
 if 'tb_val' not in st.session_state:
@@ -466,7 +477,7 @@ tab_input, tab_hasil, tab_metode = st.tabs(["1️⃣ Input Parameter", "2️⃣ 
 with tab_input:
     st.header("Masukkan Profil dan Kebutuhan")
     
-    col_gizi, col_bb, col_tb = st.columns(3)
+    col_gizi, col_bb_awal, col_tb = st.columns(3)
     Kelompok_options = list(Tabel_Kebutuhan_Gizi_Rujukan.keys())
 
     with col_gizi:
@@ -487,39 +498,58 @@ with tab_input:
             key='gizi'
         )
 
-    with col_bb:
-        # 3. Berat Badan Target
-        BB_Target_Val = st.number_input(
-            '3. Berat Badan Target (kg):',
+    st.markdown("---")
+    
+    col_bb_awal, col_bb_target, col_tb = st.columns(3)
+
+    with col_bb_awal:
+        # 3. Berat Badan Awal (Untuk hitung BMI)
+        BB_Awal_Val = st.number_input(
+            '3. Berat Badan Awal Saat Ini (kg):',
             min_value=30.0,
-            max_value=100.0,
+            max_value=120.0,
+            value=st.session_state['bb_awal'],
+            step=0.1,
+            format="%.1f",
+            help="BB Anda saat ini, digunakan untuk menghitung BMI.",
+            key='bb_awal'
+        )
+        
+    with col_bb_target:
+        # 4. Berat Badan Target (Untuk hitung AKG)
+        BB_Target_Val = st.number_input(
+            '4. Berat Badan Target Ideal (kg):',
+            min_value=30.0,
+            max_value=120.0,
             value=st.session_state['bb_target'],
             step=0.1,
             format="%.1f",
-            help="BB target antara 30.0 kg hingga 100.0 kg",
+            help="BB yang Anda targetkan. Estimasi AKG didasarkan pada BB ini.",
             key='bb_target'
         )
-        
+
     with col_tb:
-        # 4. Tinggi Badan
+        # 5. Tinggi Badan
         TB_Val = st.number_input(
-            '4. Tinggi Badan (cm):',
+            '5. Tinggi Badan (cm):',
             min_value=100.0,
             max_value=220.0,
             value=st.session_state['tb_val'],
             step=1.0,
             format="%.1f",
-            help="Masukkan Tinggi Badan untuk perhitungan BMI",
+            help="Tinggi Badan untuk perhitungan BMI",
             key='tb_val'
         )
     
     st.markdown("---")
     
-    # Tombol Hitung (Menggunakan type="primary" yang sudah dimodifikasi menjadi hijau di CSS)
     if st.button('HITUNG ESTIMASI GIZI SEKARANG 🎯', use_container_width=True, type="primary"):
-        st.session_state['hitung'] = True
-        st.info(f"Perhitungan {Jenis_Gizi_Key} Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
-        st.balloons()
+        if BB_Awal_Val <= 0 or TB_Val <= 0 or BB_Target_Val <= 0:
+            st.error("Semua nilai Berat Badan dan Tinggi Badan harus lebih besar dari nol.")
+        else:
+            st.session_state['hitung'] = True
+            st.info(f"Perhitungan {Jenis_Gizi_Key} Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
+            st.balloons()
 
 
 # --- TAB 2: Logika Perhitungan & Output Utama ---
@@ -529,7 +559,8 @@ with tab_hasil:
             # Ambil nilai dari session state
             Kelompok_Populasi_Key = st.session_state['kelompok']
             Jenis_Gizi_Key = st.session_state['gizi']
-            BB_Target_Val = st.session_state['bb_target']
+            BB_Awal_Val = st.session_state['bb_awal'] # BB Awal
+            BB_Target_Val = st.session_state['bb_target'] # BB Target
             TB_Val = st.session_state['tb_val']
 
             # Ambil Data Lagrange Gizi yang Dipilih
@@ -544,63 +575,84 @@ with tab_hasil:
             Unit_Air = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['unit_air']
             Unit_Serat = Tabel_Kebutuhan_Air_Serat[Kelompok_Populasi_Key]['unit_serat']
             
-            # Estimasi Nilai Lagrange
+            # Estimasi Nilai Lagrange (Menggunakan BB TARGET)
             hasil_estimasi = Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, BB_Target_Val)
             
-            # Hitung BMI
+            # Hitung BMI (Menggunakan BB AWAL)
             TB_meter = TB_Val / 100
-            BMI = BB_Target_Val / (TB_meter ** 2)
+            BMI_Awal = BB_Awal_Val / (TB_meter ** 2)
             
-            # Klasifikasi BMI Kustom (MENDAPATKAN BMI_Key)
-            BMI_Status, BMI_Saran_Subtext, BMI_Color_Code, BMI_Key = Klasifikasi_BMI_HTML(BMI, BB_Target_Val, TB_Val)
+            # Klasifikasi BMI Kustom
+            BMI_Status, BMI_Saran_Subtext, BMI_Color_Code, BMI_Key = Klasifikasi_BMI_HTML(BMI_Awal, BB_Awal_Val, TB_Val)
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
-            # IMPLEMENTASI CUSTOM METRIC (WARNA BIRU MUDA & PUTIH CERAH)
-            col_bmi, col_air, col_serat = st.columns(3)
+            # CUSTOM METRIC
+            col_bmi, col_bb_target, col_bb_diff = st.columns(3)
             
             with col_bmi:
                 custom_metric(
-                    label="Indeks Massa Tubuh (BMI)",
-                    value=f"{BMI:.1f}",
-                    subtext=f'<span style="color:{BMI_Color_Code}; font-weight:bold;">{BMI_Status}</span><br>{BMI_Saran_Subtext}'
+                    label="Indeks Massa Tubuh (BMI) Awal",
+                    value=f"{BMI_Awal:.1f}",
+                    subtext=f'<span style="color:{BMI_Color_Code}; font-weight:bold;">{BMI_Status}</span>'
                 )
                 
-            with col_air:
+            with col_bb_target:
+                diff = BB_Target_Val - BB_Awal_Val
+                if diff > 0.5:
+                    label_diff = "Target: Naik BB"
+                    val_diff = f"+{diff:.1f} kg"
+                    color_diff = "#FFB300"
+                elif diff < -0.5:
+                    label_diff = "Target: Turun BB"
+                    val_diff = f"{diff:.1f} kg"
+                    color_diff = "#FF4B4B"
+                else:
+                    label_diff = "Target: Pertahankan BB"
+                    val_diff = f"{diff:.1f} kg"
+                    color_diff = "#00BFA6"
+                    
                 custom_metric(
-                    label="Kebutuhan Air Harian",
+                    label="Tujuan Berat Badan",
+                    value=f"{BB_Target_Val:.1f} kg",
+                    subtext=f'Perubahan: <span style="color:{color_diff}; font-weight:bold;">{val_diff}</span>'
+                )
+                
+            with col_bb_diff:
+                 custom_metric(
+                    label="Kebutuhan Air & Serat",
                     value=f"{Air_Rujukan} {Unit_Air}",
-                    subtext="💧 Rujukan Kelompok Usia"
+                    subtext=f"Serat: {Serat_Rujukan} {Unit_Serat}/hari"
                 )
-                
-            with col_serat:
-                custom_metric(
-                    label="Kebutuhan Serat Harian",
-                    value=f"{Serat_Rujukan} {Unit_Serat}",
-                    subtext="🥦 Rujukan Kelompok Usia"
-                )
-            # AKHIR IMPLEMENTASI CUSTOM METRIC
             
             st.markdown("---")
             
             # Tampilkan Hasil Utama Gizi Lagrange
-            st.subheader(f"✅ HASIL ESTIMASI LAGRANGE: {Deskripsi_Gizi}")
+            st.subheader(f"✅ HASIL ESTIMASI AKG: {Deskripsi_Gizi} ")
             
             # Tampilkan hasil estimasi dalam kotak SUCCESS 
-            st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda pada Berat Badan **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
+            st.success(f"Perkiraan kebutuhan **{Deskripsi_Gizi}** harian Anda untuk mencapai BB Target **{BB_Target_Val:.1f} kg** adalah **{hasil_estimasi:.2f} {Unit_Gizi}**.")
 
             # Saran Makanan 
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
-            # Trigger diagram for Tumpeng Gizi Seimbang for visual aid
-            st.markdown("")
-            saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key)
+            
+            # Tentukan saran berdasarkan BB Awal dan BB Target
+            saran_list = get_saran_makanan(
+                Jenis_Gizi_Key, 
+                hasil_estimasi, 
+                Unit_Gizi, 
+                BMI_Saran_Subtext, 
+                BB_Awal_Val, 
+                BB_Target_Val, 
+                BMI_Key
+            )
             
             for saran in saran_list:
                 st.markdown(saran)
                 
             st.markdown("---")
 
-            # Analisis Data dan Visualisasi
+            # Analisis Data dan Visualisasi (Plot menggunakan BB TARGET)
             st.header("📈 Analisis Data dan Kurva Lagrange")
             col_data, col_viz = st.columns([1, 1])
             
@@ -616,9 +668,7 @@ with tab_hasil:
                 st.markdown("**Interpretasi Tabel Rujukan:**")
                 st.write(f"""
                 Tabel ini menunjukkan **pasangan data rujukan resmi AKG** (Angka Kecukupan Gizi) untuk kelompok usia **{Kelompok_Populasi_Key}**. 
-                * Kolom **X (Berat Badan Acuan)**: Merupakan titik-titik Berat Badan yang sudah ditetapkan dalam data AKG.
-                * Kolom **Y ({Deskripsi_Gizi} Rujukan)**: Adalah kebutuhan gizi yang sesuai dengan masing-masing Berat Badan di kolom X.
-                * Metode Interpolasi Lagrange menjamin **kurva estimasi akan melewati semua titik data** yang ada di tabel ini untuk memastikan akurasi model.
+                * Estimasi Lagrange menggunakan data ini untuk memprediksi kebutuhan gizi pada BB Target Anda ({BB_Target_Val:.1f} kg).
                 """)
                 # --- AKHIR PENJELASAN TABEL ---
                 
@@ -634,8 +684,11 @@ with tab_hasil:
                 fig, ax = plt.subplots(figsize=(8, 5))
                 ax.scatter(X_data_BB, Y_data_Gizi, color='#FFB300', s=100, label='Titik Data AKG Rujukan', zorder=5) 
                 ax.plot(X_plot, Y_plot, color='#A5D7E8', linestyle='-', label='Kurva Model Estimasi Lagrange') 
-                ax.scatter(BB_Target_Val, hasil_estimasi, color='#40A2E3', marker='X', s=250, label=f'Estimasi Target ({BB_Target_Val} kg)', zorder=6) 
                 
+                # Tampilkan BB Awal dan BB Target pada plot
+                ax.scatter(BB_Awal_Val, Estimasi_AKG_Lagrange(X_data_BB, Y_data_Gizi, BB_Awal_Val), color='#FF4B4B', marker='o', s=150, alpha=0.7, label=f'BB Awal ({BB_Awal_Val} kg)', zorder=6) 
+                ax.scatter(BB_Target_Val, hasil_estimasi, color='#40A2E3', marker='X', s=250, label=f'BB Target ({BB_Target_Val} kg)', zorder=7) 
+
                 # Ubah warna background plot agar sesuai tema gelap
                 ax.set_facecolor('#19376D') 
                 fig.patch.set_facecolor('#19376D')
@@ -655,9 +708,9 @@ with tab_hasil:
                 # --- PENJELASAN GRAFIK LEBIH SPESIFIK ---
                 st.markdown("**Interpretasi Kurva Lagrange:**")
                 st.write(f"""
-                1.  **Kurva Biru Muda (—)**: Ini adalah Kurva Polinomial Lagrange yang dibuat berdasarkan semua titik data di tabel. Kurva ini **menginterpolasi** (mengisi celah) antara titik-titik rujukan.
-                2.  **Titik Kuning (•)**: Ini adalah Titik-Titik Data Rujukan AKG asli dari tabel. Perhatikan bahwa Kurva Lagrange **pasti melewati** titik-titik ini.
-                3.  **Tanda X Biru Cerah (X)**: Ini adalah **Hasil Estimasi Anda** ({hasil_estimasi:.2f} {Unit_Gizi}) yang diprediksi oleh kurva Lagrange berdasarkan Berat Badan Target Anda ({BB_Target_Val:.1f} kg).
+                1.  **Titik Merah (o)**: Kebutuhan gizi yang diekspektasikan pada **BB Awal** Anda ({BB_Awal_Val:.1f} kg).
+                2.  **Tanda X Biru Cerah (X)**: Kebutuhan gizi yang diperlukan pada **BB Target** Anda ({BB_Target_Val:.1f} kg).
+                3.  **Jarak antara kedua titik** menunjukkan perubahan nutrisi yang perlu Anda lakukan untuk mencapai BB Target.
                 """)
                 # --- AKHIR PENJELASAN GRAFIK ---
 
@@ -668,7 +721,7 @@ with tab_hasil:
     else:
         st.warning("Tekan tombol **'HITUNG ESTIMASI GIZI SEKARANG 🎯'** di tab **Input Parameter** untuk memulai analisis.")
 
-# --- TAB 3: Tentang Metode ---
+# --- TAB 3: Tentang Metode (Tidak Berubah) ---
 with tab_metode:
     st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
     st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
@@ -682,12 +735,10 @@ with tab_metode:
     st.subheader("Rumus Polinomial Lagrange")
     st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
     
-    # RUMUS UTAMA LAGRANGE
     st.latex(r"P(x) = \sum_{j=0}^{n-1} y_j L_j(x)")
     
     st.markdown("Di mana $L_j(x)$ adalah **Basis Polinomial Lagrange**:")
     
-    # BASIS POLINOMIAL LAGRANGE
     st.latex(r"L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}")
     
     st.markdown("""
@@ -706,5 +757,5 @@ with tab_metode:
     
     st.markdown("---")
     st.markdown("""
-    **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
+    **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi).
     """)
