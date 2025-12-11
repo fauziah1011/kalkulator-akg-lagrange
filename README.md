@@ -9,7 +9,8 @@ Selamat datang di **GIZI ANTI RIBET**, sebuah proyek keren yang membuat perhitun
 Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi, bukan hanya perkiraan kasar.**
 
 ### 🖼 Tampilan Aplikasi
-<img width="1310" height="357" alt="Tampilan Aplikasi Streamlit Kalkulator AKG Lagrange" src="https://github.com/user-attachments/assets/43630a82-f359-4410-a0e6-054cea1a7bb4" />
+<img width="1250" height="541" alt="image" src="https://github.com/user-attachments/assets/a1cbeb30-656c-4c69-8019-5ae3fbecbc1a" />
+
 
 👉 **[LANGSUNG COBAIN KALKULATOR AKG LAGRANGE DI SINI!](https://bit.ly/3KILFZb)** 👈
 
