@@ -633,31 +633,33 @@ with tab_hasil:
 
 # --- TAB 3: Tentang Metode ---
 with tab_metode:
-    st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
-    st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
+    st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
+    st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
 
-    st.subheader("Konsep Dasar")
-    st.markdown("""
-    * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
-    * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
-    """)
-    
+    st.subheader("Konsep Dasar")
+    st.markdown("""
+    * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
+    * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
+    """)
+    
 
-    st.subheader("Rumus Polinomial Lagrange")
-    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
-    
-    $$P(x) = \sum_{i=0}^{n-1} y_i L_i(x)$$
-    
-    st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
-    
-    $$L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}$$
-    
-    st.markdown("""
-    Dalam konteks aplikasi ini:
-    * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
-    * $x_i$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
-    * $y_i$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
-    """)
+    st.subheader("Rumus Polinomial Lagrange")
+    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
+    
+    # KOREKSI SINTAKS DI SINI (st.latex ditambahkan)
+    st.latex(r"P(x) = \sum_{i=0}^{n-1} y_i L_i(x)")
+    
+    st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
+    
+    # KOREKSI SINTAKS DI SINI (st.latex ditambahkan)
+    st.latex(r"L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}")
+    
+    st.markdown("""
+    Dalam konteks aplikasi ini:
+    * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
+    * $x_i$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
+    * $y_i$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
+    """)
 
     st.subheader("Mengapa menggunakan Lagrange?")
     st.markdown("""
@@ -670,3 +672,4 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
+
