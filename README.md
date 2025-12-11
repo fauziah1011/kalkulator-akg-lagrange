@@ -31,7 +31,7 @@ Kami membangun sebuah model matematika untuk mengisi celah antara data AKG stand
 
 #### Konsep Inti:
 
-Metode ini menggunakan Polinomial Lagrange P(X) untuk menentukan nilai gizi y berdasarkan Berat Badan x Anda.
+Metode ini menggunakan Polinomial Lagrange P(x) untuk menentukan nilai gizi y berdasarkan Berat Badan x Anda.
 
 **1. Rumus Polinomial Lagrange:**
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
