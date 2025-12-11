@@ -8,8 +8,6 @@ Selamat datang di **GIZI ANTI RIBET**, sebuah proyek keren yang membuat perhitun
 
 Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi, bukan hanya perkiraan kasar.**
 
-
-
 ### 🖼 Tampilan Aplikasi
 <img width="1310" height="357" alt="Tampilan Aplikasi Streamlit Kalkulator AKG Lagrange" src="https://github.com/user-attachments/assets/43630a82-f359-4410-a0e6-054cea1a7bb4" />
 
@@ -28,14 +26,21 @@ Kami membangun sebuah model matematika untuk mengisi celah antara data AKG stand
 | Fitur | Manfaat untuk Anda |
 | :--- | :--- |
 | **Interpolasi Lagrange** | Menghasilkan kurva yang melewati *semua* titik data AKG rujukan. |
-| **Estimasi Presisi** | Jika Berat Badan (BB) Anda 67,5 kg, kami tidak membulatkannya ke 60 kg atau 70 kg. Kami hitung AKG yang persis untuk 67,5 kg. |
-| **Personalisasi** | Hasil yang Anda dapatkan adalah AKG (x) yang spesifik, di mana x adalah Berat Badan Anda. |
+| **Estimasi Presisi** | Jika Berat Badan (BB) Anda $67.5 \text{ kg}$, kami tidak membulatkannya ke $60 \text{ kg}$ atau $70 \text{ kg}$. Kami hitung AKG yang persis untuk $67.5 \text{ kg}$. |
+| **Personalisasi** | Hasil yang Anda dapatkan adalah $AKG(x)$ yang spesifik, di mana $x$ adalah Berat Badan Anda. |
 
 #### Konsep Inti:
 
-Metode ini menggunakan Polinomial Lagrange P(x) untuk menentukan nilai gizi (y) berdasarkan Berat Badan (x) Anda, yang dirumuskan sebagai:
+Metode ini menggunakan Polinomial Lagrange $P(x)$ untuk menentukan nilai gizi ($y$) berdasarkan Berat Badan ($x$) Anda.
 
+**1. Rumus Polinomial Lagrange:**
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
+*(Catatan: Pastikan Anda mengganti path `assets/polinomial_lagrange.png` dengan lokasi gambar yang benar di repo Anda.)*
+
+**2. Rumus Basis Polinomial ($L_i(x)$):**
+![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
+*(Catatan: Pastikan Anda mengganti path `assets/basis_lagrange.png` dengan lokasi gambar yang benar di repo Anda.)*
+
 ---
 
 ## 💻 Detail Proyek (The Engine Room)
