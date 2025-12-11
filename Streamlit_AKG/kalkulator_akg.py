@@ -23,7 +23,7 @@ st.markdown("""
         border: 1px solid #A5D7E8; /* Garis tepi kontainer */
     }
     
-    /* FIX: Teks di Sidebar */
+    /* Teks di Sidebar */
     .st-emotion-cache-1ldfqsx label, .st-emotion-cache-1ldfqsx h2 {
         color: #F0F0F0 !important;
     }
@@ -45,7 +45,7 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 🔥 KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
+    /* KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
         border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
@@ -81,7 +81,7 @@ st.markdown("""
         border: 1px solid #A5D7E8;
     }
 
-    /* 🔥 TAB KRUSIAL (Warna Oranye) */
+    /* TAB KRUSIAL (Warna Oranye) */
     .stTabs [aria-selected="true"] {
         /* Warna teks tab aktif */
         color: #F0F0F0 !important; 
@@ -117,7 +117,7 @@ st.markdown("""
         margin-bottom: 5px;
     }
     
-    /* 🔥 WARNA NILAI UTAMA BIRU MUDA */
+    /* WARNA NILAI UTAMA BIRU MUDA */
     .custom-metric-value {
         color: #A5D7E8; /* Warna Nilai Utama JADI BIRU MUDA */
         font-size: 2.2rem;
@@ -125,7 +125,7 @@ st.markdown("""
         line-height: 1.1;
     }
     
-    /* 🔥 WARNA SUBTEKS PUTIH */
+    /* WARNA SUBTEKS PUTIH */
     .custom-metric-subtext {
         color: #F0F0F0; /* Subteks (Rujukan Usia/Status Gizi) JADI PUTIH */
         font-size: 0.9rem;
@@ -521,7 +521,7 @@ with tab_hasil:
 
             st.header(f"Ringkasan Profil Gizi untuk {Kelompok_Populasi_Key}")
 
-            # 🚨 IMPLEMENTASI CUSTOM METRIC (WARNA BIRU MUDA & PUTIH CERAH)
+            # IMPLEMENTASI CUSTOM METRIC (WARNA BIRU MUDA & PUTIH CERAH)
             col_bmi, col_air, col_serat = st.columns(3)
             
             with col_bmi:
@@ -544,7 +544,7 @@ with tab_hasil:
                     value=f"{Serat_Rujukan} {Unit_Serat}",
                     subtext="🥦 Rujukan Kelompok Usia"
                 )
-            # 🚨 AKHIR IMPLEMENTASI CUSTOM METRIC
+            # AKHIR IMPLEMENTASI CUSTOM METRIC
             
             st.markdown("---")
             
@@ -633,43 +633,45 @@ with tab_hasil:
 
 # --- TAB 3: Tentang Metode ---
 with tab_metode:
-    st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
-    st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
+    # PERBAIKAN: Menghilangkan spasi non-standar (U+00A0) di Baris ini.
+    st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
+    st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
 
-    st.subheader("Konsep Dasar")
-    st.markdown("""
-    * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
-    * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
-    """)
-    
+    st.subheader("Konsep Dasar")
+    st.markdown("""
+    * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
+    * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
+    """)
+    
 
-    st.subheader("Rumus Polinomial Lagrange")
-    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
-    
-    # KOREKSI SINTAKS DI SINI (st.latex ditambahkan)
-    st.latex(r"P(x) = \sum_{i=0}^{n-1} y_i L_i(x)")
-    
-    st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
-    
-    # KOREKSI SINTAKS DI SINI (st.latex ditambahkan)
-    st.latex(r"L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}")
-    
-    st.markdown("""
-    Dalam konteks aplikasi ini:
-    * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
-    * $x_i$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
-    * $y_i$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
-    """)
+    st.subheader("Rumus Polinomial Lagrange")
+    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
+    
+    # PERBAIKAN: Menggunakan st.latex() dan Raw String (r"...")
+    st.latex(r"P(x) = \sum_{i=0}^{n-1} y_i L_i(x)")
+    
+    st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
+    
+    # PERBAIKAN: Menggunakan st.latex() dan Raw String (r"...")
+    st.latex(r"L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}")
+    
+    st.markdown("""
+    Dalam konteks aplikasi ini:
+    * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
+    * $x_i$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
+    * $y_i$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
+    """)
 
     st.subheader("Mengapa menggunakan Lagrange?")
     st.markdown("""
-    1.  **Akurasi Titik Rujukan:** Polinomial Lagrange memiliki properti bahwa kurva yang dihasilkan **pasti melewati** semua titik data rujukan AKG resmi. Ini memastikan bahwa estimasi AKG untuk Berat Badan acuan yang tersedia tidak akan meleset.
-    2.  **Solusi Unik:** Untuk set titik data yang diberikan, Polinomial Lagrange memberikan solusi polinomial tunggal (unik) untuk interpolasi.
-    3.  **Kesederhanaan Implementasi:** Meskipun secara matematis rumit, implementasinya dalam kode (seperti yang ditunjukkan dalam fungsi `Estimasi_AKG_Lagrange`) cukup lugas dan efisien untuk jumlah titik data yang kecil (n=4 atau n=5).
-    """)
+    1.  **Akurasi Titik Rujukan:** Polinomial Lagrange menjamin akurasi penuh pada titik-titik data rujukan (kurva pasti melewati titik-titik tersebut).
+    2.  **Solusi Unik:** Untuk set data yang diberikan, Polinomial Lagrange memberikan solusi polinomial unik.
+    3.  **Kesinambungan Data Gizi:** Karena kebutuhan gizi sering kali berhubungan secara non-linear dengan berat badan, interpolasi polinomial memberikan estimasi yang lebih halus dan logis dibandingkan interpolasi linier.
+    """) 
     
     st.markdown("---")
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
+
 
