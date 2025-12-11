@@ -2,7 +2,7 @@
 
 ## 🎉 Selamat Datang di NutriMatch!
 
-Halo teman-teman pembelajar dan pegiat hidup sehat!
+Halo teman-teman pelajar dan pegiat hidup sehat!
 
 Selamat datang di **GIZI ANTI RIBET**, sebuah proyek keren yang membuat perhitungan Angka Kecukupan Gizi (AKG) jadi super mudah dan sangat akurat.
 
@@ -57,6 +57,5 @@ Proyek ini adalah implementasi dari pembelajaran mata kuliah Metode Numerik yang
 
 ## 📜 Lisensi & Status
 
-Proyek ini **Aktif** dan dikembangkan untuk tujuan edukasi dan kesehatan masyarakat. Silakan *fork* dan kembangkan lebih lanjut!
-
+Proyek ini **Aktif** dan dikembangkan untuk tujuan edukasi dan kesehatan masyarakat.
 * **Versi Saat Ini:** v1.0.0 (Stabil)
