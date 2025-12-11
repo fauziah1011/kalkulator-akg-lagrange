@@ -61,6 +61,26 @@ Proyek ini adalah implementasi dari pembelajaran mata kuliah Metode Numerik yang
 | **Aliffia Hilva Salsabila** | K1323006 |
 | **Fauziah Rahmawati Sholehah** |K1323026 |
 
+import streamlit as st
+
+# --- CUSTOM CSS ---
+st.markdown("""
+    <style>
+        /* Ubah warna background keseluruhan */
+        .stApp {
+            background-color: #F4F9FF;  /* ganti sesuai selera */
+        }
+
+        /* Background container utama */
+        .main {
+            background-color: #ffffffee;
+            padding: 20px;
+            border-radius: 15px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
 ---
 
 ## 📜 Lisensi & Status
