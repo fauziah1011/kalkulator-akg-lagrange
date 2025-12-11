@@ -3,11 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-st.set_page_config(
-    page_title="Kalkulator AKG Lagrange",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 # --- CSS KUSTOM & TEMA ---
 st.markdown("""
 <style>
@@ -49,7 +44,7 @@ st.markdown("""
         border-left: 5px solid #A5D7E8;
         padding-left: 10px;
     }
-
+    
     /* KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
@@ -89,7 +84,7 @@ st.markdown("""
     /* TAB KRUSIAL (Warna Oranye) */
     .stTabs [aria-selected="true"] {
         /* Warna teks tab aktif */
-        color: #F0F0F0 !important; 
+        color: #FFB300 !important; /* <--- Warna teks saat aktif */
         /* Tambahkan garis batas tipis cerah */
         border: 1px solid #FFB300 !important; 
         border-radius: 6px;
@@ -101,6 +96,8 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
+        /* Warna teks tab tidak aktif */
+        color: #FFFFFF !important; /* <--- Warna teks saat tidak aktif */
         /* Pastikan tab tidak aktif punya border */
         border: 1px solid transparent; 
         border-radius: 6px;
@@ -137,6 +134,13 @@ st.markdown("""
         margin-top: 5px;
     }
     
+    /* WARNA TOMBOL PRIMARY JADI HIJAU (UNTUK TOMBOL HITUNG) */
+    .stButton > button {
+        background-color: #00BFA6; 
+        color: #000000; /* Teks Hitam */
+        border: 2px solid #00BFA6;
+    }
+    
 </style>
 """, unsafe_allow_html=True)
 
@@ -152,6 +156,7 @@ def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     hasil_estimasi = 0.0
     
     if len(np.unique(X_Acuan)) < n:
+        # Jika ada BB acuan yang sama, hindari pembagian nol
         return 0.0
 
     for i in range(n):
@@ -485,7 +490,7 @@ with tab_input:
     
     st.markdown("---")
     
-    # Tombol Hitung
+    # Tombol Hitung (Menggunakan type="primary" yang sudah dimodifikasi menjadi hijau di CSS)
     if st.button('HITUNG ESTIMASI GIZI SEKARANG 🎯', use_container_width=True, type="primary"):
         st.session_state['hitung'] = True
         st.info(f"Perhitungan {Jenis_Gizi_Key} Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
@@ -646,7 +651,18 @@ with tab_metode:
     * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
     * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
     """)
-        
+    
+    st.subheader("Rumus Polinomial Lagrange")
+    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
+    
+    # RUMUS UTAMA LAGRANGE (AMAN DARI ERROR INDENTATION DAN SYNTAX)
+    st.latex(r"P(x) = \sum_{j=0}^{n-1} y_j L_j(x)")
+    
+    st.markdown("Di mana $L_j(x)$ adalah **Basis Polinomial Lagrange**:")
+    
+    # BASIS POLINOMIAL LAGRANGE (AMAN DARI ERROR INDENTATION DAN SYNTAX)
+    st.latex(r"L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}")
+    
     st.markdown("""
     Dalam konteks aplikasi ini:
     * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
@@ -665,7 +681,3 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
-    
-    # Garis kosong penutup file
-
-
