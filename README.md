@@ -60,7 +60,6 @@ Proyek ini adalah implementasi dari pembelajaran mata kuliah Metode Numerik yang
 | :--- | :--- |
 | **Aliffia Hilva Salsabila** | K1323006 |
 | **Fauziah Rahmawati Sholehah** |K1323026 |
-
 ---
 
 ## 📜 Lisensi & Status
