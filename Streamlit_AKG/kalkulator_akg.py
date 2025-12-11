@@ -646,18 +646,7 @@ with tab_metode:
     * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
     * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
     """)
-    
-    st.subheader("Rumus Polinomial Lagrange")
-    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
-    
-    # PERBAIKAN ST.LATEX UNTUK MENGHINDARI SYNTAX ERROR DAN INDENTATION ERROR
-    st.latex(r"P(x) = \sum_{j=0}^{n-1} y_j L_j(x)")
-    
-    st.markdown("Di mana $L_j(x)$ adalah **Basis Polinomial Lagrange**:")
-    
-    # PERBAIKAN ST.LATEX UNTUK BASIS POLINOMIAL
-    st.latex(r"L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}")
-    
+        
     st.markdown("""
     Dalam konteks aplikasi ini:
     * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
@@ -678,4 +667,5 @@ with tab_metode:
     """)
     
     # Garis kosong penutup file
+
 
