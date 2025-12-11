@@ -149,7 +149,7 @@ st.markdown("💡Aplikasi ini menggunakan **Interpolasi Polinomial Lagrange** un
 st.markdown("---")
 
 # ----------------------------------------------------------------------
-# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE📈
+# BAGIAN 1: FUNGSI UTAMA ESTIMASI LAGRANGE
 # ----------------------------------------------------------------------
 def Estimasi_AKG_Lagrange(X_Acuan, Y_Nilai_Gizi, BB_Target):
     n = len(X_Acuan)
@@ -229,7 +229,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BB_Awal, BB_Tar
         Tujuan_Text = f"Anda bertujuan **MEMPERTAHANKAN** BB di sekitar {BB_Target:.1f} kg."
         
     # --- BAGIAN 1: TARGET GIZI UTAMA & TUJUAN BB ---
-    saran.append(f"### 🎯 Kebutuhan Harian **{Jenis_Gizi_Key}** (untuk BB Target {BB_Target:.1f} kg): {hasil_estimasi:.0f} {Unit_Gizi}")
+    saran.append(f"###  Kebutuhan Harian **{Jenis_Gizi_Key}** (untuk BB Target {BB_Target:.1f} kg): {hasil_estimasi:.0f} {Unit_Gizi}")
     saran.append(f"**Tujuan Besar Anda:** {Tujuan_Text}")
     saran.append(f"**Strategi Utama Energi:** {Tujuan_Goal}")
     saran.append("---")
@@ -239,14 +239,14 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BB_Awal, BB_Tar
     
     # TINGKATKAN/JAGA
     tingkatkan_jaga = saran_data.get(Tujuan_Key, {}).get('Tingkatkan/Jaga', "Informasi strategi peningkatan belum tersedia.")
-    saran.append(f"**⬆️ FOKUS TINGKATKAN / JAGA:**")
+    saran.append(f"**AYO TINGKATKAN DI BAWAH INI!:**")
     # Tampilkan sebagai list yang mudah dibaca
     for item in tingkatkan_jaga.split(';'):
         saran.append(f"* {item.strip()}")
     
     # KURANGI/BATASI
     kurangi_batasi = saran_data.get(Tujuan_Key, {}).get('Kurangi/Batasi', "Informasi strategi pembatasan belum tersedia.")
-    saran.append(f"**⬇️ FOKUS KURANGI / BATASI:**")
+    saran.append(f"**KURANGI DI BAWAH INI YA!:**")
     for item in kurangi_batasi.split(';'):
         saran.append(f"* {item.strip()}")
     
@@ -265,8 +265,8 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BB_Awal, BB_Tar
     # Saran Air dan Serat (Rujukan Tetap)
     Air_Rujukan = Tabel_Kebutuhan_Air_Serat[st.session_state['kelompok']]['Air']
     Serat_Rujukan = Tabel_Kebutuhan_Air_Serat[st.session_state['kelompok']]['Serat']
-    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Jangan tunggu haus untuk minum!")
-    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Pastikan ada sayur dan buah di setiap piring Anda.")
+    saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Jangan tunggu haus untuk minum ya!")
+    saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Pastikan ada sayur dan buah di setiap piring Kamu ya.")
     
     return saran
 
@@ -765,4 +765,5 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi).
     """)
+
 
