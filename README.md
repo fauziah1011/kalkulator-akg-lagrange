@@ -33,13 +33,12 @@ Kami membangun sebuah model matematika untuk mengisi celah antara data AKG stand
 
 Metode ini menggunakan Polinomial Lagrange $P(x)$ untuk menentukan nilai gizi ($y$) berdasarkan Berat Badan ($x$) Anda.
 
-**1. Rumus Polinomial Lagrange:**
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
+**1. Rumus Polinomial Lagrange:**
 
 
-**2. Rumus Basis Polinomial ($L_i(x)$):**
 ![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
-
+**2. Rumus Basis Polinomial :**
 ---
 
 ## 💻 Detail Proyek (The Engine Room)
@@ -53,8 +52,8 @@ Proyek ini adalah implementasi dari pembelajaran mata kuliah Metode Numerik yang
 
 | Nama | NIM |
 | :--- | :--- |
-| **Fauziah Rahmawati Sholehah** | K1323026 |
-| **Aliffia Hilva Salsabila** |K1323006 |
+| **Aliffia Hilva Salsabila** | K1323006 |
+| **Fauziah Rahmawati Sholehah** |K1323026 |
 
 ---
 
