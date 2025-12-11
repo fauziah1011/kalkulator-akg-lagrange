@@ -15,7 +15,7 @@ Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi,
 
 ---
 
-## ✨ Kenapa Kalkulator Ini Spesial? (Intisari Teknologi)
+## ✨ Kenapa Kalkulator Ini Spesial?
 
 Kalkulator Gizi biasa seringkali hanya membulatkan kebutuhan Anda ke kategori usia atau berat badan terdekat. Kami tidak! Kami menggunakan ilmu pasti, yaitu **Metode Numerik Interpolasi Lagrange**, untuk memberikan estimasi yang benar-benar personal.
 
