@@ -246,7 +246,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BB_Awal, BB_Tar
     
     # KURANGI/BATASI
     kurangi_batasi = saran_data.get(Tujuan_Key, {}).get('Kurangi/Batasi', "Informasi strategi pembatasan belum tersedia.")
-    saran.append(f"**⬇️ FOKUS KURANGI / BATASI:**")
+    saran.append(f"**KURANGI BAGIAN INI YA!:**")
     for item in kurangi_batasi.split(';'):
         saran.append(f"* {item.strip()}")
     
@@ -787,5 +787,6 @@ with tab_metode:
     transform: scale(0.95);
     box-shadow: 0 0 5px #FFB300;
 }
+
 
 
