@@ -3,6 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
+st.set_page_config(
+    page_title="Kalkulator AKG Lagrange",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 # --- CSS KUSTOM & TEMA ---
 st.markdown("""
 <style>
@@ -673,3 +678,4 @@ with tab_metode:
     """)
     
     # Garis kosong penutup file
+
