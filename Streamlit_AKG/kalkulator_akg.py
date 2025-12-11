@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# --- CSS KUSTOM & TEMA (REVISI V10 - Saran Makanan Aksi Spesifik) ---
+# --- CSS KUSTOM & TEMA ---
 st.markdown("""
 <style>
     /* 1. Latar Belakang Utama Aplikasi (Deep Navy) */
@@ -45,7 +45,7 @@ st.markdown("""
         padding-left: 10px;
     }
 
-    /* 🔥 FIX: KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
+    /* 🔥 KOTAK SUCCESS (st.success) -> PUTIH TEKS HITAM */
     .st-emotion-cache-199v4c3 { 
         background-color: #f7f3e8; /* Background Putih Pucat (Off-White) */
         border-left: 8px solid #FFB300; /* Garis samping Kuning Emas */
@@ -57,7 +57,7 @@ st.markdown("""
         font-weight: bold !important;
     }
     
-    /* FIX: BACKGROUND KOTAK INPUT */
+    /* BACKGROUND KOTAK INPUT */
     [data-baseweb="select"] div:first-child,
     [data-baseweb="input"] input,
     .st-emotion-cache-1y4pm5r div, 
@@ -67,12 +67,12 @@ st.markdown("""
         color: #F0F0F0 !important; /* Teks di dalam input field jadi terang */
     }
     
-    /* FIX AGGRESSIVE: Teks label di atas input field */
+    /* Teks label di atas input field */
     label { 
         color: #A5D7E8 !important; /* Warna label input field jadi Biru Muda Cerah */
     }
     
-    /* PERBAIKAN FINAL: CONTAINER DI TAB INPUT */
+    /* CONTAINER DI TAB INPUT */
     .stTabs > div:first-child + div > div:first-child {
         background-color: #19376D; /* Warna kotak container input */
         padding: 30px; 
@@ -81,7 +81,7 @@ st.markdown("""
         border: 1px solid #A5D7E8;
     }
 
-    /* 🔥 PERBAIKAN TAB KRUSIAL (Warna Oranye) */
+    /* 🔥 TAB KRUSIAL (Warna Oranye) */
     .stTabs [aria-selected="true"] {
         /* Warna teks tab aktif */
         color: #F0F0F0 !important; 
@@ -101,7 +101,7 @@ st.markdown("""
         border-radius: 6px;
     }
     
-    /* STYLE UNTUK METRIK CUSTOM (GANTI st.metric) */
+    /* STYLE UNTUK METRIK CUSTOM */
     .custom-metric-container {
         background-color: #19376D; 
         padding: 15px;
@@ -203,7 +203,7 @@ def custom_metric(label, value, subtext):
     st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI - REV V10)
+# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI)
 # ----------------------------------------------------------------------
 def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key):
     saran = []
@@ -246,7 +246,7 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# REVISI STRUKTUR SARAN MAKANAN BERDASARKAN BMI (V10: Tingkatkan vs Kurangi)
+# STRUKTUR SARAN MAKANAN BERDASARKAN BMI
 Tabel_Saran_Makro_Mikro = {
     'Energi': {
         'Saran_Kurus': {
@@ -399,7 +399,7 @@ Tabel_Kebutuhan_Gizi_Rujukan = {
             'Protein': {'data': np.array([45, 58, 70, 85]), 'unit': 'g', 'desc': 'Kebutuhan Protein'},
             'Lemak Total': {'data': np.array([35, 45, 65, 85]), 'unit': 'g', 'desc': 'Kebutuhan Lemak Total'},
             'Karbohidrat': {'data': np.array([200, 230, 300, 370]), 'unit': 'g', 'desc': 'Kebutuhan Karbohidrat'},
-            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'}, # 🚨 PERBAIKAN DI SINI
+            'Kalsium (Ca)': {'data': np.array([1200, 1200, 1200, 1200]), 'unit': 'mg', 'desc': 'Kebutuhan Kalsium'},
             'Besi (Fe)': {'data': np.array([8, 8, 8, 8]), 'unit': 'mg', 'desc': 'Kebutuhan Besi'},
         }
     },
@@ -484,7 +484,7 @@ with tab_input:
     if st.button('HITUNG ESTIMASI GIZI SEKARANG 🎯', use_container_width=True, type="primary"):
         st.session_state['hitung'] = True
         st.info(f"Perhitungan {Jenis_Gizi_Key} Selesai! Silakan cek Tab 'Hasil Estimasi & Visualisasi'.")
-        st.balloons()
+        st.snow()
 
 
 # --- TAB 2: Logika Perhitungan & Output Utama ---
@@ -631,3 +631,42 @@ with tab_hasil:
     else:
         st.warning("Tekan tombol **'HITUNG ESTIMASI GIZI SEKARANG 🎯'** di tab **Input Parameter** untuk memulai analisis.")
 
+# --- TAB 3: Tentang Metode ---
+with tab_metode:
+    st.header("Metode Numerik: Interpolasi Polinomial Lagrange")
+    st.markdown("Aplikasi ini menggunakan metode **Interpolasi Polinomial Lagrange** untuk mengestimasi nilai Angka Kecukupan Gizi (AKG) pada Berat Badan (BB) yang tidak tercantum langsung dalam tabel rujukan AKG resmi.")
+
+    st.subheader("Konsep Dasar")
+    st.markdown("""
+    * **Interpolasi** adalah metode untuk membangun fungsi baru dari sekumpulan titik data yang diskrit. Dalam kasus ini, kita membuat fungsi yang menghubungkan kebutuhan gizi (Y) dengan Berat Badan (X).
+    * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
+    """)
+    
+
+    st.subheader("Rumus Polinomial Lagrange")
+    st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
+    
+    $$P(x) = \sum_{i=0}^{n-1} y_i L_i(x)$$
+    
+    st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
+    
+    $$L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}$$
+    
+    st.markdown("""
+    Dalam konteks aplikasi ini:
+    * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
+    * $x_i$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
+    * $y_i$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
+    """)
+
+    st.subheader("Mengapa menggunakan Lagrange?")
+    st.markdown("""
+    1.  **Akurasi Titik Rujukan:** Polinomial Lagrange memiliki properti bahwa kurva yang dihasilkan **pasti melewati** semua titik data rujukan AKG resmi. Ini memastikan bahwa estimasi AKG untuk Berat Badan acuan yang tersedia tidak akan meleset.
+    2.  **Solusi Unik:** Untuk set titik data yang diberikan, Polinomial Lagrange memberikan solusi polinomial tunggal (unik) untuk interpolasi.
+    3.  **Kesederhanaan Implementasi:** Meskipun secara matematis rumit, implementasinya dalam kode (seperti yang ditunjukkan dalam fungsi `Estimasi_AKG_Lagrange`) cukup lugas dan efisien untuk jumlah titik data yang kecil (n=4 atau n=5).
+    """)
+    
+    st.markdown("---")
+    st.markdown("""
+    **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
+    """)
