@@ -1,6 +1,6 @@
 # 🚀 GIZI ANTI RIBET: Kalkulator AKG Lagrange
 
-## 🎉 Selamat Datang di NutriMatch!
+## Selamat Datang di NutriMatch!
 
 Halo teman-teman pelajar dan pejuang hidup sehat!
 
