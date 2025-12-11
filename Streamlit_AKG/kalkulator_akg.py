@@ -256,94 +256,111 @@ Tabel_Kebutuhan_Air_Serat = {
     'Perempuan (Lansia 61-80+ th)': {'Air': 2.5, 'Serat': 25, 'unit_air': 'liter', 'unit_serat': 'g'},
 }
 
-# STRUKTUR SARAN MAKANAN BERDASARKAN BMI
+# STRUKTUR SARAN MAKANAN BERDASARKAN BMI (VERSI LEBIH VARIASI)
 Tabel_Saran_Makro_Mikro = {
     'Energi': {
         'Saran_Kurus': {
             'Tingkatkan/Jaga': "Asupan karbohidrat kompleks (nasi, roti, ubi) dan protein. Pilih makanan padat kalori (alpukat, kacang-kacangan) dan makan porsi lebih sering/besar.",
-            'Kurangi/Batasi': "Minuman dan makanan yang terlalu banyak serat di awal makan (untuk memaksimalkan penyerapan kalori), makanan rendah kalori."
+            'Kurangi/Batasi': "Minuman dan makanan yang terlalu banyak serat di awal makan (untuk memaksimalkan penyerapan kalori), makanan rendah kalori.",
+            'Contoh Praktis': "Substitusi nasi putih dengan nasi uduk/beras merah dan tambahkan 1 sdm minyak zaitun. Ngemil alpukat atau kacang almond di sela waktu makan."
         }, 
         'Saran_Normal': {
             'Tingkatkan/Jaga': "Keseimbangan sumber energi (Karbohidrat, Protein, Lemak) sesuai target AKG. Fokus pada sumber energi yang bersih (whole foods).",
-            'Kurangi/Batasi': "Kalori kosong seperti *snack* tinggi gula, minuman manis, dan *fast food* berlebihan."
+            'Kurangi/Batasi': "Kalori kosong seperti *snack* tinggi gula, minuman manis, dan *fast food* berlebihan.",
+            'Contoh Praktis': "Ganti sereal sarapan dengan oatmeal utuh. Coba *snack* buah potong atau *yogurt* daripada kue kemasan."
         },
         'Saran_Gemuk_Obesitas': {
             'Tingkatkan/Jaga': "Sayuran non-pati dan serat (untuk kenyang tanpa kalori berlebih). Jaga asupan protein untuk massa otot.",
-            'Kurangi/Batasi': "Porsi keseluruhan makanan (defisit kalori), gula tambahan, minuman manis, makanan yang digoreng, dan sumber karbohidrat sederhana."
+            'Kurangi/Batasi': "Porsi keseluruhan makanan (defisit kalori), gula tambahan, minuman manis, makanan yang digoreng, dan sumber karbohidrat sederhana.",
+            'Contoh Praktis': "Ganti 1 porsi nasi dengan sayuran rebus atau salad. Minum air putih/teh tawar daripada jus kemasan atau minuman manis."
         }
     }, 
     'Protein': {
         'Saran_Kurus': {
             'Tingkatkan/Jaga': "Asupan protein berkualitas tinggi (daging tanpa lemak, telur, ikan, whey) pada setiap kali makan untuk membangun massa otot.",
-            'Kurangi/Batasi': "Hanya makan sayuran sebagai sumber protein utama; perlu kombinasi dengan protein hewani."
+            'Kurangi/Batasi': "Hanya makan sayuran sebagai sumber protein utama; perlu kombinasi dengan protein hewani.",
+            'Contoh Praktis': "Tambahkan 1 butir telur setiap sarapan. Coba protein shake (whey atau kedelai) sebagai camilan."
         },
         'Saran_Normal': {
             'Tingkatkan/Jaga': "Sumber protein beragam (daging, telur, ikan, tahu/tempe) untuk menjaga dan memperbaiki sel tubuh.",
-            'Kurangi/Batasi': "Protein yang datang bersamaan dengan lemak jenuh berlebih (misalnya: kulit ayam, sosis, *bacon*)."
+            'Kurangi/Batasi': "Protein yang datang bersamaan dengan lemak jenuh berlebih (misalnya: kulit ayam, sosis, *bacon*).",
+            'Contoh Praktis': "Pilih dada ayam tanpa kulit dan olah dengan dipanggang. Konsumsi ikan berlemak (salmon/sarden) 2 kali seminggu."
         },
         'Saran_Gemuk_Obesitas': {
             'Tingkatkan/Jaga': "Protein tinggi serat dan rendah lemak (dada ayam tanpa kulit, ikan, produk kedelai) untuk meningkatkan rasa kenyang.",
-            'Kurangi/Batasi': "Potongan daging berlemak tinggi; hindari pengolahan protein dengan cara digoreng (pilih panggang/rebus)."
+            'Kurangi/Batasi': "Potongan daging berlemak tinggi; hindari pengolahan protein dengan cara digoreng (pilih panggang/rebus).",
+            'Contoh Praktis': "Ganti daging merah dengan tahu atau tempe. Pilih susu *skim* atau *low fat yogurt* sebagai sumber protein."
         }
     },
     'Lemak Total': {
         'Saran_Kurus': {
             'Tingkatkan/Jaga': "Lemak tak jenuh tunggal dan ganda (alpukat, kacang, minyak zaitun, ikan berlemak) untuk tambahan kalori bersih.",
-            'Kurangi/Batasi': "Lemak trans buatan (roti-roti kemasan, makanan instan) dan lemak jenuh yang sangat tinggi."
+            'Kurangi/Batasi': "Lemak trans buatan (roti-roti kemasan, makanan instan) dan lemak jenuh yang sangat tinggi.",
+            'Contoh Praktis': "Gunakan minyak zaitun atau minyak kanola untuk menumis. Taburi salad dengan biji chia atau biji bunga matahari."
         },
         'Saran_Normal': {
             'Tingkatkan/Jaga': "Proporsi Lemak Sehat (omega-3 dan tak jenuh) untuk kesehatan otak dan jantung.",
-            'Kurangi/Batasi': "Lemak jenuh dari *junk food* dan lemak trans. Pertahankan jumlah lemak sesuai target AKG."
+            'Kurangi/Batasi': "Lemak jenuh dari *junk food* dan lemak trans. Pertahankan jumlah lemak sesuai target AKG.",
+            'Contoh Praktis': "Batasi konsumsi gorengan, ganti dengan *air fryer* atau rebus. Masukkan seperempat alpukat ke dalam sandwich Anda."
         },
         'Saran_Gemuk_Obesitas': {
             'Tingkatkan/Jaga': "Batasi lemak hingga batas minimum yang direkomendasikan AKG. Jika mengonsumsi lemak, pilih lemak tak jenuh.",
-            'Kurangi/Batasi': "Semua sumber lemak jenuh (mentega, minyak kelapa sawit, *deep fried* food), serta semua makanan/minuman yang mengandung krim atau santan kental."
+            'Kurangi/Batasi': "Semua sumber lemak jenuh (mentega, minyak kelapa sawit, *deep fried* food), serta semua makanan/minuman yang mengandung krim atau santan kental.",
+            'Contoh Praktis': "Pilih daging *lean* (tanpa lemak). Ganti santan dengan susu rendah lemak atau krimer nabati non-santan."
         }
     },
     'Karbohidrat': {
         'Saran_Kurus': {
             'Tingkatkan/Jaga': "Karbohidrat kompleks (nasi, pasta, roti gandum utuh) dalam porsi besar sebagai sumber energi utama.",
-            'Kurangi/Batasi': "Diet rendah karbohidrat yang tidak perlu; hindari melewatkan jam makan utama berkarbohidrat."
+            'Kurangi/Batasi': "Diet rendah karbohidrat yang tidak perlu; hindari melewatkan jam makan utama berkarbohidrat.",
+            'Contoh Praktis': "Makan kentang atau ubi sebagai pengganti nasi sesekali. Tambahkan 1 porsi pasta di malam hari."
         },
         'Saran_Normal': {
             'Tingkatkan/Jaga': "Pilih sumber Karbohidrat kompleks (oat, nasi merah, roti gandum) dan serat yang cukup.",
-            'Kurangi/Batasi': "Gula sederhana (permen, *soft drink*, kue-kue) dan karbohidrat olahan."
+            'Kurangi/Batasi': "Gula sederhana (permen, *soft drink*, kue-kue) dan karbohidrat olahan.",
+            'Contoh Praktis': "Pilih roti gandum utuh 100%. Batasi kue dan minuman manis maksimum 1 kali sehari."
         },
         'Saran_Gemuk_Obesitas': {
             'Tingkatkan/Jaga': "Karbohidrat yang datang bersamaan dengan serat tinggi (sayuran, kacang-kacangan, biji-bijian utuh) untuk rasa kenyang.",
-            'Kurangi/Batasi': "Porsi nasi, mie, atau roti putih (Karbohidrat sederhana). Hindari minuman manis berkalori tinggi."
+            'Kurangi/Batasi': "Porsi nasi, mie, atau roti putih (Karbohidrat sederhana). Hindari minuman manis berkalori tinggi.",
+            'Contoh Praktis': "Ganti sarapan dengan 1/2 porsi nasi merah. Pastikan separuh piring Anda diisi sayuran non-pati (selada, brokoli)."
         }
     },
     'Kalsium (Ca)': {
         'Saran_Kurus': {
             'Tingkatkan/Jaga': "Susu *full cream* atau produk olahannya (keju/yogurt), bayam, dan brokoli.",
-            'Kurangi/Batasi': "Minuman bersoda atau berkafein berlebih yang dapat mengganggu penyerapan Kalsium."
+            'Kurangi/Batasi': "Minuman bersoda atau berkafein berlebih yang dapat mengganggu penyerapan Kalsium.",
+            'Contoh Praktis': "Minum susu 2 gelas sehari. Tambahkan keju (atau produk olahan susu) pada camilan sore Anda."
         },
         'Saran_Normal': {
             'Tingkatkan/Jaga': "Produk susu (rendah/sedang lemak), tahu/tempe, dan sayuran hijau gelap.",
-            'Kurangi/Batasi': "Konsumsi fosfor berlebihan (misalnya dari minuman ringan) yang dapat mengganggu keseimbangan Ca."
+            'Kurangi/Batasi': "Konsumsi fosfor berlebihan (misalnya dari minuman ringan) yang dapat mengganggu keseimbangan Ca.",
+            'Contoh Praktis': "Pilih yogurt atau kefir. Konsumsi satu porsi kecil sayuran hijau gelap setiap hari."
         },
         'Saran_Gemuk_Obesitas': {
             'Tingkatkan/Jaga': "Susu atau produk olahan rendah lemak/non-fat, serta sumber nabati Kalsium (untuk membatasi kalori).",
-            'Kurangi/Batasi': "Susu tinggi lemak atau produk *dessert* tinggi gula yang mengandung Kalsium."
+            'Kurangi/Batasi': "Susu tinggi lemak atau produk *dessert* tinggi gula yang mengandung Kalsium.",
+            'Contoh Praktis': "Pilih susu nabati yang difortifikasi Kalsium. Makan tempe/tahu 1-2 porsi sehari."
         }
     },
     'Besi (Fe)': {
         'Saran_Kurus': {
             'Tingkatkan/Jaga': "Sumber Besi Heme (daging merah, hati) dikombinasikan dengan sumber Vitamin C (jeruk, jambu).",
-            'Kurangi/Batasi': "Minum teh/kopi segera setelah makan karena kandungan tanin dapat menghambat penyerapan Besi."
+            'Kurangi/Batasi': "Minum teh/kopi segera setelah makan karena kandungan tanin dapat menghambat penyerapan Besi.",
+            'Contoh Praktis': "Konsumsi hati ayam/sapi 1 porsi seminggu. Minum jus jeruk saat mengonsumsi suplemen Besi."
         },
         'Saran_Normal': {
             'Tingkatkan/Jaga': "Sumber Besi beragam (hewani dan nabati) dan Vitamin C untuk penyerapan optimal.",
-            'Kurangi/Batasi': "Antasida atau suplemen Kalsium dalam waktu yang sama dengan makanan kaya Besi."
+            'Kurangi/Batasi': "Antasida atau suplemen Kalsium dalam waktu yang sama dengan makanan kaya Besi.",
+            'Contoh Praktis': "Pilih daging tanpa lemak. Masak dengan panci besi cor untuk meningkatkan kandungan Besi."
         },
         'Saran_Gemuk_Obesitas': {
             'Tingkatkan/Jaga': "Sumber Besi hewani rendah lemak (misalnya ikan) atau sumber nabati (kacang-kacangan).",
-            'Kurangi/Batasi': "Daging merah berlemak tinggi sebagai satu-satunya sumber Besi."
+            'Kurangi/Batasi': "Daging merah berlemak tinggi sebagai satu-satunya sumber Besi.",
+            'Contoh Praktis': "Pilih ikan tuna, salmon, atau daging ayam. Makan kacang-kacangan (lentil, buncis) sebagai lauk."
         }
     },
 }
-
 Tabel_Kebutuhan_Gizi_Rujukan = {
     'Laki-laki (Remaja 10-20 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
@@ -681,3 +698,4 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
+
