@@ -657,8 +657,8 @@ with tab_metode:
     st.markdown("""
     Dalam konteks aplikasi ini:
     * $x$ adalah **Berat Badan Target** (`BB_Target_Val`).
-    * $x_i$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
-    * $y_i$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
+    * $x_j$ adalah **Berat Badan Acuan** dalam tabel (`X_data_BB`).
+    * $y_j$ adalah **Kebutuhan Gizi Rujukan** dalam tabel (`Y_data_Gizi`).
     """)
 
     st.subheader("Mengapa menggunakan Lagrange?")
@@ -672,6 +672,7 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
+
 
 
 
