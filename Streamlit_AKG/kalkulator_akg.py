@@ -647,12 +647,12 @@ with tab_metode:
     st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
     
     # Menggunakan st.latex() dan Raw String (r"...")
-    st.latex(r"P(x) = \sum_{i=0}^{n-1} y_i L_i(x)")
+    st.latex(r"P(x) = \sum_{j=0}^{n-1} y_j L_j(x)")
     
     st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange** yang didefinisikan sebagai:")
     
     # Menggunakan st.latex() dan Raw String (r"...")
-    st.latex(r"L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}")
+    st.latex(r"L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}")
     
     st.markdown("""
     Dalam konteks aplikasi ini:
@@ -672,6 +672,7 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
+
 
 
 
