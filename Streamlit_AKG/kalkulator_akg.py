@@ -642,16 +642,16 @@ with tab_metode:
     * **Polinomial Lagrange** adalah salah satu metode interpolasi yang menghasilkan polinomial unik berderajat $n-1$ yang melewati semua $n$ titik data yang diberikan.
     """)
     
-
     st.subheader("Rumus Polinomial Lagrange")
     st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
     
-    # Menggunakan st.latex() dan Raw String (r"...")
-   st.latex(r"P(x) = \sum_{i=0}^{n-1} y_i L_i(x)")
+    # PERBAIKAN ST.LATEX UNTUK MENGHINDARI SYNTAX ERROR DAN INDENTATION ERROR
+    st.latex(r"P(x) = \sum_{j=0}^{n-1} y_j L_j(x)")
     
-    st.markdown("Di mana $L_i(x)$ adalah **Basis Polinomial Lagrange**:")
+    st.markdown("Di mana $L_j(x)$ adalah **Basis Polinomial Lagrange**:")
     
-    st.latex(r"L_i(x) = \prod_{j=0, j \neq i}^{n-1} \frac{x - x_j}{x_i - x_j}")
+    # PERBAIKAN ST.LATEX UNTUK BASIS POLINOMIAL
+    st.latex(r"L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}")
     
     st.markdown("""
     Dalam konteks aplikasi ini:
@@ -662,19 +662,14 @@ with tab_metode:
 
     st.subheader("Mengapa menggunakan Lagrange?")
     st.markdown("""
-    1.  **Akurasi Titik Rujukan:** Polinomial Lagrange menjamin akurasi penuh pada titik-titik data rujukan (kurva pasti melewati titik-titik tersebut).
-    2.  **Solusi Unik:** Untuk set data yang diberikan, Polinomial Lagrange memberikan solusi polinomial unik.
-    3.  **Kesinambungan Data Gizi:** Karena kebutuhan gizi sering kali berhubungan secara non-linear dengan berat badan, interpolasi polinomial memberikan estimasi yang lebih halus dan logis dibandingkan interpolasi linier.
+    1. **Akurasi Titik Rujukan:** Polinomial Lagrange menjamin akurasi penuh pada titik-titik data rujukan (kurva pasti melewati titik-titik tersebut).
+    2. **Solusi Unik:** Untuk set data yang diberikan, Polinomial Lagrange memberikan solusi polinomial unik.
+    3. **Kesinambungan Data Gizi:** Karena kebutuhan gizi sering kali berhubungan secara non-linear dengan berat badan, interpolasi polinomial memberikan estimasi yang lebih halus dan logis dibandingkan interpolasi linier.
     """) 
     
     st.markdown("---")
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
-
-
-
-
-
-
-
+    
+    # Garis kosong penutup file
