@@ -35,11 +35,10 @@ Metode ini menggunakan Polinomial Lagrange $P(x)$ untuk menentukan nilai gizi ($
 
 **1. Rumus Polinomial Lagrange:**
 ![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
-*(Catatan: Pastikan Anda mengganti path `assets/polinomial_lagrange.png` dengan lokasi gambar yang benar di repo Anda.)*
+
 
 **2. Rumus Basis Polinomial ($L_i(x)$):**
 ![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
-*(Catatan: Pastikan Anda mengganti path `assets/basis_lagrange.png` dengan lokasi gambar yang benar di repo Anda.)*
 
 ---
 
@@ -52,10 +51,10 @@ Proyek ini adalah implementasi dari pembelajaran mata kuliah Metode Numerik yang
 
 ## 🛠️ Tim Kontributor
 
-| Nama | GitHub |
+| Nama | NIM |
 | :--- | :--- |
-| **Fauziah Rahma** | [@fauziah1011](https://github.com/fauziah1011) |
-| **Aliffia Hilva** | [@FIADANRARA](https://github.com/FIADANRARA) |
+| **Fauziah Rahmawati Sholehah** | K1323026 |
+| **Aliffia Hilva Salsabila** |K1323006 |
 
 ---
 
