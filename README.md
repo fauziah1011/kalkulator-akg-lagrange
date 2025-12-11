@@ -1,4 +1,4 @@
-# 🚀 GIZI ANTI RIBET: Kalkulator AKG Lagrange
+# GIZI ANTI RIBET: Kalkulator AKG Lagrange
 
 ## Selamat Datang di NutriMatch!
 
