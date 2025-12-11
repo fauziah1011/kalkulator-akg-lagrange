@@ -239,7 +239,7 @@ def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BB_Awal, BB_Tar
     
     # TINGKATKAN/JAGA
     tingkatkan_jaga = saran_data.get(Tujuan_Key, {}).get('Tingkatkan/Jaga', "Informasi strategi peningkatan belum tersedia.")
-    saran.append(f"**⬆️ FOKUS TINGKATKAN / JAGA:**")
+    saran.append(f"**AYO TINGKATKAN BAGIAN DI BAWAH INI!:**")
     # Tampilkan sebagai list yang mudah dibaca
     for item in tingkatkan_jaga.split(';'):
         saran.append(f"* {item.strip()}")
@@ -765,4 +765,5 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi).
     """)
+
 
