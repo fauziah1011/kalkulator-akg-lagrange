@@ -766,4 +766,26 @@ with tab_metode:
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi).
     """)
 
+.glow-button {
+    display: inline-block;
+    background: #FFB300;
+    color: black !important;
+    padding: 14px 30px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.25s;
+}
+
+.glow-button:hover {
+    box-shadow: 0 0 18px #FFB300;
+    transform: translateY(-3px);
+}
+
+.glow-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 5px #FFB300;
+}
+
 
