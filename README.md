@@ -11,9 +11,6 @@ Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi,
 ### 🖼 Tampilan Aplikasi
 <img width="1250" height="541" alt="image" src="https://github.com/user-attachments/assets/a1cbeb30-656c-4c69-8019-5ae3fbecbc1a" />
 
-
-
-
 👉 **[LANGSUNG COBAIN KALKULATOR AKG LAGRANGE DI SINI!](https://bit.ly/3KILFZb)** 👈
 
 ---
