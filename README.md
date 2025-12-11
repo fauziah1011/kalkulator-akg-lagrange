@@ -1,78 +1,62 @@
-# 🔥 GIZI ANTI RIBET: Kalkulator AKG Lagrange
+# 🚀 GIZI ANTI RIBET: Kalkulator AKG Lagrange
 
-Halo gaes! Selamat datang di project keren ini.
+## 🎉 Selamat Datang di NutriMatch!
 
-Ini adalah aplikasi web *Streamlit* yang kita bikin pakai *Python. Fungsinya? Biar kalian bisa hitung **Angka Kecukupan Gizi (AKG)* dengan hasil yang super duper akurat karena kita pakai skill matematika tingkat tinggi: *Metode Lagrange!*
+Halo teman-teman pembelajar dan pegiat hidup sehat!
 
-Intinya: Gak perlu pusing sama perhitungan manual lagi!
+Selamat datang di **GIZI ANTI RIBET**, sebuah proyek keren yang membuat perhitungan Angka Kecukupan Gizi (AKG) jadi super mudah dan sangat akurat.
+
+Tujuan kami sederhana: **Memberikan estimasi kebutuhan gizi harian yang presisi, bukan hanya perkiraan kasar.**
+
+
+
+### 🖼 Tampilan Aplikasi
+<img width="1310" height="357" alt="Tampilan Aplikasi Streamlit Kalkulator AKG Lagrange" src="https://github.com/user-attachments/assets/43630a82-f359-4410-a0e6-054cea1a7bb4" />
+
+👉 **[LANGSUNG COBAIN KALKULATOR AKG LAGRANGE DI SINI!](https://bit.ly/3KILFZb)** 👈
+
+---
+
+## ✨ Kenapa Kalkulator Ini Spesial? (Intisari Teknologi)
+
+Kalkulator Gizi biasa seringkali hanya membulatkan kebutuhan Anda ke kategori usia atau berat badan terdekat. Kami tidak! Kami menggunakan ilmu pasti, yaitu **Metode Numerik Interpolasi Lagrange**, untuk memberikan estimasi yang benar-benar personal.
+
+### 🧠 Otak di Balik Akurasi: Interpolasi Lagrange
+
+Kami membangun sebuah model matematika untuk mengisi celah antara data AKG standar (titik-titik rujukan).
+
+| Fitur | Manfaat untuk Anda |
+| :--- | :--- |
+| **Interpolasi Lagrange** | Menghasilkan kurva yang melewati *semua* titik data AKG rujukan. |
+| **Estimasi Presisi** | Jika Berat Badan (BB) Anda $67.5 \text{ kg}$, kami tidak membulatkannya ke $60 \text{ kg}$ atau $70 \text{ kg}$. Kami hitung AKG yang persis untuk $67.5 \text{ kg}$. |
+| **Personalisasi** | Hasil yang Anda dapatkan adalah $AKG(x)$ yang spesifik, di mana $x$ adalah Berat Badan Anda. |
+
+#### Konsep Inti:
+
+Metode ini menggunakan Polinomial Lagrange $P(x)$ untuk menentukan nilai gizi ($y$) berdasarkan Berat Badan ($x$) Anda, yang dirumuskan sebagai:
+
+$$P(x) = \sum_{i=0}^{n-1} y_i L_i(x)$$
 
 ---
 
-## 🤩 LANGSUNG COBAIN AJA!
-## 🖼 Tampilan Aplikasi
-<img width="1310" height="357" alt="image" src="https://github.com/user-attachments/assets/43630a82-f359-4410-a0e6-054cea1a7bb4" />
+## 💻 Detail Proyek (The Engine Room)
 
-Udah siap pakai dan live! Buktiin sendiri deh akurasinya:
+Proyek ini adalah implementasi dari pembelajaran mata kuliah Metode Numerik yang disajikan dalam bentuk aplikasi web yang siap pakai.
 
-👉 **[GAS, KLIK DI SINI BUAT COBA KALKULATOR LAGRANGE!](https://bit.ly/3KILFZb)** 👈
+* **Bahasa:** Python
+* **Kerangka Kerja Web:** [Streamlit](https://streamlit.io/) (Membuat aplikasi data interaktif menjadi sangat cepat).
 
----
-
-## ⚙️ The Engine Room: Teknologi & Metode (Materi Inti)
-
-Proyek ini tidak hanya sekadar kalkulator, tetapi sebuah implementasi canggih dari ilmu data dan matematika terapan untuk gizi.
-
-* **💻 Bahasa Pemrograman:** Python
-* **🌐 Kerangka Kerja Web:** [Streamlit](https://streamlit.io/) (Membuat *data app* interaktif dan mudah diakses)
-
-### 🧠 Otak di Balik Akurasi: Metode Interpolasi Lagrange
-
-Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya tersedia untuk kelompok usia/berat badan tertentu (titik data diskrit). Metode ini memungkinkan kami mengestimasi nilai AKG (*y*) yang presisi untuk setiap input usia/berat badan (*x*) yang berada di antara titik data standar tersebut.
-
-## ⚙️ The Engine Room: Teknologi & Metode (Materi Inti)
-
-Proyek ini tidak hanya sekadar kalkulator, tetapi sebuah implementasi canggih dari ilmu data dan matematika terapan untuk gizi.
-
-* **💻 Bahasa Pemrograman:** Python
-* **🌐 Kerangka Kerja Web:** [Streamlit](https://streamlit.io/) (Membuat *data app* interaktif dan mudah diakses)
-
-### 🧠 Otak di Balik Akurasi: Metode Interpolasi Lagrange
-
-Kami menggunakan **Interpolasi Lagrange** karena standar AKG seringkali hanya tersedia untuk kelompok usia/berat badan tertentu (titik data diskrit). Metode ini memungkinkan kami mengestimasi nilai AKG (*y*) yang presisi untuk setiap input usia/berat badan (*x*) yang berada di antara titik data standar tersebut.
-
-#### Konsep Matematis
-
-Misalkan kita memiliki n titik data AKG yang sudah terstandarisasi:
-
-![Notasi Titik Data AKG](assets/titik_data_akg.png) 
-
-Polinomial Lagrange P(x) didefinisikan sebagai:
-
-![Rumus Polinomial Lagrange](assets/polinomial_lagrange.png)
-
-dengan **![Simbol L_j(x)](assets/L_j_x.png)** adalah basis polinomial Lagrange yang didefinisikan sebagai:
-
-![Rumus Basis Polinomial Lagrange](assets/basis_lagrange.png)
-#### Penerapan pada Gizi
-
-1.  **Input:** Pengguna memasukkan usia, berat, dan jenis kelamin ($x$).
-2.  **Titik Data **![Simbol L_j(x)](assets/x_i,y_i.png)**:** Kami menggunakan data AKG standar dari Kemenkes/FAO/WHO yang tersedia untuk kelompok usia/berat badan tertentu.
-3.  **Output:** Aplikasi menghitung $P(x)$ untuk mendapatkan estimasi AKG (*y*) yang sangat personal dan spesifik untuk input pengguna tersebut, bukan hanya pembulatan ke kategori terdekat.
-
----
----
-
-## 🤝 Kontributor & Tim Tempur (Profil)
-
-Proyek keren ini terwujud berkat kolaborasi tim yang bersemangat. Kami terbuka untuk kontribusi!
+## 🛠️ Tim Kontributor
 
 | Nama | GitHub |
-| **[Fauziah Rahma]** | [@fauziah1011](https://github.com/fauziah1011) |
-| **[Aliffia Hilva]** | [@FIADANRARA](https://github.com/FIADANRARA) |
+| :--- | :--- |
+| **Fauziah Rahma** | [@fauziah1011](https://github.com/fauziah1011) |
+| **Aliffia Hilva** | [@FIADANRARA](https://github.com/FIADANRARA) |
 
 ---
 
-## 📄 Lisensi & Status
+## 📜 Lisensi & Status
 
-* **Status Proyek:** Aktif 
-* **Versi Saat Ini:** v1.0.0
+Proyek ini **Aktif** dan dikembangkan untuk tujuan edukasi dan kesehatan masyarakat. Silakan *fork* dan kembangkan lebih lanjut!
+
+* **Versi Saat Ini:** v1.0.0 (Stabil)
