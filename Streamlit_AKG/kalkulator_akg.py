@@ -213,32 +213,39 @@ def custom_metric(label, value, subtext):
     st.markdown(html_code, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI)
+# FUNGSI SARAN MAKANAN DINAMIS BARU (MEMASUKKAN LOGIKA BMI & VARIATIF)
 # ----------------------------------------------------------------------
 def get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key):
     saran = []
-    
-    # 1. Status BMI
-    saran.append(f"**Status Gizi (BMI):** {BMI_Saran_Subtext}")
+    saran_data = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {})
+
+    # --- BAGIAN 1: TARGET GIZI UTAMA ---
+    saran.append(f"### Kebutuhan Harian **{Jenis_Gizi_Key}**: {hasil_estimasi:.0f} {Unit_Gizi}")
+    saran.append(f"**Status Gizi Anda:** {BMI_Saran_Subtext}")
     saran.append("---")
     
-    # 2. Saran Utama Gizi (dengan format TINGKATKAN/KURANGI)
-    saran_data = Tabel_Saran_Makro_Mikro.get(Jenis_Gizi_Key, {})
-    
-    saran.append(f"### Target Utama: {hasil_estimasi:.0f} {Unit_Gizi} ({Jenis_Gizi_Key})")
+    # --- BAGIAN 2: STRATEGI UTAMA BERDASARKAN BMI ---
+    saran.append(f"### Strategi Gizi ({BMI_Key.replace('_', ' ').title()})")
     
     # TINGKATKAN/JAGA
-    tingkatkan_jaga = saran_data.get(BMI_Key, {}).get('Tingkatkan/Jaga', "Informasi saran belum tersedia.")
+    tingkatkan_jaga = saran_data.get(BMI_Key, {}).get('Tingkatkan/Jaga', "Informasi strategi peningkatan belum tersedia.")
     saran.append(f"**⬆️ FOKUS TINGKATKAN/JAGA:** {tingkatkan_jaga}")
     
     # KURANGI/BATASI
-    kurangi_batasi = saran_data.get(BMI_Key, {}).get('Kurangi/Batasi', "Informasi saran belum tersedia.")
+    kurangi_batasi = saran_data.get(BMI_Key, {}).get('Kurangi/Batasi', "Informasi strategi pembatasan belum tersedia.")
     saran.append(f"**⬇️ FOKUS KURANGI/BATASI:** {kurangi_batasi}")
     
     saran.append("---")
     
-    # 3. Saran Air dan Serat (Rujukan Tetap)
-    saran.append(f"### Kebutuhan Pelengkap Harian")
+    # --- BAGIAN 3: CONTOH PRAKTIS & PELENGKAP ---
+    saran.append(f"### Contoh Praktis & Pelengkap Harian")
+    
+    # CONTOH PRAKTIS SPESIFIK
+    contoh_praktis = saran_data.get(BMI_Key, {}).get('Contoh Praktis', "Contoh makanan spesifik belum tersedia.")
+    saran.append(f"**🍽️ SUBSTITUSI/OPSI MENU:** {contoh_praktis}")
+    saran.append("") # Baris kosong
+
+    # Saran Air dan Serat (Rujukan Tetap)
     saran.append(f"**💧 Air:** Target **{Air_Rujukan} liter/hari**. Pastikan minum air putih secara teratur, hindari minuman manis berlebihan.")
     saran.append(f"**🥦 Serat:** Target **{Serat_Rujukan} g/hari**. Konsumsi sayur dan buah minimal 5 porsi/hari dan pilih biji-bijian utuh (whole grain).")
     
@@ -361,6 +368,7 @@ Tabel_Saran_Makro_Mikro = {
         }
     },
 }
+
 Tabel_Kebutuhan_Gizi_Rujukan = {
     'Laki-laki (Remaja 10-20 th)': {
         'Berat_Badan_Acuan_X': np.array([30.0, 36.0, 50.0, 75.0, 100.0]), 
@@ -583,6 +591,8 @@ with tab_hasil:
 
             # Saran Makanan 
             st.subheader("💡 Saran Gizi, Makanan & Minuman Harian Dinamis")
+            # Trigger diagram for Tumpeng Gizi Seimbang for visual aid
+            st.markdown("")
             saran_list = get_saran_makanan(Jenis_Gizi_Key, hasil_estimasi, Unit_Gizi, BMI_Saran_Subtext, Air_Rujukan, Serat_Rujukan, BMI_Key)
             
             for saran in saran_list:
@@ -672,12 +682,12 @@ with tab_metode:
     st.subheader("Rumus Polinomial Lagrange")
     st.markdown("Untuk $n$ titik data $(x_0, y_0), (x_1, y_1), \dots, (x_{n-1}, y_{n-1})$, Polinomial Lagrange $P(x)$ didefinisikan sebagai:")
     
-    # RUMUS UTAMA LAGRANGE (AMAN DARI ERROR INDENTATION DAN SYNTAX)
+    # RUMUS UTAMA LAGRANGE
     st.latex(r"P(x) = \sum_{j=0}^{n-1} y_j L_j(x)")
     
     st.markdown("Di mana $L_j(x)$ adalah **Basis Polinomial Lagrange**:")
     
-    # BASIS POLINOMIAL LAGRANGE (AMAN DARI ERROR INDENTATION DAN SYNTAX)
+    # BASIS POLINOMIAL LAGRANGE
     st.latex(r"L_j(x) = \prod_{i=0, i \neq j}^{n-1} \frac{x - x_i}{x_j - x_i}")
     
     st.markdown("""
@@ -698,4 +708,3 @@ with tab_metode:
     st.markdown("""
     **Penting:** Meskipun metode ini sangat akurat di antara titik-titik data (interpolasi), metode ini mungkin kurang akurat jika digunakan untuk memprediksi di luar rentang data acuan (ekstrapolasi, misalnya BB < 30 kg atau BB > 100 kg).
     """)
-
