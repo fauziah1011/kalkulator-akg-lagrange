@@ -28,12 +28,12 @@ Kami membangun sebuah model matematika untuk mengisi celah antara data AKG stand
 | Fitur | Manfaat untuk Anda |
 | :--- | :--- |
 | **Interpolasi Lagrange** | Menghasilkan kurva yang melewati *semua* titik data AKG rujukan. |
-| **Estimasi Presisi** | Jika Berat Badan (BB) Anda $67.5 \text{ kg}$, kami tidak membulatkannya ke $60 \text{ kg}$ atau $70 \text{ kg}$. Kami hitung AKG yang persis untuk $67.5 \text{ kg}$. |
-| **Personalisasi** | Hasil yang Anda dapatkan adalah $AKG(x)$ yang spesifik, di mana $x$ adalah Berat Badan Anda. |
+| **Estimasi Presisi** | Jika Berat Badan (BB) Anda 67,5 kg, kami tidak membulatkannya ke 60 kg atau 70 kg. Kami hitung AKG yang persis untuk 67,5 kg. |
+| **Personalisasi** | Hasil yang Anda dapatkan adalah AKG (x) yang spesifik, di mana x adalah Berat Badan Anda. |
 
 #### Konsep Inti:
 
-Metode ini menggunakan Polinomial Lagrange $P(x)$ untuk menentukan nilai gizi ($y$) berdasarkan Berat Badan ($x$) Anda, yang dirumuskan sebagai:
+Metode ini menggunakan Polinomial Lagrange P(x) untuk menentukan nilai gizi (y) berdasarkan Berat Badan (x) Anda, yang dirumuskan sebagai:
 
 $$P(x) = \sum_{i=0}^{n-1} y_i L_i(x)$$
 
